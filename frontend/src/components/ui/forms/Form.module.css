@@ -1,0 +1,128 @@
+.login-register-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #EAF2F8;
+    width: 248px;
+    padding: 0 0 0 0;
+    border: 3px solid #86AAC5;
+    border-radius: 10px;
+    overflow: hidden;
+    align-self: flex-start;
+    transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.login-register-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 24px rgba(0, 195, 255, 1);
+}
+
+.login-register-container:focus-within {
+    transform: translateY(-3px);
+    box-shadow: 0 0 24px rgb(0, 47, 255);
+}
+
+.container-title {
+    background-color: #86AAC5;
+    justify-items: center;
+}
+
+.container-title h2 {
+    margin: 0;
+    padding: 11px 0 11px 0;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px 24px 24px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 42px;
+}
+
+.form-group input {
+    color: #86AAC5;
+    width: 100%;
+    height: 25px;
+    border: none;
+    border-bottom: 3px solid #86AAC5;
+    outline: none;
+    background: transparent;
+    padding: 0;
+}
+
+.form-group input::placeholder {
+    color: #86AAC5;
+    font-size: 18px;
+}
+
+.form-group p {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+}
+
+.error-message {
+    margin-top: 3px;
+    animation: blinkOverlay 0.25s ease-out;
+}
+
+@keyframes blinkOverlay {
+    0% {
+        opacity: 0;
+        background-color: transparent;
+    }
+    40% {
+        opacity: 1;
+        background-color: rgba(185, 183, 255, 0.68)
+    }
+    70% {
+        opacity: 0.7;
+        background-color: rgba(185, 183, 255, 0.6)
+    }
+    100% {
+        opacity: 1;
+        background-color: rgba(185, 183, 255, 0.68)
+    }
+}
+
+.success-message-container {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.success-message {
+    position: absolute;
+    text-align: center;
+    font-size: 16px;
+    transform: translateY(-18px);
+    animation:
+        fadeIn 0.6s ease-out,
+        blink 0.3s ease-in-out 0.6s,
+        fadeOut 0.6s ease-out 4s forwards;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-4px)};
+    100% { opacity: 1; transform: translateY(-18px)};
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    40% { opacity: 0.4; }
+    60% { opacity: 1; }
+    80% { opacity: 0.4; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; transform: translateY(-4px); }
+}
+
+.submit-btn {
+    align-self: center;
+}

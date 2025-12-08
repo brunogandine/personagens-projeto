@@ -1,0 +1,51 @@
+body {
+    color: #FFFFFF;
+    background-color: #051035;
+    background-image: linear-gradient(hsla(239, 50%, 50%, .07) 1px, transparent 0), linear-gradient(90deg, hsla(239, 50%, 50%, .07) 1px, transparent 0);
+    background-size: 40px 40px;
+    font-family: "Trebuchet MS", Impact ;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}
+
+h1 {
+    line-height: 1.0;
+}
+
+img {
+    vertical-align: baseline;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%
+}
+
+#app > #main {
+    flex-grow: 1;
+}
+
+/*Some colors*/
+
+.green {
+    color: #00FF00;
+}
+
+.red {
+    color: #FF0000;
+}
+
+/*Some responsive changes*/
+
+@media only screen and (min-width: 1180px) {
+
+    img {
+        vertical-align: middle;
+    }
+}

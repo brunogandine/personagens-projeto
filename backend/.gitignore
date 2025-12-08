@@ -1,0 +1,24 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Prisma Client
+/src/generated/prisma/
+
+# Logs do backend
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# Cache
+
+.cache/
