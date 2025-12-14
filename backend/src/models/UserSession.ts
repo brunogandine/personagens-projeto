@@ -6,9 +6,9 @@ class UserSessionModel {
         return prisma.userSession.create({ data })
     }
 
-    delete = async (id: number) => {
+    delete = async (session_token: string) => {
         return prisma.userSession.delete({
-            where: { id }
+            where: { session_token }
         })
     }
 
@@ -22,7 +22,15 @@ class UserSessionModel {
     findByToken = async (token: string) => {
         return prisma.userSession.findUnique({
             where: {session_token: token},
-            include: { user: true}
+            include: {user: {
+                select: {
+                    id: true,
+                    username: true,
+                    currency: true,
+                    level: true,
+                    user_power: true
+                }
+            }}
         })
     }
 }

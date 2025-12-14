@@ -34,12 +34,12 @@ class AuthService {
     async loginUser(email: string, user_key: string) {
         const errors = [];
 
-        const user = await userModel.findByEmail(email);        
-
+        const user = await userModel.findByEmail(email);  
+        
         const match = user && await comparePassword(user_key, user.user_key);
 
         if(!match) {
-            errors.push({ message: "Usuário ou senha inválidos!" });
+            errors.push({ field: "login", message: "Usuário ou senha inválidos!" });
 
             throw { type: "validation", errors };
         }
@@ -52,7 +52,13 @@ class AuthService {
             expires_at: new Date(Date.now() + 30 * 60 * 1000)
         })
 
-        return { token, user: { id: user.id, email: user.email, role: user.user_power} };
+        return { token, user: { id: user.id, username: user.username, currency: user.currency, level: user.level, user_power: user.user_power} };
+    }
+
+    async logoutUser(sessionToken: string) {
+        const deletedSession = await userSessionModel.delete(sessionToken);
+
+        return !!deletedSession;
     }
 }
 

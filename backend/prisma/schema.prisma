@@ -52,28 +52,44 @@ model CharacterDescription {
 }
 
 model UserSession {
-  id Int @id @default(autoincrement()) @db.UnsignedInt
-  user_id Int @db.UnsignedInt
-  session_token String @unique @db.VarChar(255)
-  expires_at DateTime @db.DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id            Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_id       Int      @db.UnsignedInt
+  session_token String   @unique @db.VarChar(255)
+  expires_at    DateTime @db.DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
-  user User @relation(fields: [user_id], references: [id])
+  user          User     @relation(fields: [user_id], references: [id])
 
   @@map("user_sessions")
 }
 
 model UserUnlocks {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
+  characters  UserCharacters[]
   user_id     Int         @db.UnsignedInt
   unlock_type UnlockTypes
   unlock_key  String?     @db.VarChar(255)
   unlock_date DateTime    @default(now())
+
   user        User        @relation(fields: [user_id], references: [id])
 
   @@index([user_id], map: "user_unlocks_user_id_fkey")
   @@map("user_unlocks")
+}
+
+model UserCharacters {
+  id           Int          @id @default(autoincrement()) @db.UnsignedInt
+  user_id      Int          @db.UnsignedInt
+  character_id Int          @db.UnsignedInt
+  was_default  Boolean
+  unlocked_on  DateTime     @default(now())
+  unlock_id    Int?         @db.UnsignedInt
+
+  user         User         @relation(fields: [user_id], references: [id])
+  unlock       UserUnlocks? @relation(fields: [unlock_id], references: [id])
+
+  @@map("user_characters")
 }
 
 model User {
@@ -88,9 +104,11 @@ model User {
   level              Int           @default(1)
   created_at         DateTime      @db.DateTime
   activated_at       DateTime?     @db.DateTime
-  unlocks            UserUnlocks[]
-  session            UserSession[]
+
+  characters         UserCharacters[]
   user_power         UserPower     @default(Regular)
+  session            UserSession[]
+  unlocks            UserUnlocks[]
 
   @@index([email], map: "email")
   @@index([activation_key], map: "idx_activation")

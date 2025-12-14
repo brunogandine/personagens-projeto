@@ -24,6 +24,10 @@ class UserModel {
     findByUsername = async (username: string) => {
         return prisma.user.findUnique({ where: { username } })
     }
+
+    getUserCount = async () => {
+        return prisma.user.count();
+    }
 }
 
 export const userModel = new UserModel();

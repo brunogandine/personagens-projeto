@@ -3,8 +3,11 @@ import { prisma } from '../../libs/prisma';
 import { auth } from '../../middlewares/auth';
 import { authorize } from '../../middlewares/authorize';
 import { validate } from '../../middlewares/validate';
+import CharacterController from '../../controllers/character.controller';
 
 const router = Router();
+
+router.get("/counts", auth, CharacterController.getCounts)
 
 // router.get("/", auth, CharacterController.getter, async (req, res) => {
 //     try {

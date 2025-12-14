@@ -41,6 +41,19 @@ img {
     color: #FF0000;
 }
 
+.orange {
+    color: #FF5F03;
+}
+
+.gold {
+    color: #E4AF00;
+}
+
+.vertical-ruler {
+    border-left: 1px dashed #10111E;
+    height: 100%;
+}
+
 /*Some responsive changes*/
 
 @media only screen and (min-width: 1180px) {
