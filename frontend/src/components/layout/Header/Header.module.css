@@ -17,19 +17,16 @@
 
 #main-header, #user-header{
     display: flex;
+    background-color: #0B0651;
     height: 100%;
-}
-
-#main-header .vertical-ruler {
-    margin: 0 5px 0 5px;
-    color:
+    padding-right: 10px;
+    border-right: 1px solid #221E5FFF;
 }
 
 .user-pic {
+    background-color: #0D0D22;
     width: 28px;
     height: 28px;
-    border: none;
-    border-radius: 28px;
     outline: 2px solid white;
     margin-left: 10px;
     align-self: center;
@@ -43,7 +40,7 @@
 .level {
     color: #FFFFFF;
     align-self: center;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .currency {
@@ -51,10 +48,31 @@
     flex-direction: row;
     align-items: center;
     gap: 5px;
+    margin-left: 10px;
 }
 
 .currency-value {
     font-size: 14px;
+}
+
+.link-section {
+    display: flex;
+    align-items: center;
+}
+
+.category-styles {
+    display: flex;
+    height: 100%;
+    border-right: 1px solid #221e5FFF;
+}
+
+.category-styles:hover {
+    background-color: #04031d;
+}
+
+.anchor-links {
+    padding: 0 10px;
+    align-self: center;
 }
 
 .logout-section {

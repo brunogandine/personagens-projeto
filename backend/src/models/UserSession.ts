@@ -25,6 +25,7 @@ class UserSessionModel {
             include: {user: {
                 select: {
                     id: true,
+                    email: true,
                     username: true,
                     currency: true,
                     level: true,

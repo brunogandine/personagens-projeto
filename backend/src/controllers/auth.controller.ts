@@ -55,13 +55,14 @@ class AuthController {
             return res.status(500).json({message: "Erro ao realizar Logout."})
         }
 
-
         res.clearCookie('session_token');
 
         return res.status(200).json({message: "Logout efetuado com sucesso!"})
     }
 
     me: RequestHandler = async (req, res) => {
+        console.log(req)
+
         return res.status(200).json({user: req.user});
     }
 }

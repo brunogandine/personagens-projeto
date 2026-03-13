@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     color: #FFFFFF;
     background-color: #051035;
@@ -50,8 +54,20 @@ img {
 }
 
 .vertical-ruler {
-    border-left: 1px dashed #10111E;
     height: 100%;
+}
+
+.showText {
+    padding-right: 3px;
+}
+
+.drop-custom .ant-dropdown-menu {
+    background-color: #0D0D22;
+    outline: 1px solid #221E5F
+}
+
+.drop-custom .ant-dropdown-menu-title-content {
+    color: #FFF;
 }
 
 /*Some responsive changes*/
