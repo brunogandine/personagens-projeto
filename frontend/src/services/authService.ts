@@ -5,7 +5,7 @@ export const getMe = async () => {
 
   if(!res.ok) return null
 
-  const data = await res.json()
+  const data = await res.json();
   
   return data.user?? null;
 }

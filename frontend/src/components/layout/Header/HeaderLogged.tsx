@@ -5,6 +5,8 @@ import type { AuthUser } from '../../../types/AuthUser';
 import styles from './Header.module.css'
 import { Link } from 'react-router-dom';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 type HeaderProps = {
     user: AuthUser
     loading: boolean
@@ -19,18 +21,17 @@ const buildAccountDrop = (user: AuthUser) => {
         {
             key: "profile",
             label: <Link to="/profile">Perfil</Link>
+        },
+        {
+            key: "support",
+            label: <Link to="/support">Suporte</Link>
         }
     ]
-
-    account.push({
-        key: "support",
-        label: <Link to="/support">Suporte</Link>
-    })
 
     if(user.user_power === "Admin") {
         account.push({
             key: "admin",
-            label: <Link to="/adm-panel">Painel de Administração</Link>
+            label: <Link to="/adm-panel">Painel Administrativo</Link>
         })
     }
 
@@ -50,7 +51,7 @@ const characters: MenuProps['items'] = [
 
 function HeaderLogged({user, loading}: HeaderProps) {
     const handleLogout = async () => {
-        const res = await fetch("http://localhost:3000/api/auth/logout", {
+        const res = await fetch(`${BASE_URL}/api/auth/logout`, {
             method: "POST",
             credentials: "include"
         });
@@ -64,7 +65,7 @@ function HeaderLogged({user, loading}: HeaderProps) {
         <header id={styles["header-nav"]}>
             <div id={styles["header-container"]}>
                 <div id={styles["main-header"]}>
-                    <Avatar src="assets/Cinderel laGray.png" className={styles["user-pic"]} icon={<UserOutlined />}/>
+                    <Avatar className={styles["user-pic"]} src={user.avatar_url ? `${BASE_URL}/${user.avatar_url}` : undefined } icon={<UserOutlined />}/>
                     <div className={styles["user-name"]}>
                         {loading ? (<p>Carregando...</p>) : (<p>{user.username}</p>)}
                     </div>

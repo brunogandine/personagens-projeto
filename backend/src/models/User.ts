@@ -13,8 +13,25 @@ class UserModel {
         })
     }
 
+    updateAvatar = async(id: number, avatarUrl: string | null) => {
+        return prisma.user.update({
+            where: { id },
+            data: {
+                avatar_url: avatarUrl
+            }
+        });
+    }
+
     findById = async (id: number) => {
-        return prisma.user.findUnique({ where: { id } })
+        return prisma.user.findUnique({ 
+            where: { id },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                avatar_url: true
+            }
+        })
     }
 
     findByEmail = async (email: string) => {

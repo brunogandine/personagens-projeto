@@ -7,4 +7,5 @@ export type AuthUser = {
     currency: number;
     level: number;
     user_power: UserPowers
+    avatar_url: string | null;
 }

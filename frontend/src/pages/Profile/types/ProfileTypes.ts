@@ -7,4 +7,10 @@ export type ProfileStats = {
     // pvpBattles: number;
     // npcBattles: number;
     // completedStories: number;
-}
+};
+
+export type RecentAvatar = {
+    fileName: string,
+    avatarPath: string,
+    updatedAt: string
+};

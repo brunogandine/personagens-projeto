@@ -52,7 +52,7 @@ class AuthService {
             expires_at: new Date(Date.now() + 30 * 60 * 1000)
         })
 
-        return { token, user: { id: user.id, email: user.email, username: user.username, currency: user.currency, level: user.level, user_power: user.user_power} };
+        return { token, user: { id: user.id, email: user.email, username: user.username, currency: user.currency, level: user.level, user_power: user.user_power, avatar_url: user.avatar_url } };
     }
 
     async logoutUser(sessionToken: string) {

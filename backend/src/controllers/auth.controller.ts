@@ -61,8 +61,6 @@ class AuthController {
     }
 
     me: RequestHandler = async (req, res) => {
-        console.log(req)
-
         return res.status(200).json({user: req.user});
     }
 }

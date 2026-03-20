@@ -5,7 +5,7 @@ import { getMe } from "../services/authService";
 
 type AuthContextType = {
     user: AuthUser | null
-    setUser: (user: AuthUser | null) => void;
+    setUser: React.Dispatch<React.SetStateAction<AuthUser | null>>;
     loading: boolean,
 }
 
