@@ -1,5 +1,5 @@
 import styles from "./Profile.module.css";
-import { Avatar } from "antd";
+import { Avatar, Button } from "antd";
 import { EditFilled, UserOutlined } from "@ant-design/icons";
 import { useAuth } from "../../contexts/LoggedUserContext";
 import EmailField from "../../components/Profile/EmailField";
@@ -9,6 +9,7 @@ import { UserSection } from "./components/UserSection";
 import { ProfileSections } from "./hooks/ProfileSections";
 import AvatarOptionsModal from "./components/AvatarOptionsModal";
 import AvatarCropModal from "./components/AvatarCropModal";
+import ProfileChangePasswordModal from "./components/ProfileChangePasswordModal";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -19,6 +20,7 @@ const Profile = () => {
     const [stats, setStats] = useState<ProfileStats | null>(null);
     const [isProfileModalOptionsOpen, setIsProfileModalOptionsOpen] = useState(false);
     const [isProfileModalCropOpen, setIsProfileModalCropOpen] = useState(false);
+    const [isProfileChangePasswordModalOpen, setIsProfileChangePasswordModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [selectedSource, setSelectedSource] = useState<"upload" | "recent">("upload");
     const [recentAvatars, setRecentAvatars] = useState<RecentAvatar[]>([])
@@ -72,6 +74,10 @@ const Profile = () => {
             console.error(error)
         }
     };
+
+    const handleOpenPasswordChangeModal = async () => {
+        setIsProfileChangePasswordModalOpen(true);
+    }
 
     const handleChooseImageClick = () => {
         fileInputRef.current?.click();
@@ -231,19 +237,28 @@ const Profile = () => {
                             recentAvatars={recentAvatars}
                             onSelectRecentAvatar={handleSelectedAvatarFromRecents}
                         />
-                        <AvatarCropModal open={isProfileModalCropOpen} onClose={handleCropModalClose} onApply={handleApplyAvatar} image={selectedImage} ></AvatarCropModal>
+                        <AvatarCropModal 
+                            open={isProfileModalCropOpen} 
+                            onClose={handleCropModalClose} 
+                            onApply={handleApplyAvatar} 
+                            image={selectedImage} 
+                        />
                     </div>
                     <div className={`${styles["p-user"]} ${styles["pad-15"]}`}>
                         <div className={styles["p-username"]}>
                             <h2 className={user?.user_power === "Moderator" ? "green" : user?.user_power === "Admin" ? "orange" : ""}>{user?.username}</h2>
                         </div>
                         <div className={styles["p-email"]}>
-                            <div className={styles["p-email-title"]}>Email:</div>
+                            <div className={styles["p-email-title"]}>E-mail</div>
                             <EmailField email={user?.email} />
                         </div>
-                        <div className={styles["p-passChange"]}>
-                            <p>Alterar Senha</p>
+                        <div className={styles["p-passChange"]} onClick={handleOpenPasswordChangeModal}>
+                            <Button className={`${styles["simple-btn"]}`}>Mudar senha</Button>
                         </div>
+                        <ProfileChangePasswordModal 
+                            open={isProfileChangePasswordModalOpen} 
+                            onClose={() => setIsProfileChangePasswordModalOpen(false)} 
+                        />
                     </div>
                 </div>
                 <div className={styles["user-stats"]}>

@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
+import { hashPassword, comparePassword } from "../utils/bcrypt.util";
 import { userModel } from "../models/User";
 
 const uploadDir = path.resolve(process.cwd(), "uploads", "avatars");
@@ -139,6 +140,36 @@ class UserService {
                 fs.promises.unlink(file.fullPath).catch(() => {})
             )
         );
+    }
+
+    async changePassword({ userId, currentPassword, newPassword }: { userId: number, currentPassword: string, newPassword: string}) {
+        const user = await userModel.findById(userId);
+        const errors = [];
+
+        if(!user)
+            throw new Error(`Usuário não encontrado.`);
+
+        const isPasswordCorrect = await comparePassword(
+            currentPassword, 
+            user.user_key
+        );
+
+        if(!isPasswordCorrect)
+            errors.push({ field: "currentPassword", message: `Senha atual inválida.`})
+
+        if(errors.length > 0)
+            throw { type: "validation", errors };
+
+        const hashedPassword = await hashPassword(newPassword);
+
+        await userModel.update(
+            userId, 
+            { user_key: hashedPassword }
+        );
+
+        return {
+            message: `Senha alterada com sucesso.`
+        };
     }
 }
 

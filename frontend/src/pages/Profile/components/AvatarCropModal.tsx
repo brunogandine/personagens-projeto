@@ -54,7 +54,14 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
     }, [open])
 
     return (
-        <Modal className={`${styles["crop-modal"]}`} title="Editar imagem" open={open} onCancel={handleCancel} onOk={handleConfirm} footer={null}>
+        <Modal 
+            className={`${styles["crop-modal"]}`} 
+            title="Editar imagem" 
+            open={open} 
+            onCancel={handleCancel} 
+            onOk={handleConfirm} 
+            footer={null}
+        >
             <>
                 {image && (
                     <div className={`${styles["crop-container"]}`} style={{position: "relative", width: "100%", height: "300px"}}>

@@ -38,11 +38,19 @@ img {
 /*Some colors*/
 
 .green {
-    color: #00FF00;
+    color: #009400;
+}
+
+.lightGreen {
+    color: #77EB77
 }
 
 .red {
     color: #FF0000;
+}
+
+.lightRed {
+    color: #FF8080;
 }
 
 .orange {
@@ -68,6 +76,24 @@ img {
 
 .drop-custom .ant-dropdown-menu-title-content {
     color: #FFF;
+}
+
+.error-message {
+    position: absolute;
+    text-align: center;
+    font-size: 16px;
+    animation: blinkOverlay 0.25s ease-out;
+}
+
+.success-message {
+    position: absolute;
+    text-align: center;
+    font-size: 16px;
+    transform: translateY(-18px);
+    animation:
+        fadeIn 0.6s ease-out,
+        blink 0.3s ease-in-out 0.6s,
+        fadeOut 0.6s ease-out 4s forwards;
 }
 
 /*Some responsive changes*/

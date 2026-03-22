@@ -4,7 +4,7 @@ import AuthService from "../services/auth.service"
 class AuthController {
     register: RequestHandler = async (req, res) => {
         try {
-            const user = await AuthService.registerUser(req.body);
+            await AuthService.registerUser(req.body);
 
             res.status(201).json({message: "Cadastro feito com sucesso!"})
         } catch (err: any) {

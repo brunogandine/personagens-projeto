@@ -80,6 +80,33 @@ class UserController {
                 message: `Erro interno ao buscar avatares recentes.`
             })
         }
+    };
+
+    changePassword: RequestHandler = async (req, res) => {
+        try {
+            const userId = req.user?.id;
+
+            if(!userId)
+                return res.status(401).json({
+                    message: `Usuário não autenticado.`
+                });
+
+            const { currentPassword, newPassword } = req.body;
+
+            const result = await UserService.changePassword({
+                userId,
+                currentPassword,
+                newPassword
+            });
+
+            return res.status(201).json(result.message)
+        } catch(err: any) {
+            if(err.type === "validation") {
+                return res.status(400).json({ message: `Erro de validação`, errors: err.errors })
+            };
+
+            return res.status(400).json({ message: `Erro desconhecido.` })
+        }
     }
 }
 

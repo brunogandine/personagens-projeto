@@ -1,4 +1,4 @@
-import { custom, z } from "zod";
+import { z } from "zod";
 
 export const registerSchema = z.object({
     username: z.string().min(1, {message: "Usuário não pode estar vazio."}).pipe(z.string().min(5, {message: "O nome de usuário precisa ter no mínimo 5 caracteres"}).max(18, {message: "O nome de usuário pode ter no máximo 18 caracteres"})),
@@ -10,7 +10,7 @@ export const registerSchema = z.object({
     
     if(data.user_key !== data.confirmPassword)
         ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "As senhas não coincidem.",
             path: ["confirmPassword"]
         });

@@ -85,19 +85,22 @@
 }
 
 .avatar-modal :global(.ant-modal-container),
-.crop-modal :global(.ant-modal-container){
+.crop-modal :global(.ant-modal-container), 
+.changePass-modal :global(.ant-modal-container) {
     background-color: #18162D;
     border: 1px solid rgba(93, 93, 93, 0.17);
 }
 
 .avatar-modal :global(.ant-modal-title),
-.crop-modal :global(.ant-modal-title) {
+.crop-modal :global(.ant-modal-title), 
+.changePass-modal :global(.ant-modal-title) {
     color: #C1C1C1;
     font-size: 20px
 }
 
 .avatar-modal :global(.ant-modal-close),
-.crop-modal :global(.ant-modal-close) {
+.crop-modal :global(.ant-modal-close), 
+.changePass-modal :global(.ant-modal-close) {
     color: #C1C1C1;
     
     &:global(.ant-modal-close) svg {
@@ -234,8 +237,92 @@
     justify-content: center;
 }
 
+.changePass-modal {
+    width: 400px !important;
+}
+
+.changePass-container {
+    display: flex;
+    flex-direction: column;
+    transition: height 2s ease;
+}
+
+.input-pass-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.input-pass-container :global(.ant-input-outlined) {
+    color: #C1C1C1;
+    background-color: #0B0A16;
+    border-color: #433E62
+}
+
+.input-pass-container :global(.ant-input-outlined:hover) {
+    border-color: #433E62
+}
+
+.input-pass-container :global(.ant-input-outlined:focus),
+.input-pass-container :global(.ant-input-outlined:focus-within) {
+    border-color: #54499C;
+    box-shadow: none;
+    outline: 2px solid #54499C;
+    outline-offset: -1px;
+}
+
+.input-pass-container :global(.error-message) {
+    position: static;
+    font-size: 13px;
+    text-align: unset;
+}
+
+.error-input:global(.ant-input-affix-wrapper) {
+    border: none;
+    transition: none;
+}
+
+.error-input:global(.ant-input-affix-wrapper:focus),
+.error-input:global(.ant-input-affix-wrapper:focus-within) {
+    outline: none;
+}
+
+.error-input {
+    background-color: #3015155E !important;
+    outline: 1px solid #FF8080 !important;
+}
+
+.error-input:hover,
+.error-input:focus,
+.error-input:focus-within {
+    outline: 2px solid #FF8080 !important;
+}
+
+.success-message-container :global(.success-message) {
+    position: static;
+    font-size: 13px;
+}
+
+.btn-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
 .cancel-btn {
     background-color: #36325E;
+    color: #C1C1C1;
+    height: 40px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+}
+
+.apply-btn {
+    width: 100%;
+    background-color: #4F6DBE;
     color: #C1C1C1;
     height: 40px;
     font-size: 16px;
@@ -243,13 +330,16 @@
     border: none;
 }
 
-.apply-btn {
+.simple-btn {
     background-color: #4F6DBE;
     color: #C1C1C1;
-    height: 40px;
-    font-size: 16px;
+    height: 30px;
+    width: 100%;
+    font-size: 13px;
     font-weight: bold;
     border: none;
+    border-radius: 7px;
+    padding: 0 6px 0 6px;
 }
 
 .cancel-btn:global(.ant-btn:not(:disabled):not(.ant-btn-disabled)):hover {
@@ -262,12 +352,23 @@
 }
 
 .apply-btn:global(.ant-btn:not(:disabled):not(.ant-btn-disabled)):hover {
-    background-color: #4660a8;
+    background-color: #4660A8;
     color: #C1C1C1;
     height: 40px;
     font-size: 16px;
     font-weight: bold;
     border: none;
+}
+
+.simple-btn:global(.ant-btn:not(:disabled):not(.ant-btn-disabled)):hover {
+    background-color: #4660A8;
+    color: #C1C1C1;
+    height: 30px;
+    font-size: 13px;
+    font-weight: bold;
+    border: none;
+    border-radius: 7px;
+    padding: 0 6px 0 6px
 }
 
 .p-username h2 {
@@ -285,7 +386,8 @@
 }
 
 .p-email-title {
-    font-size: 12px;
+    font-weight: bold;
+    font-size: 14px;
     margin-bottom: 5px;
 }
 

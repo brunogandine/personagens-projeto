@@ -2,6 +2,8 @@ import { useState } from "react";
 import styles from "../ui/forms/Form.module.css";
 import { Button } from "antd";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
+
 function RegisterForm() {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState<string>("");
@@ -20,13 +22,13 @@ function RegisterForm() {
         }
 
         try {
-            const res = await fetch("http://localhost:3000/api/auth/register", {
+            const res = await fetch(`${BASE_URL}/api/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(payload)
-            })
+            });
 
             if (!res.ok) {
                 const errorData = await res.json();
@@ -52,7 +54,7 @@ function RegisterForm() {
                 setSuccessMessage("");
             }, 4600);
 
-            if (data) {
+            if(data) {
                 form.reset();
             }
         } catch (err) {
@@ -73,15 +75,15 @@ function RegisterForm() {
                     </div>
                     <div className={styles["form-group"]}>
                         <input type="email" name="email" placeholder="Email"></input>
-                        {errors.email && <p className={`${styles["error-message"]} red`}>{errors.email}</p>}
+                        {errors.email && <p className="error-message lightRed" >{errors.email}</p>}
                     </div>
                     <div className={styles["form-group"]}>
                         <input type="password" name="password" placeholder="Senha"></input>
-                        {errors.user_key && <p className={`${styles["error-message"]} red`}>{errors.user_key}</p>}
+                        {errors.user_key && <p className="error-message lightRed" >{errors.user_key}</p>}
                     </div>
                     <div className={styles["form-group"]}>
                         <input type="password" name="confirmPassword" placeholder="Confirmar Senha"></input>
-                        {errors.confirmPassword && <p className={`${styles["error-message"]} red`}>{errors.confirmPassword}</p>}
+                        {errors.confirmPassword && <p className="error-message lightRed" >{errors.confirmPassword}</p>}
                     </div>
                 </form>
                 <div className={styles["success-message-container"]}>

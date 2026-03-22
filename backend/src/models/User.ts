@@ -29,7 +29,8 @@ class UserModel {
                 id: true,
                 username: true,
                 email: true,
-                avatar_url: true
+                avatar_url: true,
+                user_key: true
             }
         })
     }

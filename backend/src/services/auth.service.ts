@@ -10,10 +10,12 @@ class AuthService {
         const errors = [];
 
         const userExists = await userModel.findByUsername(safeData.username)
+        
         if(userExists) 
             errors.push({ field: "username", message: "Nome de usuário já cadastrado!"});
 
-        const emailExists = await userModel.findByEmail(safeData.email)
+        const emailExists = await userModel.findByEmail(safeData.email);
+        
         if(emailExists) 
             errors.push({ field: "email", message: "Email já cadastrado!" });
 
@@ -52,7 +54,15 @@ class AuthService {
             expires_at: new Date(Date.now() + 30 * 60 * 1000)
         })
 
-        return { token, user: { id: user.id, email: user.email, username: user.username, currency: user.currency, level: user.level, user_power: user.user_power, avatar_url: user.avatar_url } };
+        return { token, user: { 
+            id: user.id, 
+            email: user.email, 
+            username: user.username, 
+            currency: user.currency, 
+            level: user.level, 
+            user_power: user.user_power, 
+            avatar_url: user.avatar_url 
+        }};
     }
 
     async logoutUser(sessionToken: string) {
