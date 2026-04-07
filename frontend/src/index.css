@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     color: #FFFFFF;
     background-color: #051035;
@@ -24,21 +28,34 @@ img {
 #app {
     display: flex;
     flex-direction: column;
-    height: 100%
+    min-height: 100vh
 }
 
 #app > #main {
-    flex-grow: 1;
+    display: flex;
+    flex: 1;
+    width: 1280px;
+    max-width: 1280px;
+    min-height: 0;
+    margin: auto;
 }
 
 /*Some colors*/
 
 .green {
-    color: #00FF00;
+    color: #009400;
+}
+
+.lightGreen {
+    color: #77EB77
 }
 
 .red {
     color: #FF0000;
+}
+
+.lightRed {
+    color: #FF8080;
 }
 
 .orange {
@@ -50,8 +67,38 @@ img {
 }
 
 .vertical-ruler {
-    border-left: 1px dashed #10111E;
     height: 100%;
+}
+
+.showText {
+    padding-right: 3px;
+}
+
+.drop-custom .ant-dropdown-menu {
+    background-color: #0D0D22;
+    outline: 1px solid #221E5F
+}
+
+.drop-custom .ant-dropdown-menu-title-content {
+    color: #FFF;
+}
+
+.error-message {
+    position: absolute;
+    text-align: center;
+    font-size: 16px;
+    animation: blinkOverlay 0.25s ease-out;
+}
+
+.success-message {
+    position: absolute;
+    text-align: center;
+    font-size: 16px;
+    transform: translateY(-18px);
+    animation:
+        fadeIn 0.6s ease-out,
+        blink 0.3s ease-in-out 0.6s,
+        fadeOut 0.6s ease-out 4s forwards;
 }
 
 /*Some responsive changes*/

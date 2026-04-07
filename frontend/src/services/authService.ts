@@ -3,9 +3,10 @@ export const getMe = async () => {
     credentials: "include"
   })
 
-  if(!res.ok) return null
+  if(!res.ok)
+    return { success: false }
 
-  const data = await res.json()
+  const data = await res.json();
   
-  return data.user?? null;
+  return { success: true, user: data.user };
 }

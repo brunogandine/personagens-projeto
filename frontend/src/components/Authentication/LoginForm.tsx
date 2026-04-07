@@ -1,7 +1,7 @@
 import styles from "../ui/forms/Form.module.css"
 import { useState } from "react";
 import { Button } from "antd";
-import { useAuth } from "../../contexts/LoggedUserContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface LoginFormValues {
     email: string;
@@ -14,10 +14,10 @@ const initialValues: LoginFormValues = {
 }
 
 function LoginForm() {
+    const { login } = useAuth();
 
-    const [formValues, setFormValues] = useState<LoginFormValues>(initialValues)
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const { setUser } = useAuth()
+    const [formValues, setFormValues] = useState<LoginFormValues>(initialValues)
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,45 +27,28 @@ function LoginForm() {
             user_key: formValues.user_key
         }
 
-        try{
-            const res = await fetch("http://localhost:3000/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify(payload)
-            })
+        setErrors({});
 
-            if(!res.ok) {
-                const errorData = await res.json();
-                
-                if(errorData.errors) {
-                    const formattedErrors: Record<string, string> = {};
+        const result = await login(payload);
 
-                    errorData.errors.forEach((err: { field: string, message: string }) => {
-                        formattedErrors[err.field] = err.message;
-                    })
+        if(!result.success) {
+            setFormValues(prev => ({...prev, user_key: ""}));
 
-                    setErrors(formattedErrors);
-                };
-
-                setFormValues(prev => ({...prev, user_key: ""}));
-
-                return;
+            if(result.errors) {
+                setErrors(result.errors);
             }
 
-            const data = await res.json();
-            setUser(data.user?? null)
-
-            setErrors({})
-
-            if(data.user) {
-                setFormValues(initialValues)
+            if(result.message) {
+                console.error(result.message);
             }
-        } catch(err: any) {
-            console.error("Erro de Rede:", err)
+
+            return;
         }
+
+        setErrors({});
+        setFormValues(initialValues);
+
+        return;
     }
 
     return (

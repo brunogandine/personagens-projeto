@@ -10,10 +10,12 @@ class AuthService {
         const errors = [];
 
         const userExists = await userModel.findByUsername(safeData.username)
+        
         if(userExists) 
             errors.push({ field: "username", message: "Nome de usuário já cadastrado!"});
 
-        const emailExists = await userModel.findByEmail(safeData.email)
+        const emailExists = await userModel.findByEmail(safeData.email);
+        
         if(emailExists) 
             errors.push({ field: "email", message: "Email já cadastrado!" });
 
@@ -47,12 +49,20 @@ class AuthService {
         const token = crypto.randomBytes(64).toString("hex");
 
         await userSessionModel.create({
-            user: { connect: { id: user.id}},
+            user: { connect: { id: user.id }},
             session_token: token,
             expires_at: new Date(Date.now() + 30 * 60 * 1000)
         })
 
-        return { token, user: { id: user.id, username: user.username, currency: user.currency, level: user.level, user_power: user.user_power} };
+        return { token, user: { 
+            id: user.id, 
+            email: user.email, 
+            username: user.username, 
+            currency: user.currency, 
+            level: user.level, 
+            user_power: user.user_power, 
+            avatar_url: user.avatar_url 
+        }};
     }
 
     async logoutUser(sessionToken: string) {

@@ -1,3 +1,5 @@
+import { Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import styles from './Header.module.css'
 
 function HeaderPublic() {
@@ -5,7 +7,7 @@ function HeaderPublic() {
         <header id={styles["header-nav"]}>
             <div id={styles["header-container"]}>
                 <div id={styles["main-header"]}>
-                    <div className={styles["user-pic"]}></div>
+                    <Avatar className={styles["user-pic"]} icon={<UserOutlined />}/>
                     <div className={styles["user-name"]}>
                             <p>Entre ou Cadastre-se</p>
                     </div>

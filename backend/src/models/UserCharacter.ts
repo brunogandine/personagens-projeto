@@ -10,7 +10,11 @@ class UserCharacter {
         return prisma.userCharacters.findMany();
     }
 
-    getCount = async () => {
-        return prisma.userCharacters.count();
+    getCount = async (userId: number) => {
+        return prisma.userCharacters.count({
+            where: {user_id: userId}
+        });
     }
 }
+
+export const userCharacterModel = new UserCharacter()

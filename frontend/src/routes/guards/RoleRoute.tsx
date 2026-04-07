@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../contexts/LoggedUserContext";
+import { useAuth } from "../../contexts/AuthContext";
 import type { AuthUser } from "../../types/AuthUser";
 
 type UserPowers = AuthUser["user_power"];
 
 type Props = {
-    allowed: UserPowers
+    allowed: UserPowers[]
 }
 
 export const RoleRoute = ({allowed}: Props) => {

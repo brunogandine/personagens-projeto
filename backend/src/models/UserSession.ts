@@ -25,10 +25,12 @@ class UserSessionModel {
             include: {user: {
                 select: {
                     id: true,
+                    email: true,
                     username: true,
                     currency: true,
                     level: true,
-                    user_power: true
+                    user_power: true,
+                    avatar_url: true
                 }
             }}
         })
