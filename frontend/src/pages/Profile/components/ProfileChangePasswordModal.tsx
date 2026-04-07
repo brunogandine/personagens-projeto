@@ -125,12 +125,12 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
                             {errors.currentPassword && <p className="error-message lightRed" ><ExclamationCircleFilled style={{marginRight: 6}}/>{errors.currentPassword}</p>}
                         </div>
                         <div className={`${styles["input-pass-container"]}`}>
-                            <span style={{color: "#C1C1C1", fontSize: "14px", fontWeight: "bold"}}>Nova senha <span style={{color: "#FF6363"}}>*</span></span>
+                            <span style={{color: "#C1C1C1", fontSize: "14px", fontWeight: "bold"}}>Nova senha <span className="lightRed" >*</span></span>
                             <Input.Password className={errors.newPassword && `${styles['error-input']}`} name="newPassword" value={newPassword} onChange={(e) =>  setNewPassword(e.target.value)} visibilityToggle={false}/>
                             {errors.newPassword && <p className="error-message lightRed" ><ExclamationCircleFilled style={{marginRight: 6}}/>{errors.newPassword}</p>}
                         </div>
                         <div className={`${styles["input-pass-container"]}`}>
-                            <span style={{color: "#C1C1C1", fontSize: "14px",fontWeight: "bold"}}>Confirmar nova senha <span style={{color: "#FF6363"}}>*</span></span>
+                            <span style={{color: "#C1C1C1", fontSize: "14px",fontWeight: "bold"}}>Confirmar nova senha <span className="lightRed">*</span></span>
                             <Input.Password className={errors.confirmNewPassword && `${styles['error-input']}`} name="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} visibilityToggle={false}/>
                             {errors.confirmNewPassword && <p className="error-message lightRed" ><ExclamationCircleFilled style={{marginRight: 6}}/>{errors.confirmNewPassword}</p>}
                         </div>

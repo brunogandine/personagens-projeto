@@ -1,6 +1,6 @@
 import HomePublic from "./HomePublic";
 import HomeLogged from "./HomeLogged";
-import { useAuth } from "../../contexts/LoggedUserContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Home = () => {
     const { user, loading } = useAuth();

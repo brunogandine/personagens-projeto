@@ -3,7 +3,8 @@ import type { MenuProps } from 'antd';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import type { AuthUser } from '../../../types/AuthUser';
 import styles from './Header.module.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -49,16 +50,25 @@ const characters: MenuProps['items'] = [
     }
 ]
 
-function HeaderLogged({user, loading}: HeaderProps) {
-    const handleLogout = async () => {
-        const res = await fetch(`${BASE_URL}/api/auth/logout`, {
-            method: "POST",
-            credentials: "include"
-        });
+function HeaderLogged() {
+    const { user, logout, loading } = useAuth();
+    const navigate = useNavigate();
 
-        if (res.ok) {
-            window.location.href = "/";
+    if(!user) 
+        return null;
+
+    const handleLogout = async () => {
+        const result = await logout();
+
+        if(!result.success) {
+            console.error(result.message || "Erro desconhecido ao realizar logout.");
+            return;
         }
+
+        navigate("/", {
+            replace: true,
+            state: { message: "Logout realizado com sucesso!" }
+        })
     }
 
     return (

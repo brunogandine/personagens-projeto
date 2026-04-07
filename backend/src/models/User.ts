@@ -46,6 +46,37 @@ class UserModel {
     getUserCount = async () => {
         return prisma.user.count();
     }
+
+    getModeratorsCount = async () => {
+        return prisma.user.count({
+            where: {
+                user_power: "Moderator"
+            }
+        });
+    }
+
+    getAdminsCount = async () => {
+        return prisma.user.count({
+            where: {
+                user_power: "Admin"
+            }
+        });
+    }
+
+    getRecentUsers = async (limit: number = 5) => {
+        return prisma.user.findMany({
+                select: {
+                    id: true,
+                    username: true,
+                    avatar_url: true,
+                    created_at: true,
+                },
+                orderBy: {
+                    created_at: "desc"
+                },
+                take: limit
+            })
+    }
 }
 
 export const userModel = new UserModel();

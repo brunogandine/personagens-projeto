@@ -1,7 +1,7 @@
 import styles from "./Profile.module.css";
 import { Avatar, Button } from "antd";
 import { EditFilled, UserOutlined } from "@ant-design/icons";
-import { useAuth } from "../../contexts/LoggedUserContext";
+import { useAuth } from "../../contexts/AuthContext";
 import EmailField from "../../components/Profile/EmailField";
 import { useEffect, useRef, useState } from "react";
 import { type RecentAvatar, type ProfileStats } from "./types/ProfileTypes";

@@ -15,12 +15,21 @@
     border-right: 1px solid #232d4e;
 }
 
-#main-header, #user-header{
+#main-header {
+    display: flex;
+    background-color: #0B0651;
+    height: 100%;
+    min-width: 150px;
+    padding-right: 10px;
+    border-right: 1px solid #221E5FFF;
+}
+
+#user-header {
     display: flex;
     background-color: #0B0651;
     height: 100%;
     padding-right: 10px;
-    border-right: 1px solid #221E5FFF;
+    border-right: 1px solid #221E5FFF;    
 }
 
 .user-pic {
