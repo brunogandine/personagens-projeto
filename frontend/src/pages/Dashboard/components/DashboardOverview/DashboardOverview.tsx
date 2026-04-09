@@ -1,8 +1,6 @@
-import styles from "../../AdmPanel.module.css";
+import styles from "../../Dashboard.module.css";
 
-import DashboardOverview from "./DashboardOverview/DashboardOverview";
-import { Avatar } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import DashboardOverview from "./DashboardOverviewContent/DashboardOverview";
 import { useEffect, useState } from "react";
 import DashboardRecentsUsers from "./DashboardRecentUsers/DashboardRecentUsers";
 

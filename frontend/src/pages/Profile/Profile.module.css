@@ -18,6 +18,7 @@
 .user-basic,
 .user-stats {
     display: flex;
+    flex: 1;
     flex-direction: column;
     background-color: #18162D;
     color: #C1C1C1;

@@ -8,11 +8,6 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-type HeaderProps = {
-    user: AuthUser
-    loading: boolean
-}
-
 const buildAccountDrop = (user: AuthUser) => {
     const account: MenuProps['items'] = [
         {
@@ -32,7 +27,7 @@ const buildAccountDrop = (user: AuthUser) => {
     if(user.user_power === "Admin") {
         account.push({
             key: "admin",
-            label: <Link to="/adm-panel">Painel Administrativo</Link>
+            label: <Link to="/dashboard">Painel Administrativo</Link>
         })
     }
 
@@ -50,7 +45,7 @@ const characters: MenuProps['items'] = [
     }
 ]
 
-function HeaderLogged() {
+const HeaderLogged = () => {
     const { user, logout, loading } = useAuth();
     const navigate = useNavigate();
 
@@ -75,7 +70,7 @@ function HeaderLogged() {
         <header id={styles["header-nav"]}>
             <div id={styles["header-container"]}>
                 <div id={styles["main-header"]}>
-                    <Avatar className={styles["user-pic"]} src={user.avatar_url ? `${BASE_URL}/${user.avatar_url}` : undefined } icon={<UserOutlined />}/>
+                    <Avatar className={styles["user-pic"]} src={user.avatar_url ? `${BASE_URL}${user.avatar_url}` : undefined } icon={<UserOutlined />}/>
                     <div className={styles["user-name"]}>
                         {loading ? (<p>Carregando...</p>) : (<p>{user.username}</p>)}
                     </div>

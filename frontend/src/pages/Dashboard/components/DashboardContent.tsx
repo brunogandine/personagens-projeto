@@ -5,13 +5,13 @@ type Props = {
     children: ReactNode;
 };
 
-const MainComponent = ({children}: Props) => {
+const DashboardContent = ({children}: Props) => {
     return (
-        <div id="adm-content">
+        <div id="dashboard-content">
             <HeaderMainAdmPanel />
             {children}
         </div>
     )
 }
 
-export default MainComponent;
+export default DashboardContent;

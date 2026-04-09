@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "../../../AdmPanel.module.css";
+import styles from "../../../Dashboard.module.css";
 import DashboardCardOverview from "./DashboardOverviewCard";
 
 type DashboardData = {

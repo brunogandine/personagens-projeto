@@ -38,7 +38,7 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
 
     const login = async (payload: {email: string, user_key: string}) => {
         try{
-            const res = await fetch(`${BASE_URL}/api/auth/login`, {
+            const res = await fetch(`${BASE_URL}api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -71,7 +71,7 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
 
     const logout = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+            const res = await fetch(`${BASE_URL}api/auth/logout`, {
                 method: "POST",
                 credentials: "include"
             });

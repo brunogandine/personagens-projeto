@@ -9,9 +9,9 @@ export const AuthRoute = () => {
     if(!user)
         return (
         <Navigate 
-            to="/access-denied" 
+            to="/" 
             replace 
-            state={{message: "Você precisa estar logado para acessar esse conteúdo."}}
+            state={{message: "Você precisa estar logado para acessar esta página."}}
         />);
 
     return <Outlet />;

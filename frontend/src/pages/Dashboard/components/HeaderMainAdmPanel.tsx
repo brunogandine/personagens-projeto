@@ -1,4 +1,4 @@
-import styles from "../AdmPanel.module.css"
+import styles from "../Dashboard.module.css"
 
 const HeaderMainAdmPanel = () => {
     return (

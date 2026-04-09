@@ -14,11 +14,18 @@ export const RoleRoute = ({allowed}: Props) => {
     if(loading) 
         return <div>Carregando...</div>
 
-    if(!user || !allowed.includes(user.user_power))
+    if(!user)
+        return <Navigate 
+            to="/"
+            replace
+            state={{message: `Você precisa estar logado para acessar esta página.`}}
+        />
+
+    if(!allowed.includes(user.user_power))
         return <Navigate 
             to="/access-denied"
             replace
-            state={{message: "Você não tem permissão para acessar está página."}}
+            state={{message: "Você não tem permissão para acessar esta página."}}
         />
 
     return <Outlet />

@@ -4,8 +4,8 @@
 
 body {
     color: #FFFFFF;
-    background-color: #051035;
-    background-image: linear-gradient(hsla(239, 50%, 50%, .07) 1px, transparent 0), linear-gradient(90deg, hsla(239, 50%, 50%, .07) 1px, transparent 0);
+    background-color: #121212;
+    background-image: linear-gradient(hsl(239deg 18.37% 28.73% / 15%) 1px, transparent 0), linear-gradient(90deg, hsl(239deg 18.37% 28.73% / 15%) 1px, transparent 0);
     background-size: 40px 40px;
     font-family: "Trebuchet MS", Impact ;
     line-height: 1;

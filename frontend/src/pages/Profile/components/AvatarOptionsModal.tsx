@@ -33,7 +33,7 @@ const AvatarOptionsModal = ({ open, onClose, onChooseImage, recentAvatars, onSel
                                 onClick={() => avatar && onSelectRecentAvatar(avatar)}>
                                 <Avatar 
                                     className={avatar ? `${styles["active-recent"]}` : `${styles["avatar-upload"]}`} 
-                                    src={avatar ? `${BASE_URL}/${avatar.avatarPath}` : undefined} 
+                                    src={avatar ? `${BASE_URL}${avatar.avatarPath}` : undefined} 
                                     icon={<UserOutlined style={{fontSize: "40px"}}></UserOutlined>}>
                                 </Avatar>
                                 {avatar && (

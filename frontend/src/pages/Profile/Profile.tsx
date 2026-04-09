@@ -30,7 +30,7 @@ const Profile = () => {
     useEffect(() => {
         const loadStats = async () => {
             try {
-                const res = await fetch(`${BASE_URL}/api/profile/stats`, {
+                const res = await fetch(`${BASE_URL}api/profile/stats`, {
                     credentials: "include"
                 });
 
@@ -50,7 +50,7 @@ const Profile = () => {
 
     const loadRecentAvatars = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/users/me/avatar/recents`, {
+            const res = await fetch(`${BASE_URL}api/users/me/avatar/recents`, {
                 credentials: "include"
             });
 
@@ -90,7 +90,7 @@ const Profile = () => {
 
     const handleSelectedAvatarFromRecents = (avatar: { fileName: string, avatarPath: string, updatedAt: string }) => {
         setIsProfileModalOptionsOpen(false);
-        setSelectedImage(`${BASE_URL}/${avatar.avatarPath}`);
+        setSelectedImage(`${BASE_URL}${avatar.avatarPath}`);
         setSelectedSource("recent");
         setIsProfileModalCropOpen(true);
     };
@@ -166,7 +166,7 @@ const Profile = () => {
             formData.append("avatar", blob);
             formData.append("source", selectedSource);
 
-            const res = await fetch(`${BASE_URL}/api/users/me/avatar`, {
+            const res = await fetch(`${BASE_URL}api/users/me/avatar`, {
                 method: "PATCH",
                 credentials: "include",
                 body: formData
@@ -220,7 +220,7 @@ const Profile = () => {
                         <div className={`${styles["p-pic-wrap"]}`}>
                             <Avatar 
                                 className={styles["p-pic"]} 
-                                src={(user.avatar_url ? `${BASE_URL}/${user.avatar_url}` : undefined)} 
+                                src={(user.avatar_url ? `${BASE_URL}${user.avatar_url}` : undefined)} 
                                 icon={<UserOutlined style={{fontSize: "80px"}} />} 
                                 onClick={handleOpenOptionsModal}
                             />

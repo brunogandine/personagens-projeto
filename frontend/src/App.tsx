@@ -7,28 +7,30 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 import { AuthRoute } from "./routes/guards/AuthRoute";
 import Profile from "./pages/Profile/Profile";
 import { RoleRoute } from "./routes/guards/RoleRoute";
-import AdmPanel from "./pages/AdmPanel/AdmPanel";
-import Dashboard from "./pages/AdmPanel/components/Dashboard/Dashboard";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import DashboardOverview from "./pages/Dashboard/components/DashboardOverview/DashboardOverviewContent/DashboardOverview";
 
 function App() {
   return (
     <AuthContextProvider>
       <BrowserRouter>
-        <Layout>
           <Routes>
-            <Route path='/' element={<Home/>}/>
-            <Route path='/home' element={<Home/>}/>
-            <Route element={<AuthRoute/>}>
-              <Route path='/profile' element={<Profile />}/>
-              <Route element={<RoleRoute allowed={["Admin"]} />}>
-                <Route path='/adm-panel' element={<AdmPanel />}>
-                  <Route index element={<Dashboard />} />
-                  {/* <Route path="users" element={<UsersPage />} /> */}
-                </Route>
+            <Route element={<Layout />}>
+              <Route path='/' element={<Home/>}/>
+              <Route path='/home' element={<Home/>}/>
+              <Route element={<AuthRoute/>}>
+                <Route path='/profile' element={<Profile />}/>
+              </Route>
+            </Route>
+            <Route element={<RoleRoute allowed={["Admin"]} />}>
+              <Route path='/dashboard' element={<Dashboard />}>
+                <Route index element />
+                <Route path="users" />
+                <Route path="characters" />
+                <Route path="settings" />
               </Route>
             </Route>
           </Routes>
-        </Layout>
       </BrowserRouter>
     </AuthContextProvider>
   )
