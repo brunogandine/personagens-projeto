@@ -8,7 +8,7 @@ import { AuthRoute } from "./routes/guards/AuthRoute";
 import Profile from "./pages/Profile/Profile";
 import { RoleRoute } from "./routes/guards/RoleRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import DashboardOverview from "./pages/Dashboard/components/DashboardOverview/DashboardOverviewContent/DashboardOverview";
+import DashboardOverview from "./pages/Dashboard/components/DashboardOverview/DashboardOverview";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
             </Route>
             <Route element={<RoleRoute allowed={["Admin"]} />}>
               <Route path='/dashboard' element={<Dashboard />}>
-                <Route index element />
+                <Route index element={<DashboardOverview />} />
                 <Route path="users" />
                 <Route path="characters" />
                 <Route path="settings" />

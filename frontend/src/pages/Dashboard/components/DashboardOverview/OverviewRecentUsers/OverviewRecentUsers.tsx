@@ -1,4 +1,4 @@
-import styles from "../../../AdmPanel.module.css";
+import styles from "../../../Dashboard.module.css";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { formatDate } from "@/utils/date";
@@ -47,7 +47,7 @@ const DashboardRecentsUsers = ({loading, recentUsers}: Props) => {
                                             <td>
                                                 <Avatar 
                                                     className={styles["avatar-pic"]} 
-                                                    src={user.avatar_url ? `${BASE_URL}/${user.avatar_url}` : undefined} 
+                                                    src={user.avatar_url ? `${BASE_URL}${user.avatar_url}` : undefined} 
                                                     icon={<UserOutlined />}
                                                 />
                                             </td>

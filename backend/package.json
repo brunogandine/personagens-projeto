@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/ejs": "^3.1.5",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -32,6 +31,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.1.0",
     "@types/node": "^24.7.0",
+    "@types/ejs": "^3.1.5",
     "prisma": "^5.16.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6"

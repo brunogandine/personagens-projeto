@@ -67,16 +67,17 @@ const HeaderLogged = () => {
     }
 
     return (
-        <header id={styles["header-nav"]}>
-            <div id={styles["header-container"]}>
-                <div id={styles["main-header"]}>
-                    <Avatar className={styles["user-pic"]} src={user.avatar_url ? `${BASE_URL}${user.avatar_url}` : undefined } icon={<UserOutlined />}/>
-                    <div className={styles["user-name"]}>
-                        {loading ? (<p>Carregando...</p>) : (<p>{user.username}</p>)}
+        <header id="nav-header" className={`${styles["nav-header"]}`}>
+            <div id="nav-container" className={`${styles["nav-container"]}`}>
+                <div id="user-section-container" className={`${styles["user-section-container"]}`}>
+                    <div className={`${styles["user-section-me"]}`}>
+                        <Avatar className={styles["user-pic"]} src={user.avatar_url ? `${BASE_URL}${user.avatar_url}` : undefined } icon={<UserOutlined />}/>
+                        <div className={styles["user-name"]}>
+                            {loading ? (<p>Carregando...</p>) : (<p>{user.username}</p>)}
+                        </div>
                     </div>
-                </div>              
-                    <div id={styles["user-header"]}>
-                        <div className={styles["level"]}>
+                    <div className={`${styles["user-section-basic"]}`}>
+                        <div className={styles["user-level"]}>
                             <p>LEVEL <span className={
                                 user.level <= 10 ? "" 
                                 : user.level <= 20 ? "green" 
@@ -87,13 +88,14 @@ const HeaderLogged = () => {
                             </span>
                             </p>
                         </div>
-                        <div className={styles["currency"]}>
+                        <div className={styles["user-currency"]}>
                             <div className="currency-icon">
                                 <img src={"/assets/images/icons/currency.png"}></img>
                             </div>
                             <div className={`${styles["currency-value"]} gold`}>{user.currency}</div>
                         </div>
                     </div>
+                </div>  
                 <div className={styles["link-section"]}>
                     <Dropdown classNames={{root: "drop-custom"}} menu={{items: buildAccountDrop(user)}}>
                         <div id="account" className={styles["category-styles"]}>

@@ -1,8 +1,8 @@
 import styles from "../../Dashboard.module.css";
 
-import DashboardOverview from "./DashboardOverviewContent/DashboardOverview";
+import OverviewContent from "./OverviewContent/OverviewContent";
 import { useEffect, useState } from "react";
-import DashboardRecentsUsers from "./DashboardRecentUsers/DashboardRecentUsers";
+import DashboardRecentsUsers from "./OverviewRecentUsers/OverviewRecentUsers";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -21,7 +21,7 @@ type DashboardData = {
     }[]
 }
 
-const Dashboard = () => {
+const DashboardOverview = () => {
     const [loading, setLoading] = useState(true);
     const [dashboardData, setDashboardData] = useState<DashboardData>({ 
         totals: { 
@@ -35,7 +35,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const loadDashboard = async () => {
-            const res = await fetch(`${BASE_URL}/api/admin/stats`, {
+            const res = await fetch(`${BASE_URL}api/admin/stats`, {
                 method: "GET",
                 credentials: "include"
             });
@@ -58,12 +58,12 @@ const Dashboard = () => {
 
     return (
         <>
-            <div className={`${styles["adm-content"]}`}>
-                <DashboardOverview loading={loading} dashboardData={dashboardData.totals} />
+            <div className={`${styles["overview-content"]}`}>
+                <OverviewContent loading={loading} dashboardData={dashboardData.totals} />
                 <DashboardRecentsUsers loading={loading} recentUsers={dashboardData.recentUsers} />
             </div>
         </>
     )     
 }
 
-export default Dashboard;
+export default DashboardOverview;

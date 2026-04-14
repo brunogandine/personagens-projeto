@@ -1,7 +1,7 @@
 import styles from "../Dashboard.module.css";
 import { NavLink } from "react-router-dom";
 import { Avatar } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, TeamOutlined, ProfileFilled, SettingFilled } from "@ant-design/icons";
 import MenuGroup from "./MenuGroup";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -14,15 +14,18 @@ const menuItems = [
         items: [
             {
                 name: "Usuários",
-                path: `${BASE_ADM_PATH}/users`
+                path: `${BASE_ADM_PATH}/users`,
+                icon: <TeamOutlined />
             },
             {
                 name: "Personagens",
-                path: `${BASE_ADM_PATH}/characters`
+                path: `${BASE_ADM_PATH}/characters`,
+                icon: <ProfileFilled />
             },
             {
                 name: "Configurações",
-                path: `${BASE_ADM_PATH}/settings`
+                path: `${BASE_ADM_PATH}/settings`,
+                icon: <SettingFilled />
             }
         ]
     }
@@ -50,7 +53,7 @@ const Sidebar = () => {
                         <NavLink 
                             to={BASE_ADM_PATH}
                             end
-                            className={({isActive}) => `${styles["dashboard-link"]} ${isActive ? styles["active"] : ""}`}
+                            className={({isActive}) => `${styles["dashboard-main-link"]} ${isActive ? styles["active"] : ""}`}
                         >
                             Visão Geral
                         </NavLink>

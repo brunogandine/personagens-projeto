@@ -1,11 +1,13 @@
 import styles from "../Dashboard.module.css";
 import { NavLink } from "react-router-dom";
+import type { ReactNode } from "react";
 
 type MenuGroupProps = {
     title: string;
     items: {
         name: string;
         path: string;
+        icon: ReactNode;
     }[];
 }
 
@@ -19,9 +21,9 @@ const MenuGroup = ({ title, items }: MenuGroupProps) => {
                         <li key={item.path} className={`${styles["menu-group-item"]}`}>
                             <NavLink 
                                 to={item.path}
-                                className={({isActive}) => `${styles["dashboard-link"]} ${isActive ? styles["active"] : ""}`}
+                                className={({isActive}) => `${styles["dashboard-menu-link"]} ${isActive ? styles["active"] : ""}`}
                             >
-                                {item.name}
+                                {item.icon} {item.name}
                             </NavLink>
                         </li>
                     ))}
