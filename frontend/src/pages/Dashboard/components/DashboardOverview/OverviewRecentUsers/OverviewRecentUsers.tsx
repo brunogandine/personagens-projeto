@@ -23,15 +23,15 @@ const DashboardRecentsUsers = ({loading, recentUsers}: Props) => {
             {loading 
                 ? <p>Carregando...</p>
                 : <div className={`${styles["app-last-users"]}`}>
-                    <div className={`${styles["last-users-section"]}`}>
+                    <div className="last-users-section">
                         <div className={`${styles["last-users-section-title"]}`}>
                             <span>Últimos Usuários</span>
                         </div>
-                        <div className={`${styles["last-users-section-content"]}`}>
+                        <div className="last-users-section-content">
                             <table className={`${styles["last-users-table"]}`}>
                                 <colgroup>
                                     <col width="74px" />
-                                    <col style={{overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}/>
+                                    <col span={1} />
                                     <col width="180px" />
                                 </colgroup>
                                 <thead>

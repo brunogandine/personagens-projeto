@@ -9,6 +9,7 @@ import Profile from "./pages/Profile/Profile";
 import { RoleRoute } from "./routes/guards/RoleRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import DashboardOverview from "./pages/Dashboard/components/DashboardOverview/DashboardOverview";
+import UsersDashboard from "./pages/Dashboard/components/UsersDashboard/UsersDashboard";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
             <Route element={<RoleRoute allowed={["Admin"]} />}>
               <Route path='/dashboard' element={<Dashboard />}>
                 <Route index element={<DashboardOverview />} />
-                <Route path="users" />
+                <Route path="users" element={<UsersDashboard />} />
                 <Route path="characters" />
                 <Route path="settings" />
               </Route>

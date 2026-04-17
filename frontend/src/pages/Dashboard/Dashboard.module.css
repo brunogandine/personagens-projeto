@@ -266,6 +266,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
 .last-user-name,
 .last-user-time {
     font-size: 14px;
@@ -277,3 +278,81 @@
     width: 28px;
     height: 28px;
 }
+
+.users-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-users-list {
+    background-color: #28282d;
+    width: 90%;
+    border-radius: 7px;
+    padding: 10px;
+    margin: 20px auto 0;
+}
+
+.users-list-section-title {
+    background-color: #32323b;
+    font-weight: bold;
+    border-radius: 7px 7px 0 0;
+    padding: 12px;
+}
+
+.users-list-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 2px;
+}
+
+.users-list-table th,
+.users-list-table td {
+    background-color: #32323b;
+    text-align: center;
+}
+
+.users-list-table td {
+    overflow: hidden;
+    padding: 10px 0 10px 0;
+    font-weight: bold;
+}
+
+.users-list-table tbody > tr:last-child td:first-child {
+    border-radius: 0 0 0 5px;
+}
+
+.users-list-table tbody > tr:last-child td:last-child {
+    border-radius: 0 0 5px 0;
+}
+
+.users-list-name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.users-pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15px;
+}
+
+.btn-page {
+    background-color: #28282b;
+    appearance: none;
+    border: 1px solid #9191911f;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.btn-page-selected {
+    background-color: #1b1b1d;
+    font-weight: bold;
+    border: 1px solid #91919141;
+}
+
