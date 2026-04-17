@@ -5,6 +5,24 @@ import { validMimeTypes } from "../middlewares/upload-avatar";
 import userService from "../services/user.service";
 
 class UserController {
+    getUsers: RequestHandler = async (req, res) => {
+        try {
+            const { page, limit, search, sortBy, order } = req.query;
+
+            const result = await userService.getUsers({
+                page: Number(page),
+                limit: Number(limit),
+                search: search as string,
+                sortBy: sortBy as string,
+                order: order as "asc" | "desc"
+            });
+
+            return res.json(result);
+        } catch(err) {
+            return res.status(500).json({message: "Erro Interno."})
+        }
+    }
+
     getCounts: RequestHandler = async (req, res) => {
         try {
             const count = await UserService.getUsersCount();
