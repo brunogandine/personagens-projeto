@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "../../Dashboard.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import UsersPagination from "./UsersPagination";
+import { Request } from "@/services/apiClient";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -28,17 +29,13 @@ const UsersDashboard = () => {
 
     useEffect(() => {
         const loadUsers = async () => {
-            const res = await fetch(`${BASE_URL}api/users/get?page=${page}`, {
-                credentials: "include"
-            });
+            const res = await Request.get(`/users/get?page=${page}`);
 
-            if(!res.ok)
-                throw new Error(`Erro ao carregar lista de usuários.`);
+            if(!res)
+                throw new Error(`Falha ao carregar usuários.`)
 
-            const response = await res.json();
-
-            setUsers(response.data);
-            setTotalPages(response.totalPages)
+            setUsers(res.data.data);
+            setTotalPages(res.data.totalPages)
         };
 
         loadUsers();
