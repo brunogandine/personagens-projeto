@@ -13,8 +13,8 @@ import UsersDashboard from "./pages/Dashboard/components/UsersDashboard/UsersDas
 
 function App() {
   return (
-    <AuthContextProvider>
       <BrowserRouter>
+        <AuthContextProvider>
           <Routes>
             <Route element={<Layout />}>
               <Route path='/' element={<Home/>}/>
@@ -32,8 +32,8 @@ function App() {
               </Route>
             </Route>
           </Routes>
+        </AuthContextProvider>
       </BrowserRouter>
-    </AuthContextProvider>
   )
 }
 

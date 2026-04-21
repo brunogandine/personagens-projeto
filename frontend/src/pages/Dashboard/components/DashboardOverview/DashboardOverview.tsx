@@ -3,6 +3,7 @@ import styles from "../../Dashboard.module.css";
 import OverviewContent from "./OverviewContent/OverviewContent";
 import { useEffect, useState } from "react";
 import DashboardRecentsUsers from "./OverviewRecentUsers/OverviewRecentUsers";
+import { Request } from "@/services/apiClient";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -35,20 +36,13 @@ const DashboardOverview = () => {
 
     useEffect(() => {
         const loadDashboard = async () => {
-            const res = await fetch(`${BASE_URL}api/admin/stats`, {
-                method: "GET",
-                credentials: "include"
-            });
+            const res = await Request.get(`/admin/stats`);
 
-            if(!res.ok) {
-                throw new Error(`Erro ao carregar dados da Dashboard`);
+            if(!res) {
+                throw new Error(`Falha ao carregar dados da Dashboard`);
             };
 
-            const data = await res.json();
-
-            console.log(data)
-
-            setDashboardData(data);
+            setDashboardData(res.data);
 
             setLoading(false);
         }

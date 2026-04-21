@@ -4,12 +4,13 @@ import { EditFilled, UserOutlined } from "@ant-design/icons";
 import { useAuth } from "../../contexts/AuthContext";
 import EmailField from "../../components/Profile/EmailField";
 import { useEffect, useRef, useState } from "react";
-import { type RecentAvatar, type ProfileStats } from "./types/ProfileTypes";
+import type { RecentAvatar, ProfileStats } from "./types/ProfileTypes";
 import { UserSection } from "./components/UserSection";
 import { ProfileSections } from "./hooks/ProfileSections";
 import AvatarOptionsModal from "./components/AvatarOptionsModal";
 import AvatarCropModal from "./components/AvatarCropModal";
 import ProfileChangePasswordModal from "./components/ProfileChangePasswordModal";
+import { Request } from "@/services/apiClient";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -30,16 +31,13 @@ const Profile = () => {
     useEffect(() => {
         const loadStats = async () => {
             try {
-                const res = await fetch(`${BASE_URL}api/profile/stats`, {
-                    credentials: "include"
-                });
+                const res = await Request.get<ProfileStats>(`/profile/stats`)
 
-                if(!res.ok) {
+                if(!res)
                     throw new Error(`Erro ao carregar estatísticas.`)
-                }
 
-                const stats: ProfileStats = await res.json();
-                setStats(stats);
+
+                setStats(res.data)
             }catch(err) {
                 console.error(err);
             }
@@ -50,16 +48,12 @@ const Profile = () => {
 
     const loadRecentAvatars = async () => {
         try {
-            const res = await fetch(`${BASE_URL}api/users/me/avatar/recents`, {
-                credentials: "include"
-            });
+            const res = await Request.get<RecentAvatar[]>(`/users/me/avatar/recents`);
 
-            if(!res.ok) {
+            if(!res)
                 throw new Error(`Erro ao buscar avatares recentes.`)
-            };
 
-            const data = await res.json();
-            setRecentAvatars(data);
+            setRecentAvatars(res.data);
         }catch(err) {
             console.error(err)
         }
@@ -166,13 +160,13 @@ const Profile = () => {
             formData.append("avatar", blob);
             formData.append("source", selectedSource);
 
-            const res = await fetch(`${BASE_URL}api/users/me/avatar`, {
-                method: "PATCH",
-                credentials: "include",
-                body: formData
-            });
+            const res = await Request.patch(
+                `/users/me/avatar`,
+                formData
+            ).catch(() => null);
 
-            const data = await res.json().catch(() => null);
+            if(!res)
+                throw new Error(`Erro ao atualizar o avatar.`)
 
             if(!res.ok) {
                 if(res.status === 401) {
@@ -180,7 +174,7 @@ const Profile = () => {
                     window.location.href = "/";
                 }
 
-                throw new Error(data?.message || "Erro ao enviar o avatar.")
+                throw new Error(res.data?.message || "Erro ao enviar o avatar.")
             };
 
             setUser?.((prev) => {
@@ -189,7 +183,7 @@ const Profile = () => {
 
                 return {
                     ...prev,
-                    avatar_url: data.avatarUrl
+                    avatar_url: res.data.avatarUrl
                 }
             } )
 
@@ -208,7 +202,8 @@ const Profile = () => {
         };
     }
 
-    if(!user || !stats) return null;
+    if(!user || !stats) 
+        return null;
 
     const sections = ProfileSections(user, stats);
 

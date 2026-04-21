@@ -1,14 +1,15 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import type { AuthUser } from "@/types/AuthUser";
+import { Request } from "./apiClient";
 
-export const getMe = async () => {
-  const res = await fetch(`${BASE_URL}api/auth/me`, {
-    credentials: "include"
-  })
+type GetMeResponse = 
+  | { success: true, user: AuthUser }
+  | { success: false }
 
-  if(!res.ok)
-    return { success: false }
+export const getMe = async (): Promise<GetMeResponse> => {
+  const res = await Request.get<{user: AuthUser}>(`/auth/me`);
 
-  const data = await res.json();
+  if(!res || !res.ok)
+    return { success: false };
   
-  return { success: true, user: data.user };
+  return { success: true, user: res.data.user };
 }
