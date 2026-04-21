@@ -24,14 +24,19 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
     const config: RequestInit = {
         method,
         headers: {
-            "Content-Type": "application/json",
             Accept: "application/json",
             ...headers
         },
         ...(auth && {credentials: 'include'})
     }
 
-    if(data) {
+    if(data instanceof FormData) {
+        config.body = data;
+    } else if(data) {
+        config.headers = {
+            ...config.headers,
+            "Content-Type": "application/json",
+        };
         config.body = JSON.stringify(data);
     };
 

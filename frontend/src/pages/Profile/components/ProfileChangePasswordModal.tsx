@@ -2,6 +2,7 @@ import { Button, Input, Modal } from "antd";
 import styles from "../Profile.module.css"
 import { useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
+import { Request } from "@/services/apiClient";
 
 type ProfileChangePasswordProps = {
     open: boolean;
@@ -29,27 +30,19 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
         };
 
         try {
-            const res = await fetch(`${BASE_URL}/api/users/me/password`, {
-                method: "PATCH",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify(payload)
-            });
+            const res = await Request.patch(
+                `/users/me/password`,
+                payload
+            );
+
+            if(!res)
+                throw new Error(`Falha ao atualizar a senha.`)
 
             if(!res.ok) {
-                if(res.status === 401) {
-                    alert("Sua sessão expirou. Faça login novamente.");
-                    window.location.href = "/";
-                }
-
-                const errorData = await res.json();
-
-                if (errorData.errors) {
+                if (res.data.errors) {
                     const formattedErrors: Record<string, string> = {};
 
-                    errorData.errors.forEach((err: { field: string, message: string}) => {
+                    res.data.errors.forEach((err: { field: string, message: string}) => {
                         formattedErrors[err.field] = err.message;
                         
                         setErrors(formattedErrors);
@@ -59,26 +52,8 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
                 throw new Error("Erro ao atualizar a senha.")
             };
 
-            if(!res.ok) {
-                const errorData = await res.json();
-
-                if (errorData.errors) {
-                    const formattedErrors: Record<string, string> = {};
-
-                    errorData.errors.forEach((err: { field: string, message: string}) => {
-                        formattedErrors[err.field] = err.message;
-                        
-                        setErrors(formattedErrors);
-                    });
-                };
-
-                return;
-            };
-
-            const data = await res.json();
-
             setErrors({});
-            setSuccess(data);
+            setSuccess(res.data);
 
             setTimeout(() => {
                 setSuccess("");

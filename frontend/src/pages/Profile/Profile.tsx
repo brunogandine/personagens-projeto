@@ -166,7 +166,7 @@ const Profile = () => {
             ).catch(() => null);
 
             if(!res)
-                throw new Error(`Erro ao atualizar o avatar.`)
+                throw new Error(`Falha ao atualizar o avatar.`)
 
             if(!res.ok) {
                 if(res.status === 401) {
