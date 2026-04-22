@@ -7,9 +7,7 @@ import { Request } from "@/services/apiClient";
 type ProfileChangePasswordProps = {
     open: boolean;
     onClose: () => void;
-}
-
-const BASE_URL = import.meta.env.VITE_BASE_URL
+};
 
 const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProps) => {
     const [currentPassword, setCurrentPassword] = useState("");

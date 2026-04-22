@@ -6,8 +6,6 @@ class DashboardController {
         try {
             const stats = await DashboardService.getDashboardStats();
 
-            console.log(stats)
-
             return res.status(200).json(stats);
         } catch(err) {
 

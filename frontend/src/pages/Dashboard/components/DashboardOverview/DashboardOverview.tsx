@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import DashboardRecentsUsers from "./OverviewRecentUsers/OverviewRecentUsers";
 import { Request } from "@/services/apiClient";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 type DashboardData = {
     totals: {
         usersCount: number;

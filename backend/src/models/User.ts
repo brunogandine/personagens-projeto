@@ -118,7 +118,9 @@ class UserModel {
     
         return {
             data: users,
-            totalPages,
+            meta: {
+                totalPages
+            },
         };
     }
 }
