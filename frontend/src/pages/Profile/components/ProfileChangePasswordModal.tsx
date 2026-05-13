@@ -82,7 +82,7 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
     return (
         <>
             <Modal 
-                className={`${styles['changePass-modal']}`}
+                className={`modal-default`}
                 title="Atualize sua senha" 
                 open={open} 
                 closable 
@@ -114,8 +114,8 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
                         )}
                     </div>
                     <div className={`${styles["btn-wrapper"]}`}>
-                        <Button className={`${styles["cancel-btn"]}`} onClick={handleFormCancel}>Cancelar</Button>
-                        <Button className={`${styles["apply-btn"]}`} htmlType="submit" form={`change-password`}>Pronto</Button>
+                        <Button type="primary" className={`btn-default cancel-btn ${styles["avatar-btn"]}`} onClick={handleFormCancel}>Cancelar</Button>
+                        <Button type="primary" className={`btn-default primary-btn ${styles["avatar-btn"]}`} htmlType="submit" form={`change-password`}>Pronto</Button>
                     </div>
                 </div>
             </Modal>

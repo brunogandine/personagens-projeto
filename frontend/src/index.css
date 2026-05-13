@@ -1,3 +1,26 @@
+:root {
+    --bg-modal: #25242e;
+    --text-color-primary: #C1C1C1;
+    --text-color-primary-hover: #818181;
+    
+    --color-primary: #4F6DBE;
+    --color-danger: #ff3232;
+    --color-cancel: #36325E;
+
+    --red-100: #FF8080;
+    --red-300: #FF3232;
+    --red-500: #FF0000;
+    --red-800: #CA2222;
+    --blue-100: #6860ff;
+    --blue-300: #3838ff;
+    --blue-500: #0000FF;
+    --blue-800: #000081;
+    --gray-50: #C1C1C1;
+    --gray-100: #888888;
+    --gray-300: #818181;
+    --gray-500: #4d4d4d;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -50,14 +73,6 @@ img {
     color: #77EB77
 }
 
-.red {
-    color: #FF0000;
-}
-
-.lightRed {
-    color: #FF8080;
-}
-
 .orange {
     color: #FF5F03;
 }
@@ -99,6 +114,64 @@ img {
         fadeIn 0.6s ease-out,
         blink 0.3s ease-in-out 0.6s,
         fadeOut 0.6s ease-out 4s forwards;
+}
+
+.modal-default .ant-modal-container {
+    background-color: var(--bg-modal);
+    border: 1px solid rgba(93, 93, 93, 0.17);
+
+    & .ant-modal-title {
+        color: var(--text-color-primary);
+        font-size: 20px;
+    }
+
+    & .ant-modal-close {
+        color: var(--text-color-primary);
+
+        & svg {
+            font-size: 22px;
+        }
+
+        &:hover {
+            color: var(--text-color-primary-hover);         
+        }
+    }
+}
+
+.btn-default {
+    color: var(--text-color-primary);
+    height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    box-shadow: none !important; 
+}
+
+.primary-btn {
+    background-color: #4F6DBE;
+
+    &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
+        background-color: #4660A8;
+        border: none;
+    }
+}
+
+.danger-btn {
+    background-color: #ff3232;
+
+    &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
+        background-color: #ca2222;
+        border: none;
+    }
+}
+
+.cancel-btn {
+    background-color: #36325E;
+
+    &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
+        background-color: #443f74;
+        border: none;
+    }
 }
 
 /*Some responsive changes*/

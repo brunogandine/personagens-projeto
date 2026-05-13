@@ -1,4 +1,4 @@
-import type { AuthUser } from "@/types/AuthUser";
+import type { AuthUser } from "@/types/authUser";
 import { Request } from "./apiClient";
 
 type GetMeResponse = 

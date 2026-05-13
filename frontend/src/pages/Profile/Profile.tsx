@@ -248,7 +248,7 @@ const Profile = () => {
                             <EmailField email={user?.email} />
                         </div>
                         <div className={styles["p-passChange"]} onClick={handleOpenPasswordChangeModal}>
-                            <Button className={`${styles["simple-btn"]}`}>Mudar senha</Button>
+                            <Button type="primary" className={`btn-default primary-btn ${styles["password-btn"]}`}>Mudar senha</Button>
                         </div>
                         <ProfileChangePasswordModal 
                             open={isProfileChangePasswordModalOpen} 

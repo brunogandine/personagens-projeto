@@ -1,4 +1,4 @@
-import type { AuthUser } from "../../../types/AuthUser";
+import type { AuthUser } from "../../../types/authUser";
 import type { ProfileStats } from "../types/ProfileTypes";
 
 export const ProfileSections = (user: AuthUser, stats: ProfileStats) => {

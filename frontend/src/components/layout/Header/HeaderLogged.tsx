@@ -1,7 +1,7 @@
 import { Dropdown, Avatar} from 'antd';
 import type { MenuProps } from 'antd';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import type { AuthUser } from '../../../types/AuthUser';
+import type { AuthUser } from '../../../types/authUser';
 import styles from './Header.module.css'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';

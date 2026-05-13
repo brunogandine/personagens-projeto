@@ -55,7 +55,7 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
 
     return (
         <Modal 
-            className={`${styles["crop-modal"]}`} 
+            className={`modal-default`}
             title="Editar imagem" 
             open={open} 
             onCancel={handleCancel} 
@@ -93,8 +93,8 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
                     <PictureFilled style={{color: "#C1C1C1", fontSize: "25px"}} />
                 </div>
                 <div className={`${styles['bottom-crop-modal']}`}>
-                    <Button className={`${styles["cancel-btn"]}`} onClick={handleCancel}>Cancelar</Button>
-                    <Button className={`${styles["apply-btn"]}`} onClick={handleConfirm}>Aplicar</Button>
+                    <Button type="primary" className={`btn-default cancel-btn`} onClick={handleCancel}>Cancelar</Button>
+                    <Button type="primary" className={`btn-default primary-btn`} onClick={handleConfirm}>Aplicar</Button>
                 </div>
             </>
         </Modal>

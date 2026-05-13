@@ -307,6 +307,58 @@
     position: relative;
 }
 
+.checkbox.all::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 30px;
+    width: 25px;
+    top: -10px;
+    left: -7px;
+    opacity: 0;
+    border-radius: 5px;
+    box-shadow: none;
+    transform: scale(0);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+    z-index: 3;
+}
+
+.checkbox.single::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    top: -7px;
+    left: -7px;
+    opacity: 0;
+    border-radius: 15px;
+    box-shadow: none;
+    transform: scale(0);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+    z-index: 3;
+}
+
+.checkbox.all:hover::before,
+.checkbox.single:hover::before {
+    background-color: #858585;
+    transform: scale(1);
+    opacity: 0.3;
+}
+
+.checkbox.all:focus::before {
+    background-color: rgba(133, 133, 133, 0.3);
+    box-shadow: 0 0 0 1px rgba(108, 108, 108);
+    opacity: 1;
+    transform: scale(1)
+}
+
 .checkbox.checked, .checkbox.mixed {
     background-color: #8b8b8b;
 }
@@ -349,7 +401,170 @@
 }
 
 .users-list-options {
+    display: flex;
+    gap: 20px;
     margin-top: 10px;
+}
+
+.extended-options {
+    display: flex;
+    gap: 10px;
+    max-width: 0px;
+    opacity: 0;
+    transition: max-width 0.3s ease, opacity 0.3s ease;
+}
+
+.extended-options.open {
+    max-width: 100px;
+    opacity: 1;
+}
+
+.options-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #FFFFFF;
+}
+
+.options-modal-action {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.options-modal-action input[type="radio"] {
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #48465d;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 0;
+}
+
+.options-modal-action input[type="radio"]::before {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 120ms transform ease-in-out;
+    top: 50%;
+    left: 50%;
+    background-color: var(--text-color-primary);
+}
+
+.options-modal-action input[type="radio"]:checked::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.options-modal-user-list {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.users-selected {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    background-color: #8787873b;
+    width: 100px;
+    border: 1px solid #afafaf1f;
+    border-radius: 5px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    padding: 2px 5px 2px;
+}
+
+.users-selected:hover {
+    opacity: 1;
+}
+
+.suspension-user-name {
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;;
+}
+
+.options-modal-suspension-duration,
+.options-modal-ban-default {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.suspension-duration-options {
+    display: flex;
+    gap: 5px;
+}
+
+.suspension-duration-options input[type="radio"] {
+    display: none;
+}
+
+.suspension-duration-options label {
+    background-color: #8787873b;
+    border: 1px solid #afafaf1f;
+    border-radius: 3px;
+    opacity: 0.5;
+    padding: 1px 2px;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.suspension-duration-options label:hover {
+    opacity: 1;
+}
+
+.suspension-duration-options label.selected {
+    opacity: 1;
+}
+
+.options-modal-reason-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.options-modal-reason-input textarea {
+    background-color: #48465d;
+    color: #FFFFFF;
+    height: 150px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    box-shadow: 0 0px 2px 1px rgb(72 70 93);
+    padding: 10px 5px 10px 10px;
+    resize: none;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #6b6b6b;
+        border-radius: 5px;
+    }
+}
+
+.options-modal-reason-input textarea:focus {
+    outline: none;
+}
+
+.options-modal-confirmation {
+    display: flex;
+    gap: 10px;
+    justify-content: center;;
 }
 
 .users-list-table {
