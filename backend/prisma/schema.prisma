@@ -51,6 +51,23 @@ model CharacterDescription {
   @@map("character_descriptions")
 }
 
+model UserRestriction {
+  id                Int @id @default(autoincrement()) @db.UnsignedInt
+  user_id           Int @db.UnsignedInt
+  moderator_id      Int @db.UnsignedInt
+  restriction_type  RestrictionTypes
+  reason            String @db.Text
+  created_at        DateTime @default(now())
+  expires_at        DateTime?
+  revoked_at        DateTime?
+  active            Boolean @default(true)
+
+  user              User @relation("RestrictedUser", fields: [user_id], references: [id])
+  moderator         User @relation("ModeratorUser", fields: [moderator_id], references: [id])
+
+  @@map("user_restrictions")
+}
+
 model UserSession {
   id            Int      @id @default(autoincrement()) @db.UnsignedInt
   user_id       Int      @db.UnsignedInt
@@ -93,23 +110,25 @@ model UserCharacters {
 }
 
 model User {
-  id                  Int           @id @default(autoincrement()) @db.UnsignedInt
-  username            String        @unique
-  email               String        @unique
-  user_key            String        @db.VarChar(255)
-  activation_key      String?       @db.VarChar(255)
-  reset_password_key  String?       @db.VarChar(255)
-  active              Boolean       @default(false)
-  currency            Int           @default(100)
-  level               Int           @default(1)
-  created_at          DateTime      @db.DateTime
-  activated_at        DateTime?     @db.DateTime
-  avatar_url          String?       @db.VarChar(255)
+  id                      Int           @id @default(autoincrement()) @db.UnsignedInt
+  username                String        @unique
+  email                   String        @unique
+  user_key                String        @db.VarChar(255)
+  activation_key          String?       @db.VarChar(255)
+  reset_password_key      String?       @db.VarChar(255)
+  active                  Boolean       @default(false)
+  currency                Int           @default(100)
+  level                   Int           @default(1)
+  created_at              DateTime      @db.DateTime
+  activated_at            DateTime?     @db.DateTime
+  avatar_url              String?       @db.VarChar(255)
 
-  characters         UserCharacters[]
-  user_power         UserPower     @default(Regular)
-  session            UserSession[]
-  unlocks            UserUnlocks[]
+  characters              UserCharacters[]
+  user_power              UserPower     @default(Regular)
+  session                 UserSession[]
+  unlocks                 UserUnlocks[]
+  restrictions            UserRestriction[] @relation("RestrictedUser")
+  moderated_restrictions  UserRestriction[] @relation("ModeratorUser")
 
   @@index([email], map: "email")
   @@index([activation_key], map: "idx_activation")
@@ -130,4 +149,9 @@ enum UnlockTypes {
   Equipment
   Skill
   Story
+}
+
+enum RestrictionTypes {
+  BAN
+  SUSPENSION
 }

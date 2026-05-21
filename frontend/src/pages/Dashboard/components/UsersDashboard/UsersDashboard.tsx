@@ -48,6 +48,13 @@ const UsersDashboard = () => {
         setActiveAction(null);
     }
 
+    const selectedUserObjects = users.filter((user) => selectedUsers.includes(user.id)).map((user) => ({    
+            id: user.id,
+            username: user.username,
+            avatar_url: user.avatar_url
+        }
+    ))
+
     return (
         <>
             <div className={`${styles["users-content"]}`}>
@@ -56,7 +63,7 @@ const UsersDashboard = () => {
                 <UserSuspensionModal
                     open={activeAction === "suspend"}
                     onClose={handleActionClose}
-                    selectedUsers={selectedUsers}
+                    selectedUsers={selectedUserObjects}
                 />
             </div>
         </>

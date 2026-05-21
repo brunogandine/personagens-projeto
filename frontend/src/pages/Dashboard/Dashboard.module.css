@@ -634,3 +634,14 @@
     border: 1px solid #91919141;
 }
 
+.options-modal-custom-duration {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.relative-duration {
+    display: flex;
+    gap: 10px;
+}
+
