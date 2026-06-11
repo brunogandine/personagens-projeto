@@ -1,18 +1,12 @@
-import { Avatar, Button, Modal, Tooltip } from "antd"
-import styles from "../../../Dashboard.module.css"
-import { useState } from "react";
-import { WarningFilled, UserOutlined } from "@ant-design/icons";
-import CustomDurationModal from "./CustomDurationModal";
-import type { CustomDuration } from "../types/punishment";
+import styles from "../../../Dashboard.module.css";
 import dayjs from "dayjs";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
-type SelectedUserPreview = {
-    id: number;
-    username: string;
-    avatar_url: string | null;
-}
+import CustomDurationModal from "./CustomDurationModal";
+import SelectedUsersPreview from "./SelectedUsersPreview";
+import { Button, Modal } from "antd";
+import { useState } from "react";
+import { WarningFilled } from "@ant-design/icons";
+import type { CustomDuration } from "../types/punishment";
+import type { SelectedUserPreview } from "../types/userPreview";
 
 type Props = {
     open: boolean;
@@ -25,6 +19,13 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
     const [action, setAction] = useState<"suspend" | "ban" | null>(null);
     const [duration, setDuration] = useState<number | null>(1);
     const [customDuration, setCustomDuration] = useState<CustomDuration | null>(null);
+    const [reason, setReason] = useState<string>("");
+
+    const trimmedReason = reason.trim();
+
+    const isReasonValid = 
+        trimmedReason.length > 0 &&
+        trimmedReason.length <= 300;
 
     const handleCustomModalOpen = () => {
         setStep("customDuration");
@@ -55,6 +56,7 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
         setAction(null);
         setDuration(1);
         setCustomDuration(null);
+        setReason("");
     }
 
     const handlePunishmentConfirm = async () => {
@@ -74,12 +76,10 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
         const payload = {
             userIds: selectedUsers.map(user => user.id),
             action,
+            reason: reason.trim(),
             expiresAt
         };
     }
-
-    const visibleUsers = selectedUsers.slice(0, 3);
-    const overflowUsers = selectedUsers.length - 3
 
     if(step === "default")
         return (
@@ -91,53 +91,56 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
                         <input type="radio" id="ban" name="action" value="ban" onChange={() => setAction("ban")} checked={action === "ban"} />
                         <label htmlFor="ban">Banir</label>
                     </div>
-                    <div className={`${styles["options-modal-user-list"]}`}>
-                        {visibleUsers.map((user) => (
-                            <Tooltip title={user.username} destroyOnHidden={true}>
-                                <div className={`${styles["users-selected"]}`}>
-                                    <Avatar size={22} style={{flexShrink: "0"}} src={user.avatar_url ? `${BASE_URL}${user.avatar_url}` : undefined} icon={<UserOutlined ></UserOutlined>} />
-                                    <div className={`${styles["suspension-user-name"]}`}>
-                                        {user.username}
-                                    </div>
-                                </div>
-                            </Tooltip>
-                        ))}
-                        {overflowUsers > 0 && (
-                            <div className={`${styles["users-overflow"]}`}>
-                                +{overflowUsers} Selecionados
-                            </div>
-                        )}
-                    </div>
+                    <SelectedUsersPreview users={selectedUsers} maxVisible={3} />
                     {action === "suspend" && (
-                        <div className={`${styles["options-modal-suspension-duration"]}`}>
-                            <span style={{fontWeight: "bold"}}>Duração da Suspensão: </span>
-                            <div className={`${styles["suspension-duration-options"]}`}>
-                                <input type="radio" id="duration-1" name="duration" value="1" checked={duration === 1} onChange={() => handlePreset(1)} />
-                                <label htmlFor="duration-1" className={duration === 1 ? `${styles["selected"]}` : ""}>1 dia</label>
-                                <input type="radio" id="duration-7" name="duration" value="7" checked={duration === 7} onChange={() => handlePreset(7)} />
-                                <label htmlFor="duration-7" className={duration === 7 ? `${styles["selected"]}` : ""}>7 dias</label>
-                                <input type="radio" id="duration-15" name="duration" value="15" checked={duration === 15} onChange={() => handlePreset(15)} />
-                                <label htmlFor="duration-15" className={duration === 15 ? `${styles["selected"]}` : ""}>15 dias</label>
-                                <input type="radio" id="duration-30" name="duration" value="30" checked={duration === 30} onChange={() => handlePreset(30)} />
-                                <label htmlFor="duration-30" className={duration === 30 ? `${styles["selected"]}` : ""}>30 dias</label>
+                        <>
+                            <div className={`${styles["options-modal-suspension-duration"]}`}>
+                                <span style={{fontWeight: "bold"}}>Duração da Suspensão: </span>
+                                <div className={`${styles["suspension-duration-options"]}`}>
+                                    <input type="radio" id="duration-1" name="duration" value="1" checked={duration === 1} onChange={() => handlePreset(1)} />
+                                    <label htmlFor="duration-1" className={`item-default item-select ${duration === 1 ? "selected" : ""}`}>1 dia</label>
+                                    <input type="radio" id="duration-7" name="duration" value="7" checked={duration === 7} onChange={() => handlePreset(7)} />
+                                    <label htmlFor="duration-7" className={`item-default item-select ${duration === 7 ? "selected" : ""}`}>7 dias</label>
+                                    <input type="radio" id="duration-15" name="duration" value="15" checked={duration === 15} onChange={() => handlePreset(15)} />
+                                    <label htmlFor="duration-15" className={`item-default item-select ${duration === 15 ? "selected" : ""}`}>15 dias</label>
+                                    <input type="radio" id="duration-30" name="duration" value="30" checked={duration === 30} onChange={() => handlePreset(30)} />
+                                    <label htmlFor="duration-30" className={`item-default item-select ${duration === 30 ? "selected" : ""}`}>30 dias</label>
+                                </div>
+                                {customDuration ? (
+                                    <span className={`item-default item-select ${customDuration ? "selected" : ""}`} onClick={handleCustomModalOpen}>Editar Duração</span> 
+                                ) : (
+                                    <span className={`item-default item-select`} onClick={handleCustomModalOpen}>Personalizar</span>
+                                )}
                             </div>
-                            <span className={`${styles["suspension-duration-custom"]}`} onClick={handleCustomModalOpen}>Personalizar</span>
-                        </div>  
+                            <span className={`${styles["options-modal-suspension-estimated-end"]}`}>Estimativa de Término: <strong>{customDuration 
+                                ? dayjs(customDuration?.expiresAt).format("DD/MM/YYYY") 
+                                : duration !== null 
+                                    ? dayjs().add(duration, "day").format("DD/MM/YYYY") 
+                                    : "-"
+                                }</strong>
+                            </span>
+                        </>
                     )}
                     {action === "ban" && (
                         <div className={`${styles["options-modal-ban-default"]}`}>
                             <span style={{fontWeight: "bold"}}><WarningFilled style={{color: "yellow"}}/> Esta ação é permanente até reversão manual.</span>
                         </div>
                     )}
-
                     {action && (
                         <>
                             <div className={`${styles["options-modal-reason-input"]}`}>
                                 <label htmlFor="reason">Motivo: </label>
-                                <textarea name="reason"/>
+                                <textarea id="reason" name="reason" value={reason} onChange={(e) => setReason(e.target.value)} />
+                                <div className={`reason-footer`}>
+                                    <span 
+                                        className={`${styles["max-length-reason"]} ${trimmedReason.length > 0 ? "visible" : ""} ${trimmedReason.length >= 300 ? "error-color" : trimmedReason.length >= 250 ? "warning-color" : ""}`}
+                                    >
+                                        {trimmedReason.length}/300
+                                    </span>
+                                </div>
                             </div>
                             <div className={`${styles["options-modal-confirmation"]}`}>
-                                <Button type="primary" className="btn-default danger-btn" onClick={handlePunishmentConfirm} >
+                                <Button type="primary" className="btn-default danger-btn" onClick={handlePunishmentConfirm} disabled={!isReasonValid} >
                                     Aplicar Punição
                                 </Button>
                                 <Button type="primary" className="btn-default cancel-btn" onClick={handleClose}>
