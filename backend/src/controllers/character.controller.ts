@@ -11,6 +11,16 @@ class CharacterController {
             return res.status(500).json({message: "Erro Interno."})
         }
     }
+
+    getAll: RequestHandler = async (req, res) => {
+        try {
+            const characters = await CharacterService.getAllCharacters();
+
+            return res.status(200).json(characters);
+        } catch(err) {
+            return res.status(500).json({message: "Erro Interno."})
+        }
+    }
 }
 
 export default new CharacterController();

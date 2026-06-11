@@ -7,6 +7,7 @@ import { Request } from "@/services/apiClient";
 import type { UserAdmin } from "@/types/user";
 import type { UserAction } from "@/types/userActions";
 import UserSuspensionModal from "./components/UserSuspensionModal";
+import UserEditModal from "./components/UserEditModal";
 
 const UsersDashboard = () => {
     const { user } = useAuth();
@@ -51,7 +52,10 @@ const UsersDashboard = () => {
     const selectedUserObjects = users.filter((user) => selectedUsers.includes(user.id)).map((user) => ({    
             id: user.id,
             username: user.username,
-            avatar_url: user.avatar_url
+            avatar_url: user.avatar_url,
+            level: user.level,
+            currency: user.currency,
+            active: user.active
         }
     ))
 
@@ -62,6 +66,11 @@ const UsersDashboard = () => {
                 <UsersPagination page={page} totalPages={totalPages} onPageChange={setPage}/>
                 <UserSuspensionModal
                     open={activeAction === "suspend"}
+                    onClose={handleActionClose}
+                    selectedUsers={selectedUserObjects}
+                />
+                <UserEditModal 
+                    open={activeAction === "edit"} 
                     onClose={handleActionClose}
                     selectedUsers={selectedUserObjects}
                 />

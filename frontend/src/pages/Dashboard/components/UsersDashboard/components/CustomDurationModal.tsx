@@ -66,14 +66,14 @@ const CustomDurationModal = ({open, onClose, onConfirm}: Props) => {
                 <div className={`${styles["options-modal-custom-duration"]}`}>
                     <div className={`${styles["relative-duration"]}`}>
                         <InputNumber 
-                            className={`input-default ${mode !== "relative" ? "input-disabled" : ""}`} 
+                            className={`field-default input-default ${mode !== "relative" ? "field-default-disabled" : ""}`} 
                             value={durationValue} 
                             onChange={(value) => setDurationValue(value ?? 1)} 
                             min={1}
                             disabled={mode !== "relative"} 
                         />
                         <Select 
-                            className={`select-default ${mode !== "relative" ? "select-disabled" : ""}`} 
+                            className={`field-default select-default ${mode !== "relative" ? "field-default-disabled" : ""}`} 
                             classNames={{popup: { root: "select-default-popup"} }} 
                             value={durationUnit} 
                             onChange={(value) => setDurationUnit(value ?? "days")} 
@@ -88,7 +88,9 @@ const CustomDurationModal = ({open, onClose, onConfirm}: Props) => {
                         />
                     </div>
                     <div className={`${styles["specific-duration"]}`}>
-                        <DatePicker 
+                        <DatePicker
+                            className={`field-default ${mode !== "specific" ? "field-default-disabled" : ""}`} 
+                            classNames={{ root: ``}}
                             showTime 
                             disabled={mode !== "specific"} 
                             disabledDate={(current) => current && current < dayjs().startOf("day")}

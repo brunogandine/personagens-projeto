@@ -14,11 +14,15 @@ class CharacterModel {
     }
 
     delete = async (id: number) => {
-        return prisma.character.delete({where: { id }});
+        return prisma.character.delete({
+            where: { id }
+        });
     }
 
     findById = async (id: number) => {
-        return prisma.character.findUnique({where: { id }});
+        return prisma.character.findUnique({
+            where: { id }
+        });
     }
 
     getAll = async () => {

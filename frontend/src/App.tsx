@@ -10,6 +10,7 @@ import { RoleRoute } from "./routes/guards/RoleRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import DashboardOverview from "./pages/Dashboard/components/DashboardOverview/DashboardOverview";
 import UsersDashboard from "./pages/Dashboard/components/UsersDashboard/UsersDashboard";
+import CharactersDashboard from "./pages/Dashboard/components/CharactersDashboard/CharactersDashboard";
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
               <Route path='/dashboard' element={<Dashboard />}>
                 <Route index element={<DashboardOverview />} />
                 <Route path="users" element={<UsersDashboard />} />
-                <Route path="characters" />
+                <Route path="characters" element={<CharactersDashboard />} />
                 <Route path="settings" />
               </Route>
             </Route>
