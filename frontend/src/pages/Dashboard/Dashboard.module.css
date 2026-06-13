@@ -684,6 +684,30 @@
     }
 }
 
+.characters-options {
+    display: flex;
+    gap: 5px;
+}
+
+.character-option-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    background-color: var(--item-bg-default);
+    width: 140px;
+    height: 140px;
+    border-radius: 5px;
+    outline: 2px dashed var(--text-color-primary);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: var(--bg-default);
+    }
+}
+
 .character-list-container {
     display: grid;
     justify-content: center;
@@ -735,5 +759,10 @@
     &:focus::placeholder {
         opacity: 1;
     }
+}
+
+.characters-options {
+    display: flex;
+    gap: 5px;
 }
 

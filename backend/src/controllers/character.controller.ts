@@ -14,9 +14,14 @@ class CharacterController {
 
     getAll: RequestHandler = async (req, res) => {
         try {
-            const characters = await CharacterService.getAllCharacters();
+            const { page, search } = req.query;
 
-            return res.status(200).json(characters);
+            const result = await CharacterService.getCharacters({
+                page: Number(page),
+                search: search as string
+            });
+
+            return res.status(200).json(result);
         } catch(err) {
             return res.status(500).json({message: "Erro Interno."})
         }

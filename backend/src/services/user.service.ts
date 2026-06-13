@@ -179,7 +179,7 @@ class UserService {
         search = "",
         sortBy = "created_at",
         order = "asc"
-    } : GetParams) {
+    }: GetParams) {
         const MAX_PAGES = 10000;
         const allowedLimits = [10, 25, 50, 100];
         const sortByFields = ["id", "created_at", "username", "is_active", "is_suspended", "is_suspended_temp", "is_super_user", "currency", "level"];

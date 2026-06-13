@@ -6,6 +6,7 @@
 
     --item-bg-default: #8787873B;
 
+    --text-color-default: #FFFFFF;
     --text-color-primary: #C1C1C1;
     --text-color-primary-hover: #818181;
 
@@ -225,7 +226,7 @@ img {
 }
 
 .container-title {
-    color: var(--text-color-primary);
+    color: var(--text-color-default);
     font-size: 18px;
     font-weight: bold;
     margin: 12px 0 12px 0;
