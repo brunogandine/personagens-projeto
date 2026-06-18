@@ -7,10 +7,12 @@ class CharacterService {
         const anime = await animeModel.findById(data.anime_id);
 
         if(!anime) {
-            throw new Error("Anime fornecido não existe.");
+            throw new Error("Anime fornecido não existente.");
         };
 
-        return characterModel.create(data);
+        await characterModel.create(data);
+
+        return {ok: true, message: "Personagem criado com sucesso!"};
     }
 
     async getCharacters({

@@ -39,6 +39,8 @@ class AnimeModel {
         page = 1,
         search = ""
     }: GetAnimeParams) => {
+        const PER_PAGE = 6;
+
         const where: Prisma.AnimeWhereInput = search
             ? {
                 description: {
@@ -58,19 +60,23 @@ class AnimeModel {
                 }
             },
             where,
-            skip: (page - 1) * 6,
-            take: 6,
+            skip: (page - 1) * PER_PAGE,
+            take: PER_PAGE,
             orderBy: {
                 id: "asc"
             }
         })
 
-        const total = await prisma.anime.count();
-        const totalPages = Math.ceil(total / 6);
+        const total = await prisma.anime.count({
+            where
+        });
+        const totalPages = Math.ceil(total / PER_PAGE);
 
         return {
             animes,
-            totalPages
+            meta: {
+                totalPages
+            }
         }
     }
 

@@ -5,6 +5,7 @@ const routeTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/dashboard/users": "Dashboard / Usuários",
   "/dashboard/characters": "Dashboard / Personagens",
+  "/dashboard/characters/creation": "Dashboard / Personagens / Criar",
   "/dashboard/settings": "Dashboard / Configurações",
 };
 

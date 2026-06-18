@@ -5,6 +5,7 @@ export type RequestOptions = {
     data?: unknown;
     auth?: boolean;
     headers?: Record<string, string>;
+    query?: Record<string, string | number | boolean>;
 };
 
 export type ApiResponse<T> = {
@@ -18,7 +19,8 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
         method = "GET",
         data,
         auth = true,
-        headers = {}
+        headers = {},
+        query = {}
     } = options;
 
     const config: RequestInit = {
@@ -40,7 +42,19 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
         config.body = JSON.stringify(data);
     };
 
-    const res = await fetch(`${BASE_API_URL}${route}`, config);
+    let url = `${BASE_API_URL}${route}`;
+
+    if(query) {
+        const params = new URLSearchParams();
+
+        Object.entries(query).forEach(([key, value]) => {
+            params.append(key, String(value));
+        });
+
+        url += `?${params.toString()}`;
+    }
+
+    const res = await fetch(url, config);
 
     if(res.status === 401  && auth){
         window.dispatchEvent(new Event("unauthorized"));

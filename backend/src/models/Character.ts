@@ -45,6 +45,8 @@ class CharacterModel {
         page = 1,
         search = "",
     }: GetCharactersParams) => {
+        const PER_PAGE = 15;
+
         const where: Prisma.CharacterWhereInput = search 
         ? {
             description: {
@@ -64,15 +66,17 @@ class CharacterModel {
                 }
             },
             where,
-            skip: (page - 1) * 15,
-            take: 15,
+            skip: (page - 1) * PER_PAGE,
+            take: PER_PAGE,
             orderBy: {
                 id: "asc"
             }
         });
 
-        const total = await prisma.character.count({ where });
-        const totalPages = Math.ceil(total / 15);
+        const total = await prisma.character.count({ 
+            where 
+        });
+        const totalPages = Math.ceil(total / PER_PAGE);
 
         return {
             data: characters,
