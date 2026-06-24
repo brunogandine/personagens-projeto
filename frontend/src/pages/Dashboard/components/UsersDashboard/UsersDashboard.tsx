@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "../../Dashboard.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import UsersList from "./UsersList"
-import UsersPagination from "./UsersPagination";
+import UsersPagination from "../../shared/DashboardPagination";
 import { Request } from "@/services/apiClient";
 import type { UserAdmin } from "@/types/user";
 import type { UserAction } from "@/types/userActions";
@@ -63,7 +63,7 @@ const UsersDashboard = () => {
         <>
             <div className={`${styles["users-content"]}`}>
                 <UsersList users={users} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} onAction={handleSelectedAction} />
-                <UsersPagination page={page} totalPages={totalPages} onPageChange={setPage}/>
+                <UsersPagination page={page} totalPages={totalPages} onPageChange={setPage} range={{start: 5, end: 4}}/>
                 <UserSuspensionModal
                     open={activeAction === "suspend"}
                     onClose={handleActionClose}

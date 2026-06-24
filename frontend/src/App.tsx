@@ -10,9 +10,9 @@ import { RoleRoute } from "./routes/guards/RoleRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import DashboardOverview from "./pages/Dashboard/components/DashboardOverview/DashboardOverview";
 import UsersDashboard from "./pages/Dashboard/components/UsersDashboard/UsersDashboard";
-import CharactersDashboard from "./pages/Dashboard/components/CharactersDashboard/CharactersDashboard";
+import CharactersDashboard from "./pages/Dashboard/components/CharactersDashboard/ContentDashboard";
 import CharacterCreation from "./pages/Dashboard/components/CharactersDashboard/CharacterCreation/CharacterCreation";
-import CharactersList from "./pages/Dashboard/components/CharactersDashboard/components/CharactersList/CharactersList";
+import CharactersList from "./pages/Dashboard/components/CharactersDashboard/components/ContentMain/ContentMain";
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
               <Route path='/dashboard' element={<Dashboard />}>
                 <Route index element={<DashboardOverview />} />
                 <Route path="users" element={<UsersDashboard />} />
-                <Route path="characters" element={<CharactersDashboard />}>
+                <Route path="content" element={<CharactersDashboard />}>
                   <Route index element={<CharactersList />} />
                   <Route path="creation" element={<CharacterCreation />} />
                   {/* <Route path="edit"element={<CharacterEdit />} /> */}

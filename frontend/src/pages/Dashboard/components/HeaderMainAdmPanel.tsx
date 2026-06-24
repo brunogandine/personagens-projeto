@@ -4,8 +4,11 @@ import styles from "../Dashboard.module.css"
 const routeTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/dashboard/users": "Dashboard / Usuários",
-  "/dashboard/characters": "Dashboard / Personagens",
-  "/dashboard/characters/creation": "Dashboard / Personagens / Criar",
+  "/dashboard/content": "Dashboard / Conteúdo",
+  "/dashboard/content/anime/creation": "Dashboard / Conteúdo / Animes / Criar",
+  "/dashboard/content/anime/edit": "Dashboard / Conteúdo / Animes / Editar",
+  "/dashboard/content/character/creation": "Dashboard / Conteúdo / Personagens / Criar",
+  "/dashboard/content/character/edit": "Dashboard / Conteúdo / Personagens / Editar",
   "/dashboard/settings": "Dashboard / Configurações",
 };
 

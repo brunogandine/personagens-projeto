@@ -29,3 +29,11 @@ dist-ssr
 .env.development
 .env.production
 .env.test
+
+# Assets
+
+public/assets/images/cards/*
+public/assets/images/animes/*
+
+!public/assets/images/cards/.gitkeep
+!public/assets/images/animes/.gitkeep

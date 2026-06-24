@@ -10,52 +10,29 @@ datasource db {
 model Anime {
   id            Int                @id @default(autoincrement()) @db.UnsignedInt
   active        Boolean            @default(false)
+  name          String             @db.VarChar(255)
+  description   String?            @db.Text
   characters    Character[]
-  description   AnimeDescription[]
 
   @@map("animes")
 }
-
-model AnimeDescription {
-  id       Int        @id @default(autoincrement()) @db.UnsignedInt
-  anime_id Int        @db.UnsignedInt
-  name     String     @db.VarChar(255)
-  description String  @db.Text
-  anime    Anime      @relation(fields: [anime_id], references: [id], onDelete: Cascade)
-
-  @@index([anime_id], map: "anime_descriptions_anime_id_fkey")
-  @@map("anime_descriptions")
-}
-
 model Character {
   id            Int                    @id @default(autoincrement()) @db.UnsignedInt
   anime_id      Int                    @db.UnsignedInt
+  name          String                 @db.VarChar(255)
+  description   String?                @db.Text
   currency_lock Boolean                @default(false)
   active        Boolean                @default(false)
+  anime_active  Boolean                @default(false)
   attr_hp       Int?                   @default(0)
   attr_atk      Int?                   @default(0)
   attr_def      Int?                   @default(0)
 
   anime         Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
 
-  description   CharacterDescription[]
-
   @@index([anime_id], map: "idx_anime")
   @@map("characters")
 }
-
-model CharacterDescription {
-  id           Int        @id @default(autoincrement()) @db.UnsignedInt
-  character_id Int        @db.UnsignedInt
-  name         String     @db.VarChar(255)
-  description  String     @db.Text
-  character    Character  @relation(fields: [character_id], references: [id], onDelete: Cascade)
-
-  @@index([character_id], map: "idx_character_id")
-  @@index([name], map: "idx_character_name")
-  @@map("character_descriptions")
-}
-
 model UserRestriction {
   id                Int @id @default(autoincrement()) @db.UnsignedInt
   user_id           Int @db.UnsignedInt

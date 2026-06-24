@@ -26,7 +26,7 @@ class AnimeService {
         const result = await animeModel.getAnimes({
             page: safePages,
             search
-        })
+        });
 
         return result;
     };

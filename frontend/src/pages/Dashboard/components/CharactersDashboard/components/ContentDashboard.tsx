@@ -5,12 +5,12 @@ type Props = {
     children: ReactNode;
 }
 
-const CharacterDashboardContent = ({children}:  Props) => {
+const ContentDashboardComponent = ({children}:  Props) => {
     return (
-        <div className={`${styles["characters-content"]}`}>
+        <div className={`${styles["content-main"]}`}>
             {children}
         </div>
     )
 }
 
-export default CharacterDashboardContent;
+export default ContentDashboardComponent;

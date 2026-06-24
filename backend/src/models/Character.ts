@@ -8,17 +8,14 @@ class CharacterModel {
         return prisma.character.create({ 
             data: {
                 anime_id: data.anime_id,
+                name: data.name,
+                description: data.description,
                 currency_lock: data.currency_lock ?? false,
                 active: data.active ?? false,
                 attr_hp: data.attr_hp,
                 attr_atk: data.attr_atk,
                 attr_def: data.attr_def,
-                description: {
-                    create: {
-                        name: data.name,
-                        description: data.description
-                    }
-                }
+
             } });
     }
 
@@ -49,22 +46,10 @@ class CharacterModel {
 
         const where: Prisma.CharacterWhereInput = search 
         ? {
-            description: {
-                some: {
-                    name: { contains: search }
-                }
-            }
+            name: { contains: search }
         }
         : {};
         const characters = await prisma.character.findMany({
-            include: {
-                description: {
-                    select: {
-                        name: true,
-                        description: true,
-                    }
-                }
-            },
             where,
             skip: (page - 1) * PER_PAGE,
             take: PER_PAGE,

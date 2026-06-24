@@ -25,7 +25,7 @@ class AnimeController {
             const { page, search } = req.query;
 
             const result = await AnimeService.getAnimes({
-                page: Number(page),
+                page: Number(page ?? 1),
                 search: search as string
             })
 

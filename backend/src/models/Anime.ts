@@ -7,12 +7,8 @@ class AnimeModel {
         return prisma.anime.create({
             data: {
                 active: data.active,
-                description: {
-                    create: {
-                        name: data.name,
-                        description: data.description
-                    }
-                }
+                name: data.name,
+                description: data.description
             }
         })
     }
@@ -26,11 +22,7 @@ class AnimeModel {
     findByName = async (name: string) => {
         return prisma.anime.findFirst({
             where: {
-                description: {
-                    some: {
-                        name: { equals: name}
-                    }
-                }
+                name
             }
         })
     }
@@ -43,22 +35,13 @@ class AnimeModel {
 
         const where: Prisma.AnimeWhereInput = search
             ? {
-                description: {
-                    some: {
-                        name: {contains: search}
-                    }
+                name: {
+                    contains: search
                 }
             }
             : {}
 
         const animes = await prisma.anime.findMany({
-            include: {
-                description: {
-                    select: {
-                        name: true,
-                    }
-                }
-            },
             where,
             skip: (page - 1) * PER_PAGE,
             take: PER_PAGE,
@@ -71,9 +54,9 @@ class AnimeModel {
             where
         });
         const totalPages = Math.ceil(total / PER_PAGE);
-
+        
         return {
-            animes,
+            data: animes,
             meta: {
                 totalPages
             }

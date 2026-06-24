@@ -21,7 +21,7 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const load = async () => {
+        const loadUser = async () => {
             const data = await getMe();
 
             if(!data.success) {
@@ -35,7 +35,7 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
             setLoading(false);
         }
 
-        load();
+        loadUser();
     }, []);
 
     useEffect(() => {
@@ -93,6 +93,7 @@ const login = async (payload: {email: string, user_key: string}) => {
             }
 
             setUser(null);
+
             return { success: true };
         } catch(err) {
             return { success: false, message: "Erro de rede."}
@@ -108,7 +109,9 @@ const login = async (payload: {email: string, user_key: string}) => {
 
 export const useAuth = () => {
     const ctx = useContext(AuthContext);
-    if(!ctx) throw new Error("useAuth must be used inside AuthProvider");
+    
+    if(!ctx) 
+        throw new Error("useAuth must be used inside AuthProvider");
 
     return ctx;
 }

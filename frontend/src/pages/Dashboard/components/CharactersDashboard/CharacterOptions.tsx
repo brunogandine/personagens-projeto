@@ -2,29 +2,30 @@ import { NavLink } from "react-router-dom";
 import styles from "../../Dashboard.module.css";
 import { PlusOutlined, DeleteFilled, EditFilled } from "@ant-design/icons";
 
-const BASE_CHARACTER_DASHBOARD_URL = "/dashboard/characters";
+type Props = {
+    type: "animes" | "characters"
+}
 
-const CharacterOptions = () => {
+const ContentOptions = ({type}: Props) => {
+    const BASE_DASHBOARD_URL = `/dashboard/${type}`;
+
     return (
-        <div className={`${styles["characters-options"]}`}>
-            <NavLink to={`${BASE_CHARACTER_DASHBOARD_URL}/creation`}>
-                <div className={`${styles["character-option-item"]}`}>
-                    <PlusOutlined style={{ fontSize: 36, lineHeight: '140px' }} />
-                    <span style={{ fontSize: 14, fontWeight: "bold"}}>Novo Personagem</span>
+        <div className={`${styles["content-options"]}`}>
+            <NavLink to={`${BASE_DASHBOARD_URL}/creation`}>
+                <div className={`${styles["content-option-item"]}`}>
+                    <PlusOutlined style={{ fontSize: 30, lineHeight: '50px' }} />
                 </div>
             </NavLink>
-            <NavLink to={`${BASE_CHARACTER_DASHBOARD_URL}/edit`}>
-                <div className={`${styles["character-option-item"]}`}>
-                    <EditFilled style={{ fontSize: 36, lineHeight: '140px' }} />
-                    <span style={{ fontSize: 14, fontWeight: "bold"}}>Editar Personagem</span>
+            <NavLink to={`${BASE_DASHBOARD_URL}/edit`}>
+                <div className={`${styles["content-option-item"]}`}>
+                    <EditFilled style={{ fontSize: 30, lineHeight: '50px' }} />
                 </div>
             </NavLink>
-            <div className={`${styles["character-option-item"]}`}>
-                <DeleteFilled style={{ fontSize: 36, lineHeight: '140px' }} />
-                <span style={{ fontSize: 14, fontWeight: "bold"}}>Deletar Personagem</span>
+            <div className={`${styles["content-option-item"]}`}>
+                <DeleteFilled style={{ fontSize: 36, lineHeight: '50px' }} />
             </div>
         </div>
     );
 };
 
-export default CharacterOptions;
+export default ContentOptions;

@@ -14,7 +14,7 @@ export type ApiResponse<T> = {
     data: T,
 }
 
-const call = async <T = any>(route: string, options: RequestOptions): Promise<ApiResponse<T> | null> => {
+const call = async <T = any>(route: string, options: RequestOptions): Promise<ApiResponse<T>> => {
     const {
         method = "GET",
         data,
@@ -44,7 +44,7 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
 
     let url = `${BASE_API_URL}${route}`;
 
-    if(query) {
+    if(Object.keys(query).length > 0) {
         const params = new URLSearchParams();
 
         Object.entries(query).forEach(([key, value]) => {
@@ -59,7 +59,7 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
     if(res.status === 401  && auth){
         window.dispatchEvent(new Event("unauthorized"));
 
-        return null;
+        throw new Error("Unauthorized")
     }
 
     const json = await res.json();
