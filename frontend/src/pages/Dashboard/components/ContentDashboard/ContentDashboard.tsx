@@ -1,11 +1,11 @@
-import CharacterDashboardContent from "./components/ContentDashboard";
+import ContentDashboardContainer from "./components/ContentDashboardContainer";
 import { Outlet } from "react-router-dom";
 
 const ContentDashboard = () => {
     return (
-        <CharacterDashboardContent >
+        <ContentDashboardContainer >
             <Outlet />   
-        </CharacterDashboardContent>
+        </ContentDashboardContainer>
     )
 }
 

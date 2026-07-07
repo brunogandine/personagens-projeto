@@ -1,18 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-//Routes Import
 import Layout from "./components/layout/Layout";
 import { Home } from "./pages/Home";
-import { AuthContextProvider } from "./contexts/AuthContext";
-import { AuthRoute } from "./routes/guards/AuthRoute";
 import Profile from "./pages/Profile/Profile";
-import { RoleRoute } from "./routes/guards/RoleRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import DashboardOverview from "./pages/Dashboard/components/DashboardOverview/DashboardOverview";
 import UsersDashboard from "./pages/Dashboard/components/UsersDashboard/UsersDashboard";
-import CharactersDashboard from "./pages/Dashboard/components/CharactersDashboard/ContentDashboard";
-import CharacterCreation from "./pages/Dashboard/components/CharactersDashboard/CharacterCreation/CharacterCreation";
-import CharactersList from "./pages/Dashboard/components/CharactersDashboard/components/ContentMain/ContentMain";
+import ContentDashboard from "./pages/Dashboard/components/ContentDashboard/ContentDashboard";
+import CharacterCreation from "./pages/Dashboard/components/ContentDashboard/components/CharacterCreation/CharacterCreation";
+import ContentMain from "./pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain";
+import { AuthContextProvider } from "./contexts/AuthContext";
+import { AuthRoute } from "./routes/guards/AuthRoute";
+import { RoleRoute } from "./routes/guards/RoleRoute";
 
 function App() {
   return (
@@ -30,9 +29,10 @@ function App() {
               <Route path='/dashboard' element={<Dashboard />}>
                 <Route index element={<DashboardOverview />} />
                 <Route path="users" element={<UsersDashboard />} />
-                <Route path="content" element={<CharactersDashboard />}>
-                  <Route index element={<CharactersList />} />
-                  <Route path="creation" element={<CharacterCreation />} />
+                <Route path="content" element={<ContentDashboard />}>
+                  <Route index element={<ContentMain />} />
+                  <Route path="characters/create" element={<CharacterCreation />} />
+                  {/* <Route path="animes/creation" element={<AnimeCreation />} /> */}
                   {/* <Route path="edit"element={<CharacterEdit />} /> */}
                 </Route>
                 <Route path="settings" />

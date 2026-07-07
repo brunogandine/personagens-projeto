@@ -234,6 +234,7 @@ img {
     font-size: 18px;
     font-weight: bold;
     margin: 12px 0 12px 0;
+    padding-left: 10px;
 }
 
 .field-default {
@@ -290,6 +291,22 @@ img {
         }
 
         &.ant-picker-disabled:hover {
+            background-color: var(--field-bg-default-disabled);
+        }
+    }
+
+    &.ant-input-outlined.ant-input-disabled {
+        background-color: var(--field-bg-default-disabled);
+
+        &.ant-input::placeholder {
+            color: var(--field-text-color-disabled);
+        }
+
+        &.ant-input {
+            color: var(--ant-color-text-disabled);
+        }
+
+        &.ant-input-disabled:hover {
             background-color: var(--field-bg-default-disabled);
         }
     }

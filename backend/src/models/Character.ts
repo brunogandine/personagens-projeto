@@ -42,7 +42,7 @@ class CharacterModel {
         page = 1,
         search = "",
     }: GetCharactersParams) => {
-        const PER_PAGE = 15;
+        const PER_PAGE = 19;
 
         const where: Prisma.CharacterWhereInput = search 
         ? {

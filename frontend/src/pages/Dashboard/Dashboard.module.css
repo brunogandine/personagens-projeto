@@ -1,3 +1,10 @@
+.dashboard-variables {
+    --character--item-width: 140px;
+    --character--item-height: 139px;
+    --anime--item-width: 66px;
+    --anime--item-height: 65px;
+}
+
 .dashboard {
     display: flex;
     align-self: center;
@@ -726,7 +733,7 @@
     display: grid;
     gap: 5px;
     grid-template-columns: repeat(auto-fit, 66px);
-    max-width: calc(7 * 66px);
+    max-width: calc(8 * 66px);
     align-self: center;
 }
 
@@ -756,17 +763,25 @@
     justify-content: center;
     align-self: center;
     align-items: center;
-    background-color: var(--item-bg-default);
-    width: 50px;
-    height: 50px;
+    background-color: var(--bg-default);
     border-radius: 5px;
     outline: 2px dashed var(--text-color-primary);
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: var(--bg-default);
+        background-color: var(--item-bg-default);
     }
+}
+
+.content-option-item.anime {
+    width: var(--anime--item-width);
+    height: var(--anime--item-height);
+}
+
+.content-option-item.character {
+    width: var(--character--item-width);
+    height: var(--character--item-height);
 }
 
 .content-list-items-container {
@@ -783,6 +798,10 @@
 .content-list-item img {
     opacity: 0.5;
     transition: opacity 0.3s ease;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .content-checkbox-custom {
@@ -796,4 +815,56 @@
 .content-list-item.selected:not(:global(.inactive)) img,
 .content-checkbox-custom.selected {
     opacity: 1;
+}
+
+.content-form-default {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-default);
+    width: 90%;
+    border-radius: 6px;
+}
+
+.character-creation-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    width: 90%;
+}
+
+.anime-selection-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.content-form-top-container {
+    display: flex;
+    width: 100%;
+}
+
+.form-title {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.anime-select-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    align-self: center;
+}
+
+.content-form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.content-form-content.open {
+    padding: 10px 0 10px 0;
+    max-height: 100%;
 }

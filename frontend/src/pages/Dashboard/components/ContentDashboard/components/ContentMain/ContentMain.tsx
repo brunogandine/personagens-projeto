@@ -1,13 +1,17 @@
-import { useAuth } from "@/contexts/AuthContext";
-import { useState, useEffect } from "react";
-import type { AnimeItem, AnimeItemViewModel, CharacterItem, CharacterItemViewModel } from "../../types/content.types";
-import { Request } from "@/services/apiClient";
-import ContentOptions from "../../CharacterOptions";
 import styles from "../../../../Dashboard.module.css";
 import ContentItemComponent from "../../ContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
+import ContentOptions from "../../ContentOptions";
+import { PlusOutlined } from "@ant-design/icons";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
+import { Request } from "@/services/apiClient";
+import type { AnimeItem, AnimeItemViewModel, CharacterItem, CharacterItemViewModel } from "../../types/content.types";
 
 const ContentMain = () => {
+    const BASE_DASHBOARD_CONTENT_URL = `/dashboard/content`;
+
     const [charactersPage, setCharactersPage] = useState(1);
     const [animesPage, setAnimesPage] = useState(1);
 
@@ -139,6 +143,13 @@ const ContentMain = () => {
                 <div className={`${styles["content-list-container"]}`}>
                     <ContentOptions type={"animes"} />
                     <div className={`container-default ${styles["list-content"]} ${animes.length > 0 ? styles["anime"] : styles["no-results"]}`}>
+                        <div className={`${styles["content-list-item"]}`} >
+                            <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/animes/creation`}>
+                                <div className={`${styles["content-option-item"]} ${styles["anime"]}`}>
+                                    <PlusOutlined style={{fontSize: "30px"}}/>
+                                </div>
+                            </NavLink>
+                        </div>
                         {animesItems.length > 0 
                             ? animesItems.map((anime) => (
                                 <>
@@ -183,6 +194,11 @@ const ContentMain = () => {
                 <div className={`${styles["content-list-container"]}`}>
                     <ContentOptions type={"characters"} />
                     <div className={`container-default ${styles["list-content"]} ${characters.length > 0 ? styles["character"] : styles["no-results"]}`}>
+                        <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
+                            <div className={`${styles["content-option-item"]} ${styles["character"]}`}>
+                                <PlusOutlined style={{fontSize: "40px"}}/>
+                            </div>
+                        </NavLink>
                         {charactersItems.length > 0 
                             ? charactersItems.map((character) => (
                                     <ContentItemComponent 
