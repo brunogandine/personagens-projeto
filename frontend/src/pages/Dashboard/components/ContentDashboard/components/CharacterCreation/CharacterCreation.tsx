@@ -6,6 +6,7 @@ import type { AnimeItem, AnimeItemViewModel } from "../../types/content.types";
 import ContentItemComponent from "../../ContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import { Button, Input } from "antd";
+import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 
 const CharacterCreation = () => {
     const [animeFormToggle, setAnimeFormToggle] = useState(true);
@@ -20,6 +21,9 @@ const CharacterCreation = () => {
     
     const [confirmedAnime, setConfirmedAnime] = useState<number[]>([]);
     const [selectedAnime, setSelectedAnime] = useState<number[]>([]);
+
+    const [activeCharacter, setActiveCharacter] = useState(false);
+    const [currencyLockCharacter, setCurrencyLockCharacter] = useState(false);
 
     const loadAnimes = async () => {
         try {
@@ -155,10 +159,37 @@ const CharacterCreation = () => {
                         }
                     </div>
                     <div className={`${styles["content-form-content"]} ${characterFormToggle ? styles["open"] : ""}`} >
-                        {/* {characterFormToggle 
-                            ? (<UpOutlined style={{fontSize: "20px", paddingRight: "10px", cursor: "pointer"}} onClick={() => setCharacterFormToggle(false)}/>) 
-                            : (<DownOutlined style={{fontSize: "20px", paddingRight: "10px", cursor: "pointer"}} onClick={() => setCharacterFormToggle(true)}/>)
-                        } */}
+                        <form className={`form-default ${styles["character-form"]}`}>
+                            <fieldset className={`${styles["basic-info-fieldset"]}`} >
+                                <legend>Informações Básicas</legend>
+                                <label htmlFor="character-name">Nome do Personagem</label>
+                                <input type="text" id="character-name" name="character-name" />
+                                <label htmlFor="character-description">Descrição do Personagem</label>
+                                <textarea id="character-description" name="character-description" rows={4}></textarea>
+                            </fieldset>
+                            <fieldset className={`${styles["attributes-fieldset"]}`}>
+                                <legend>Atributos</legend>
+                                <div className={`${styles["stat-field"]}`}>
+                                    <label htmlFor="attack">Ataque</label>
+                                    <input className={`field-default`} type="number" id="attack" name="attack" />
+                                </div>
+                                <div className={`${styles["stat-field"]}`}>
+                                    <label htmlFor="defense">Defesa</label>
+                                    <input className={`field-default`} type="number" id="defense" name="defense" />
+                                </div>
+                                <div className={`${styles["stat-field"]}`}>
+                                    <label htmlFor="health">Vida</label>
+                                    <input className={`field-default`} type="number" id="health" name="health" />
+                                </div>
+                            </fieldset>
+                            <fieldset className={`${styles["settings-fieldset"]}`}>
+                                <legend>Configurações</legend>
+                                <label htmlFor="character-active">Ativo</label>
+                                <CheckboxComponent checked={activeCharacter} onToggle={() => setActiveCharacter(!activeCharacter)} />
+                                <label htmlFor="character-currency-lock">Personagem Bloqueado</label>
+                                <CheckboxComponent checked={currencyLockCharacter} onToggle={() => setCurrencyLockCharacter(!currencyLockCharacter)} />
+                            </fieldset>
+                        </form>
                     </div>
                 </div>
             </div>

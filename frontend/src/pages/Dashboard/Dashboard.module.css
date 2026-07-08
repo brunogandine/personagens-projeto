@@ -828,9 +828,9 @@
 .character-creation-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
     gap: 10px;
-    width: 90%;
+    width: 100%;
 }
 
 .anime-selection-form {
@@ -861,10 +861,28 @@
     gap: 10px;
     max-height: 0;
     overflow: hidden;
+    padding: 0 10px 0 10px;
     transition: max-height 0.3s ease;
 }
 
 .content-form-content.open {
-    padding: 10px 0 10px 0;
     max-height: 100%;
+    padding: 10px;
+}
+
+.basic-info-fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.attributes-fieldset {
+    display: flex;
+    gap: 5px;
+}
+
+.stat-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

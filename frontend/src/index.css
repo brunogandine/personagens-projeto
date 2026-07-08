@@ -312,6 +312,11 @@ img {
     }
 }
 
+.form-default {
+    display: flex;
+    flex-direction: column;
+}
+
 .option-item {
     display: flex;
     flex-direction: column;
