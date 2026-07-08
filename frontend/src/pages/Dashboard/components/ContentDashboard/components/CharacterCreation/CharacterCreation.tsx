@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { AnimeItem, AnimeItemViewModel } from "../../types/content.types";
 import ContentItemComponent from "../../ContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
-import { Button, Input } from "antd";
+import { Button, Input, InputNumber } from "antd";
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 
 const CharacterCreation = () => {
@@ -36,6 +36,13 @@ const CharacterCreation = () => {
 
             setAnimes(response.data.data);
             setTotalAnimesPages(response.data.meta.totalPages);
+
+            if(selectedAnime.length > 0 && confirmedAnime.length > 0) {
+                setSelectedAnime(confirmedAnime);
+
+                return;
+            }
+
             setSelectedAnime([]);
         } catch(err) {
             setAnimes([]);
@@ -81,8 +88,6 @@ const CharacterCreation = () => {
         setConfirmedAnime(selectedAnime);
         setAnimeFormToggle(false);
         setCharacterFormToggle(true);
-
-        setSelectedAnime([]);
     }
 
     const animesItems: AnimeItemViewModel[] = animes.map(a => ({
@@ -98,12 +103,12 @@ const CharacterCreation = () => {
                 <div className={`${styles["character-preview-info"]}`}>
 
                 </div>
-                <div className={`${styles["content-form-default"]} anime-selection-form`}>
+                <div className={`content-container ${styles["character-create-content"]}`}>
                     <div className={`${styles["content-form-top-container"]}`} >
                         <span className={`container-title ${styles["form-title"]}`}>Selecione o Anime</span>
                         {animeFormToggle 
-                            ? (<UpOutlined style={{fontSize: "20px", paddingRight: "10px", cursor: "pointer"}} onClick={() => toggleAnimeForm()}/>) 
-                            : (<DownOutlined style={{fontSize: "20px", paddingRight: "10px", cursor: "pointer"}} onClick={() => toggleAnimeForm()}/>)
+                            ? (<UpOutlined style={{fontSize: "20px", cursor: "pointer"}} onClick={() => toggleAnimeForm()}/>) 
+                            : (<DownOutlined style={{fontSize: "20px", cursor: "pointer"}} onClick={() => toggleAnimeForm()}/>)
                         }
                     </div>
                     <div className={`${styles["content-form-content"]} ${animeFormToggle ? styles["open"] : ""}`} >
@@ -127,7 +132,7 @@ const CharacterCreation = () => {
                                 )
                             }
                         </div>
-                        <div className={`${styles["anime-select-options"]}`}>
+                        <div className={`${styles["content-selection-options"]}`}>
                             <Input 
                                 className={`field-default ${styles["content-list-search-input"]} ${styles["form-search"]} ${!animeFormToggle ? "field-default-disabled" : ""}`}                         
                                 placeholder="Pesquisar anime"
@@ -147,7 +152,7 @@ const CharacterCreation = () => {
                         )}
                     </div>
                 </div>
-                <div className={`${styles["content-form-default"]} character-info-form `}>
+                <div className={`content-container ${styles["character-create-content"]}`}>
                     <div className={`${styles["content-form-top-container"]}`}>
                         <span className={`container-title ${styles["form-title"]}`}>Informações do Personagem</span>
                         {confirmedAnime.length > 0 
@@ -159,31 +164,33 @@ const CharacterCreation = () => {
                         }
                     </div>
                     <div className={`${styles["content-form-content"]} ${characterFormToggle ? styles["open"] : ""}`} >
-                        <form className={`form-default ${styles["character-form"]}`}>
+                        <form className={`${styles["character-form"]}`}>
                             <fieldset className={`${styles["basic-info-fieldset"]}`} >
-                                <legend>Informações Básicas</legend>
-                                <label htmlFor="character-name">Nome do Personagem</label>
-                                <input type="text" id="character-name" name="character-name" />
-                                <label htmlFor="character-description">Descrição do Personagem</label>
-                                <textarea id="character-description" name="character-description" rows={4}></textarea>
+                                <legend className={`item-default`} style={{fontSize: "18px"}}>Básico</legend>
+                                <div className={`${styles["basic-info-fields"]}`}>
+                                    <label htmlFor="character-name" className={`input-label-default`}>Nome do Personagem *</label>
+                                    <Input className={`field-default`} id="character-name" name="character-name" />
+                                    <label htmlFor="character-description" className={`input-label-default`} >Descrição do Personagem</label>
+                                    <textarea id="character-description" className={`input-text-default`} name="character-description" rows={4}></textarea>
+                                </div>
                             </fieldset>
                             <fieldset className={`${styles["attributes-fieldset"]}`}>
-                                <legend>Atributos</legend>
+                                <legend className={`item-default`} style={{fontSize: "18px"}}>Atributos</legend>
                                 <div className={`${styles["stat-field"]}`}>
-                                    <label htmlFor="attack">Ataque</label>
-                                    <input className={`field-default`} type="number" id="attack" name="attack" />
+                                    <label htmlFor="attack" className={`input-label-default`} >Ataque</label>
+                                    <InputNumber className={`field-default input-default`} id="attack" name="attack" min={0} />
                                 </div>
                                 <div className={`${styles["stat-field"]}`}>
-                                    <label htmlFor="defense">Defesa</label>
-                                    <input className={`field-default`} type="number" id="defense" name="defense" />
+                                    <label htmlFor="defense" className={`input-label-default`} >Defesa</label>
+                                    <InputNumber className={`field-default input-default`} id="defense" name="defense" min={0} />
                                 </div>
                                 <div className={`${styles["stat-field"]}`}>
-                                    <label htmlFor="health">Vida</label>
-                                    <input className={`field-default`} type="number" id="health" name="health" />
+                                    <label htmlFor="health" className={`input-label-default`} >Vida</label>
+                                    <InputNumber className={`field-default input-default`} id="health" name="health" min={0} />
                                 </div>
                             </fieldset>
                             <fieldset className={`${styles["settings-fieldset"]}`}>
-                                <legend>Configurações</legend>
+                                <legend className={`item-default`} style={{fontSize: "18px"}}>Configurações</legend>
                                 <label htmlFor="character-active">Ativo</label>
                                 <CheckboxComponent checked={activeCharacter} onToggle={() => setActiveCharacter(!activeCharacter)} />
                                 <label htmlFor="character-currency-lock">Personagem Bloqueado</label>

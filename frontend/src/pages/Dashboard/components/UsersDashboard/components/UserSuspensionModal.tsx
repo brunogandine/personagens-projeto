@@ -130,7 +130,7 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
                         <>
                             <div className={`${styles["options-modal-reason-input"]}`}>
                                 <label htmlFor="reason">Motivo: </label>
-                                <textarea id="reason" name="reason" value={reason} onChange={(e) => setReason(e.target.value)} />
+                                <textarea id="reason" className={`input-text-default`}name="reason" value={reason} onChange={(e) => setReason(e.target.value)} />
                                 <div className={`reason-footer`}>
                                     <span 
                                         className={`${styles["max-length-reason"]} ${trimmedReason.length > 0 ? "visible" : ""} ${trimmedReason.length >= 300 ? "error-color" : trimmedReason.length >= 250 ? "warning-color" : ""}`}
