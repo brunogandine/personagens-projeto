@@ -1,6 +1,7 @@
 :root {
     --bg-default: #28282D;
     --bg-secondary: #2c2c33;
+    --bg-success: #113311;
 
     --bg-modal: #25242E;
 
@@ -34,6 +35,8 @@
     --gray-100: #888888;
     --gray-300: #818181;
     --gray-500: #4d4d4d;
+    --green-100: #9ef59e;
+    --green-300: #54c454;
 }
 
 * {
@@ -342,6 +345,25 @@ img {
     }
 }
 
+.scrollbar-default {
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+        opacity: 0;
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #6b6b6b;
+        opacity: 0;
+        border-radius: 5px;
+    }
+}
+
 .input-default {
     width: 60px;
 
@@ -489,6 +511,12 @@ img {
     height: 6px;
     border: solid white;
     border-width: 0px 0px 2px 0;
+}
+
+
+.core-txt-default {
+    color: var(--text-color-primary);
+    font-weight: bold;
 }
 
 /*Some responsive changes*/

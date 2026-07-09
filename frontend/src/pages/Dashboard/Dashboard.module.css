@@ -607,6 +607,7 @@
     align-items: center;   
     height: 100%;     
     min-height: 0;
+    padding: 10px 0 10px 0;
 }
 
 .content-container {
@@ -736,6 +737,7 @@
     background-color: var(--bg-default);
     border-radius: 5px;
     outline: 2px dashed var(--text-color-primary);
+    outline-offset: -2px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
@@ -787,12 +789,65 @@
     opacity: 1;
 }
 
+.success-container {
+    background-color: var(--bg-success);
+
+    &:hover {
+        outline: 1px solid var(--green-300);
+    }
+}
+
 .character-creation-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
     width: 100%;
+    min-height: 0;
+}
+
+.character-preview-info {
+    display: flex;
+    gap: 10px;
+}
+
+.creation-preview-anime {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.anime-symbol-preview {
+    align-self: center;
+}
+
+.anime-basic-preview-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.anime-name-preview {
+    color: var(--yellow-800);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.anime-status-preview {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.character-creation-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 0;
+    padding: 1px 0 0 5px;
+    overflow: hidden auto;
 }
 
 .character-create-content {
@@ -851,11 +906,35 @@
 
 .attributes-fieldset {
     display: flex;
+    justify-content: center;
     gap: 5px;
 }
 
 .stat-field {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    & label {
+        display: flex;
+        flex-direction: column;
+    }
+
+    & label > img {
+        align-self: center;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.settings-fieldset {
+    display: flex;
+    flex-direction: column;
     gap: 5px;
+}
+
+.option-wrapper {
+    display: flex;
+    gap: 10px;
 }

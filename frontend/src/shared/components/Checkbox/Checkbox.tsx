@@ -1,6 +1,7 @@
 import type React from "react";
 
 type Props = {
+    id?: string;
     mixed?: boolean;
     style?: React.CSSProperties;
     className?: string;
@@ -8,10 +9,11 @@ type Props = {
     onToggle?: () => void;
 }
 
-const CheckboxComponent = ({mixed, style, className, checked, onToggle}: Props) => {
+const CheckboxComponent = ({id,mixed, style, className, checked, onToggle}: Props) => {
 
     return (                            
             <div
+                id={id}
                 style={style}
                 className={`checkbox ${checked ? "checked" : ``} ${mixed ? "mixed" : ""} ${className ?? ""}`}
                 role="checkbox"
