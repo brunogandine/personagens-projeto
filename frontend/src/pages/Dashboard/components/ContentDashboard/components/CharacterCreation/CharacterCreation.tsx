@@ -9,6 +9,7 @@ import { Button, Input, InputNumber, Tooltip } from "antd";
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import { validateImageFile } from "@/helpers/validateImageFile";
 import ImageCropModal from "./components/ImageCropModal";
+import CharacterPreviewModal from "./components/CharacterPreviewModal";
 
 const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -17,7 +18,6 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 const CharacterCreation = () => {
     const [animeFormToggle, setAnimeFormToggle] = useState(true);
     const [characterFormToggle, setCharacterFormToggle] = useState(false);
-    const [characterArtworkFormToggle, setCharacterArtworkFormToggle] = useState(false);
 
     const [animes, setAnimes] = useState<AnimeItem[]>([]);
     const [animesSearch, setAnimesSearch] = useState("");
@@ -42,6 +42,7 @@ const CharacterCreation = () => {
     const [selectedSmallArtwork, setSelectedSmallArtwork] = useState<string | null>(null);
 
     const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+    const [isCharacterPreviewModalOpen, setIsCharacterPreviewModalOpen] = useState(false);
 
     const canSubmit = confirmedAnime && characterName && smallArtworkBlob;
 
@@ -201,13 +202,84 @@ const CharacterCreation = () => {
         if(fileInputRef.current) {
             fileInputRef.current.value = "";
         }
-    }
+    };
+
+    const resetForm = () => {
+
+
+        setCharacterName("");
+        setCharacterAttack(5);
+        setCharacterDefense(5);
+        setCharacterHealth(100);
+        setActiveCharacter(false);
+        setCurrencyLockCharacter(false);
+
+        if(smallArtworkPreview)
+            URL.revokeObjectURL(smallArtworkPreview);
+
+        setSmallArtworkPreview(null);
+        setSmallArtworkBlob(null);
+
+        setSelectedAnime([])
+        setConfirmedAnime(null);
+
+        setAnimesPages(1);
+        setAnimesSearch("");
+        setCharacterFormToggle(false);
+        setAnimeFormToggle(true);
+    };
+
+    const validateForm = () => {
+        if(!confirmedAnime) {
+            alert("É preciso escolher um anime para o personagem.");
+            return;
+        };
+        
+        if(!characterName.trim()) {
+            alert("É preciso informar um nome.");
+            return;
+        };
+
+        if(characterDescription.length > 300) {
+            alert("A descrição deve ter no máximo 300 caractéres.");
+            return;
+        };
+
+        if(!Number.isFinite(characterAttack)) {
+            alert("É preciso informar um valor válido para Ataque.");
+            return;
+        };
+
+        if(!Number.isFinite(characterDefense)) {
+            alert("É preciso informar um valor válido para Defesa.");
+            return;
+        };
+
+        if(!Number.isFinite(characterHealth)) {
+            alert("É preciso informar um valor válido para Vida.");
+            return;
+        };
+
+        if(!smallArtworkBlob) {
+            alert("É preciso adicionar uma arte para o personagem.")
+            return;
+        };
+
+        return true;
+    };
+
+    const handleConfirmForm = () => {
+        if(!validateForm())
+            return;
+
+        setIsCharacterPreviewModalOpen(true);
+    };
 
     return (
         <>
             <div className={`${styles["character-creation-form-controls"]}`} >
-                <Button type="primary" className="btn-default primary-btn" disabled={!canSubmit} >Confirmar Personagem</Button>
-                <Button type="primary" className="btn-default danger-btn" >Resetar Formulário</Button>
+                <Button type="primary" className="btn-default primary-btn" disabled={!canSubmit} onClick={handleConfirmForm}>Confirmar Personagem</Button>
+                <Button type="primary" className="btn-default danger-btn" onClick={resetForm} >Resetar Formulário</Button>
             </div>
             <div className={`${styles["character-creation-container"]}`}>
                 <div className={`${styles["character-creation-form"]} scrollbar-default`}>
@@ -360,7 +432,12 @@ const CharacterCreation = () => {
                                 cropOptions={{
                                     width: 140,
                                     height: 139
-                                }}/>
+                                }}
+                            />
+                            <CharacterPreviewModal 
+                                open={isCharacterPreviewModalOpen}
+                                onClose={() => setIsCharacterPreviewModalOpen(false)}
+                            />
                         </div>
                     </div>
                 </div>
