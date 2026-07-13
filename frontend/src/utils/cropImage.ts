@@ -1,6 +1,13 @@
 import type { Area } from "react-easy-crop";
 
-export const getCroppedImg = async (imageSrc: string, pixelCrop: Area): Promise<Blob | null> => {
+export type CropOptions = {
+    width?:  number;
+    height?: number;
+    format?: "image/png" | "image/jpeg" | "image/webp";
+    quality?: number;
+};
+
+export const getCroppedImg = async (imageSrc: string, pixelCrop: Area, options?: CropOptions): Promise<Blob | null> => {
     const image = new Image();
     image.crossOrigin = "anonymous";
     image.src = imageSrc;
@@ -15,8 +22,11 @@ export const getCroppedImg = async (imageSrc: string, pixelCrop: Area): Promise<
     if(!ctx)
         return null;
 
-    canvas.width = pixelCrop.width;
-    canvas.height = pixelCrop.height;
+    const outputWidth = options?.width ?? pixelCrop.width;
+    const outputHeight = options?.height ?? pixelCrop.height;
+
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
 
     ctx.drawImage(
         image,
@@ -26,8 +36,8 @@ export const getCroppedImg = async (imageSrc: string, pixelCrop: Area): Promise<
         pixelCrop.height,
         0,
         0,
-        pixelCrop.width,
-        pixelCrop.height
+        outputWidth,
+        outputHeight
     );
 
     return new Promise((resolve) => {

@@ -1,18 +1,19 @@
 import { Button, Modal, Slider } from "antd";
 import { useEffect, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
-import { getCroppedImg } from "@/utils/cropImage";
+import { getCroppedImg, type CropOptions } from "@/utils/cropImage";
 import { PictureFilled } from "@ant-design/icons";
-import styles from "../Profile.module.css";
+import styles from "@/pages/Dashboard/Dashboard.module.css";
 
 type AvatarCropModalProps = {
     open: boolean,
     onClose: () => void,
     onApply: (blob: Blob) => void;
     image: string | null
+    cropOptions?: CropOptions
 }
 
-const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps) => {
+const ImageCropModal = ({ open, onClose, onApply, image, cropOptions }: AvatarCropModalProps) => {
     const [crop, setCrop] = useState({ x: 0, y: 0})
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
@@ -39,7 +40,7 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
         if(!image || !croppedAreaPixels)
             return;
 
-        const blob = await getCroppedImg(image, croppedAreaPixels);
+        const blob = await getCroppedImg(image, croppedAreaPixels, cropOptions);
 
         if(!blob)
             return;
@@ -70,7 +71,6 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
                             crop={crop} 
                             zoom={zoom} 
                             aspect={1} 
-                            cropShape="round"
                             showGrid={false}
                             onCropChange={setCrop} 
                             onZoomChange={setZoom}
@@ -101,4 +101,4 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
     )
 };
 
-export default AvatarCropModal;
+export default ImageCropModal;
