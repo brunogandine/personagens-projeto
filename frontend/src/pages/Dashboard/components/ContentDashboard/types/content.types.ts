@@ -26,3 +26,17 @@ export type CharacterItemViewModel = {
     image: string;
 }
 
+export type CharacterPreview = {
+    anime: AnimeItemViewModel;
+    name: string;
+    description: string;
+    stats: {
+        hp: number;
+        atk: number;
+        def: number;
+    };
+    active: boolean;
+    lock: boolean;
+    smallArtworkBlob: Blob;
+    smallArtworkPreview: string;
+};

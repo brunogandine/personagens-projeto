@@ -2,7 +2,7 @@ import styles from "@/pages/Dashboard/Dashboard.module.css";
 import { Request } from "@/services/apiClient";
 import { DownOutlined, UploadOutlined, StopOutlined, UpOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
-import type { AnimeItem, AnimeItemViewModel } from "../../types/content.types";
+import type { AnimeItem, AnimeItemViewModel, CharacterPreview } from "../../types/content.types";
 import ContentItemComponent from "../../ContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import { Button, Input, InputNumber, Tooltip } from "antd";
@@ -11,7 +11,7 @@ import { validateImageFile } from "@/helpers/validateImageFile";
 import ImageCropModal from "./components/ImageCropModal";
 import CharacterPreviewModal from "./components/CharacterPreviewModal";
 
-const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
+export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 
@@ -43,6 +43,7 @@ const CharacterCreation = () => {
 
     const [isCropModalOpen, setIsCropModalOpen] = useState(false);
     const [isCharacterPreviewModalOpen, setIsCharacterPreviewModalOpen] = useState(false);
+    const [characterPreview, setCharacterPreview] = useState<CharacterPreview | null>(null);
 
     const canSubmit = confirmedAnime && characterName && smallArtworkBlob;
 
@@ -205,8 +206,6 @@ const CharacterCreation = () => {
     };
 
     const resetForm = () => {
-
-
         setCharacterName("");
         setCharacterAttack(5);
         setCharacterDefense(5);
@@ -229,49 +228,65 @@ const CharacterCreation = () => {
         setAnimeFormToggle(true);
     };
 
-    const validateForm = () => {
+    const buildCharacterPreview = (): CharacterPreview | null => {
         if(!confirmedAnime) {
             alert("É preciso escolher um anime para o personagem.");
-            return;
+            return null;
         };
         
         if(!characterName.trim()) {
             alert("É preciso informar um nome.");
-            return;
+            return null;
         };
 
-        if(characterDescription.length > 300) {
-            alert("A descrição deve ter no máximo 300 caractéres.");
-            return;
+        if(characterDescription.length > 600) {
+            alert("A descrição deve ter no máximo 600 caractéres.");
+            return null;
         };
 
         if(!Number.isFinite(characterAttack)) {
             alert("É preciso informar um valor válido para Ataque.");
-            return;
+            return null;
         };
 
         if(!Number.isFinite(characterDefense)) {
             alert("É preciso informar um valor válido para Defesa.");
-            return;
+            return null;
         };
 
         if(!Number.isFinite(characterHealth)) {
             alert("É preciso informar um valor válido para Vida.");
-            return;
+            return null;
         };
 
-        if(!smallArtworkBlob) {
+        if(!smallArtworkBlob || !smallArtworkPreview) {
             alert("É preciso adicionar uma arte para o personagem.")
-            return;
+            return null;
         };
 
-        return true;
+        return {            
+            anime: confirmedAnime,
+            name: characterName,
+            description: characterDescription,
+            stats: {
+                hp: characterHealth,
+                atk: characterAttack,
+                def: characterDefense
+            },
+            active: activeCharacter,
+            lock: currencyLockCharacter,
+            smallArtworkBlob: smallArtworkBlob,
+            smallArtworkPreview: smallArtworkPreview
+        };
     };
 
     const handleConfirmForm = () => {
-        if(!validateForm())
+        const preview = buildCharacterPreview();
+
+        if(!preview)
             return;
 
+        setCharacterPreview(preview);
         setIsCharacterPreviewModalOpen(true);
     };
 
@@ -437,6 +452,7 @@ const CharacterCreation = () => {
                             <CharacterPreviewModal 
                                 open={isCharacterPreviewModalOpen}
                                 onClose={() => setIsCharacterPreviewModalOpen(false)}
+                                preview={characterPreview}
                             />
                         </div>
                     </div>
