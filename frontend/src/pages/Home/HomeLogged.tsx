@@ -21,7 +21,7 @@ const HomeLogged = () => {
             }} 
 
             loadData(); 
-        }, [])
+        }, []);
 
     return (
         <div id={styles["home-content"]}>

@@ -8,6 +8,34 @@ import { GetParams } from "../types/user.types";
 const uploadDir = path.resolve(process.cwd(), "uploads", "avatars");
 
 class UserService {
+    async getUsers({ page = 1, limit = 50, search = "", sortBy = "created_at", order = "asc" }: GetParams) {
+        const MAX_PAGES = 10000;
+        const allowedLimits = [10, 25, 50, 100];
+        const sortByFields = ["id", "created_at", "username", "is_active", "is_suspended", "is_suspended_temp", "is_super_user", "currency", "level"];
+
+        const safePage = page > 0 
+            ? Math.min(page, MAX_PAGES) 
+            : 1;
+            
+        const safeLimit = allowedLimits.includes(limit)
+            ? limit
+            : 50;
+
+        const safeSortBy = sortByFields.includes(sortBy)
+            ? sortBy
+            : "created_at";
+
+        const result = await userModel.getUsers({
+            page: safePage,
+            limit: safeLimit,
+            search,
+            sortBy: safeSortBy,
+            order
+        })
+
+        return result;
+    }
+
     async getUsersCount() {
         return userModel.getUserCount();
     }
@@ -172,40 +200,6 @@ class UserService {
             message: `Senha alterada com sucesso.`
         };
     };
-
-    async getUsers({
-        page = 1,
-        limit = 50,
-        search = "",
-        sortBy = "created_at",
-        order = "asc"
-    }: GetParams) {
-        const MAX_PAGES = 10000;
-        const allowedLimits = [10, 25, 50, 100];
-        const sortByFields = ["id", "created_at", "username", "is_active", "is_suspended", "is_suspended_temp", "is_super_user", "currency", "level"];
-
-        const safePage = page > 0 
-            ? Math.min(page, MAX_PAGES) 
-            : 1;
-            
-        const safeLimit = allowedLimits.includes(limit)
-            ? limit
-            : 50;
-
-        const safeSortBy = sortByFields.includes(sortBy)
-            ? sortBy
-            : "created_at";
-
-        const result = await userModel.getUsers({
-            page: safePage,
-            limit: safeLimit,
-            search,
-            sortBy: safeSortBy,
-            order
-        })
-
-        return result;
-    }
 }
 
 export default new UserService();
