@@ -965,36 +965,67 @@
 
 .preview-character-modal-content {
     display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
-.preview-character-left {
+.preview-character-details {
     display: flex;
     flex-direction: column;
     gap: 5px;
+
+    & dl {
+        margin: 0;
+    }
 }
 
-.name-preview {
-    align-self: center;
-    color: var(--yellow-800);
+.basic-item {
+    display: flex;
+    gap: 5px;
+
+    & dt {
+        color: var(--orange-500);
+        font-weight: bold;
+    }
+
+    & dd {
+        font-weight: normal;
+        color: var(--text-color-default);
+        margin: 0;
+    }
+}
+
+.preview-section {
+    color: var(--text-color-default);
     font-size: 16px;
     font-weight: bold;
 }
 
-.preview-character-right {
+.preview-character-attributes {
     display: flex;
     flex-direction: column;
     gap: 3px;
-}
-
-.stats-preview {
-    display: flex;
-    gap: 10px;
 }
 
 .stat-item {
     display: flex;
     gap: 3px;
+    height: 30px;
+    align-items: center;
+}
+
+.stat-spacing {
+    color: var(--orange-500);
+    font-size: 20px;
+    letter-spacing: -3px;
+    transform: skewX(10deg);
+    margin-right: 5px;
+}
+
+.stat-name {
+    color: var(--text-color-primary);
+    font-weight: bold;
+    width: 55%;
 }
 
 .stat-bar {
@@ -1004,16 +1035,21 @@
     background-color: #555555;
     width: 120px;
     height: 20px;
-    outline: 1px solid #000000;
     border-radius: 10px;
     overflow: hidden;
 }
 
 .stat-fill {
     background-color: var(--red-300);
-    width: 0%;
     height: 100%;
     border-radius: 10px;
+    background-image: linear-gradient(
+        45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, 
+        rgba(255, 255, 255, .15) 50%, 
+        rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+    background-size: 1rem 1rem;
+    background-position: 0px 0px;
+    animation: progression-stripes 1s linear infinite;
 }
 
 .stat-value {
@@ -1022,4 +1058,34 @@
     font-weight: bold;
     color: var(--gray-50);
     height: 100%;
+    text-shadow: 1px 1px 1px #000000;
+}
+
+.details-preview {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-preview {
+    display: flex;
+    gap: 5px;
+
+    & dt {
+        color: var(--text-color-primary);
+    }
+
+    & dd {
+        font-weight: normal;
+        color: var(--text-color-default);
+    }
+}
+
+@keyframes progression-stripes {
+    from {
+        background-position: 1rem 0;
+    }
+
+    to {
+        background-position: 0 0;
+    }
 }

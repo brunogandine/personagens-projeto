@@ -17,28 +17,46 @@ const CharacterPreviewModal = ({open, onClose, preview}:  CharacterPreviewModalP
         <Modal
             className={`modal-default`}
             title="Resumo do Personagem"
-            width={800}
+            width={"fit-content"}
             open={open}
             onCancel={onClose}
             footer
         >
             <div className={`${styles["preview-character-modal-content"]}`}>
-                <div className={`${styles["preview-character-left"]}`}>
-                    <div className={`${styles["small-artwork-preview"]}`}>
-                        <img src={preview.smallArtworkPreview} />
-                    </div>
-                    <div className={`${styles["name-preview"]}`}>
-                        <span>{preview.name}</span>
-                    </div>
+                <div className={`${styles["small-artwork-preview"]}`}>
+                    <img src={preview.smallArtworkPreview} />
                 </div>
-                <div className={`${styles["preview-character-right"]}`}>
-                    <div className={`${styles["stats-preview"]}`}>
-                        <div className={`${styles["stat-item"]}`} data-stat={`hp`}>
+                <div className={`${styles["preview-character-details"]}`}>
+                    <div className={`preview-basic-details`}>
+                        <dl>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Personagem:</dt>
+                                <dd>{preview.name}</dd>
+                            </div>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Anime:</dt>
+                                <dd>{preview.anime.name}</dd>
+                            </div>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Ativo:</dt>
+                                <dd>{preview.active ? "Sim" : "Não"}</dd>
+                            </div>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Bloqueado:</dt>
+                                <dd>{preview.lock ? "Sim" : "Não"}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <div className={`${styles["preview-character-attributes"]}`}>
+                        <div className={`${styles["preview-section"]}`}>Atributos Base:</div>
+                        <div className={`${styles["stat-item"]}`} data-stat={`life`}>
                             <div className={`stat-icon`}>
                                 <img src={`${BASE_ATTRIBUTES_URL}/for_life.png`} />
                             </div>
+                            <span className={`${styles["stat-spacing"]}`}>//</span>
+                            <div className={`${styles["stat-name"]}`}>Vida</div>
                             <div className={`${styles["stat-bar"]}`}>
-                                <div className={`${styles["stat-fill"]}`}></div>
+                                <div className={`${styles["stat-fill"]}`} style={{width: `100%`}}></div>
                                 <div className={`${styles["stat-value"]}`}>
                                     <span>{preview.stats.hp}</span>
                                 </div>
@@ -48,8 +66,10 @@ const CharacterPreviewModal = ({open, onClose, preview}:  CharacterPreviewModalP
                             <div className={`stat-icon`}>
                                 <img src={`${BASE_ATTRIBUTES_URL}/for_atk.png`} />
                             </div>
+                            <span className={`${styles["stat-spacing"]}`}>//</span>
+                            <div className={`${styles["stat-name"]}`}>Ataque</div>
                             <div className={`${styles["stat-bar"]}`}>
-                                <div className={`${styles["stat-fill"]}`}></div>
+                                <div className={`${styles["stat-fill"]}`} style={{width: `100%`}}></div>
                                 <div className={`${styles["stat-value"]}`}>
                                     <span>{preview.stats.atk}</span>
                                 </div>
@@ -59,29 +79,18 @@ const CharacterPreviewModal = ({open, onClose, preview}:  CharacterPreviewModalP
                             <div className={`stat-icon`}>
                                 <img src={`${BASE_ATTRIBUTES_URL}/for_def.png`} />
                             </div>
+                            <span className={`${styles["stat-spacing"]}`}>//</span>
+                            <div className={`${styles["stat-name"]}`}>Defesa</div>
                             <div className={`${styles["stat-bar"]}`}>
-                                <div className={`${styles["stat-fill"]}`}></div>
+                                <div className={`${styles["stat-fill"]}`} style={{width: `100%`}}></div>
                                 <div className={`${styles["stat-value"]}`}>
                                     <span>{preview.stats.def}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className={`${styles["details-preview"]}`}>
-                        <div className={`anime-preview`}>
-                            <span>Anime: <span>{preview.anime.name}</span></span>
-                        </div>
-                        <div className={`active-preview`}>
-                            <span>Personagem Ativo: <span>{preview.active ? "Sim" : "Não"}</span></span>
-                        </div>
-                        <div className={`lock-preview`}>
-                            <span>Personagem Bloqueado: <span>{preview.lock ? "Sim" : "Não"}</span></span>
-                        </div>
-                        <div className={`${styles["description-preview"]}`}>
-                            <span>Descrição do Personagem:</span>
-                            <br/>
-                            <span>{preview.description ? preview.description : "Sem descrição."}</span>
-                        </div>
+                    <div className={`${styles["preview-character-description"]}`}>
+                        {preview.description ? preview.description : "Sem descrição."}
                     </div>
                 </div>
             </div>
