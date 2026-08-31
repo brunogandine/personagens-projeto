@@ -15,6 +15,17 @@ export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 
+type CropAspectOptions = {
+    width: number;
+    height: number;
+}
+
+type CropTarget = {
+    target: "artwork" | "smallArtwork";
+    image: string;
+    options: CropAspectOptions;
+}
+
 const CharacterCreation = () => {
     const [animeFormToggle, setAnimeFormToggle] = useState(true);
     const [characterFormToggle, setCharacterFormToggle] = useState(false);
@@ -37,17 +48,20 @@ const CharacterCreation = () => {
     const [activeCharacter, setActiveCharacter] = useState(false);
     const [currencyLockCharacter, setCurrencyLockCharacter] = useState(false);
 
+    const [artworkPreview, setArtworkPreview] = useState<string | null>(null);
+    const [artworkBlob, setArtworkBlob] = useState<Blob | null>(null);
     const [smallArtworkPreview, setSmallArtworkPreview] = useState<string | null>(null);
     const [smallArtworkBlob, setSmallArtworkBlob] = useState<Blob | null>(null);
-    const [selectedSmallArtwork, setSelectedSmallArtwork] = useState<string | null>(null);
 
     const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+    const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
     const [isCharacterPreviewModalOpen, setIsCharacterPreviewModalOpen] = useState(false);
     const [characterPreview, setCharacterPreview] = useState<CharacterPreview | null>(null);
 
     const canSubmit = confirmedAnime && characterName && smallArtworkBlob;
 
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const fileInputRefArtwork = useRef<HTMLInputElement | null>(null);
+    const fileInputRefSmallArtwork = useRef<HTMLInputElement | null>(null);
 
     const loadAnimes = async () => {
         try {
@@ -126,9 +140,56 @@ const CharacterCreation = () => {
         image: `/assets/images/animes/${a.id}/symbol.jpg`
     }));
 
+    const uploadArtwork = () => {
+        fileInputRefArtwork.current?.click();
+    }
+
     const uploadSmallArtwork = () => {
-        fileInputRef.current?.click();
+        fileInputRefSmallArtwork.current?.click();
     };
+
+    const handleArtwork = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+
+        if(!file)
+            return;
+
+        if(!ALLOWED_TYPES.includes(file.type)) {
+            alert("Tipo de arquivo inválido.");
+            e.target.value = "";
+
+            return;
+        };
+
+        if(file.size > MAX_FILE_SIZE) {
+            alert("Arquivo muito grande. O tamanho máximo permitido é 5MB.");
+            e.target.value = "";
+
+            return;
+        };
+
+        const isValidImg = validateImageFile(file);
+
+        if(!isValidImg) {
+            alert("O arquivo enviado não é uma imagem válida.");
+            e.target.value = "";
+
+            return;
+        };
+
+        const imageUrl = URL.createObjectURL(file);
+
+        setCropTarget({
+            target: "artwork",
+            image: imageUrl,
+            options: {
+                width: 275,
+                height: 325
+            }
+        });
+
+        setIsCropModalOpen(true);
+    }
 
     const handleSmallArtwork = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -161,34 +222,66 @@ const CharacterCreation = () => {
 
         const imageUrl = URL.createObjectURL(file);
 
+        setCropTarget({
+            target: "smallArtwork",
+            image: imageUrl,
+            options: {
+                width: 160,
+                height: 145
+            }
+        });
+
         setIsCropModalOpen(true);
-        setSelectedSmallArtwork(imageUrl);
 
         e.target.value = "";
     };
 
-    const handleSmallArtworkCropClose = () => {
+    const handleCropClose = () => {
         setIsCropModalOpen(false);
 
-        selectedSmallArtwork && URL.revokeObjectURL(selectedSmallArtwork);
+        cropTarget?.image && URL.revokeObjectURL(cropTarget.image);
 
-        setSelectedSmallArtwork(null);
+        setCropTarget(null);
     };
 
     const handleCropApply = (blob: Blob) => {
-        if(smallArtworkPreview)
-            URL.revokeObjectURL(smallArtworkPreview);
+        if(!cropTarget)
+            return;
 
-        const imageUrl = URL.createObjectURL(blob);
+        if(cropTarget.target === "artwork") {
+            if(artworkPreview)
+                URL.revokeObjectURL(artworkPreview);
 
-        setSmallArtworkPreview(imageUrl);
-        setSmallArtworkBlob(blob);
+            setArtworkPreview(URL.createObjectURL(blob));
+            setArtworkBlob(blob);
+        };
 
-        if(selectedSmallArtwork)
-            URL.revokeObjectURL(selectedSmallArtwork);
+        if(cropTarget.target === "smallArtwork") {
+            if(smallArtworkPreview)
+                URL.revokeObjectURL(smallArtworkPreview);
 
-        setSelectedSmallArtwork(null);
+            setSmallArtworkPreview(URL.createObjectURL(blob));
+            setSmallArtworkBlob(blob);
+        };
+
+        URL.revokeObjectURL(cropTarget.image);
+
+        setCropTarget(null);
         setIsCropModalOpen(false);
+    };
+
+    const handleRemoveArtwork = (event: React.MouseEvent<HTMLImageElement>) => {
+        event.preventDefault();
+
+        if(artworkPreview)
+            URL.revokeObjectURL(artworkPreview);
+
+        setArtworkPreview(null);
+        setArtworkBlob(null);
+
+        if(fileInputRefArtwork.current) {
+            fileInputRefArtwork.current.value = "";
+        }
     };
 
     const handleRemoveSmallArtwork = (event: React.MouseEvent<HTMLImageElement>) => {
@@ -200,8 +293,8 @@ const CharacterCreation = () => {
         setSmallArtworkPreview(null);
         setSmallArtworkBlob(null);
 
-        if(fileInputRef.current) {
-            fileInputRef.current.value = "";
+        if(fileInputRefSmallArtwork.current) {
+            fileInputRefSmallArtwork.current.value = "";
         }
     };
 
@@ -259,6 +352,11 @@ const CharacterCreation = () => {
             return null;
         };
 
+        if(!artworkBlob || !artworkPreview) {
+            alert("É preciso adicionar uma arte principal para o personagem.")
+            return null;
+        }
+
         if(!smallArtworkBlob || !smallArtworkPreview) {
             alert("É preciso adicionar uma arte para o personagem.")
             return null;
@@ -275,6 +373,8 @@ const CharacterCreation = () => {
             },
             active: activeCharacter,
             lock: currencyLockCharacter,
+            artworkBlob: artworkBlob,
+            artworkPreview: artworkPreview,
             smallArtworkBlob: smallArtworkBlob,
             smallArtworkPreview: smallArtworkPreview
         };
@@ -348,7 +448,7 @@ const CharacterCreation = () => {
                             )}
                         </div>
                     </div>
-                    <div className={`content-container ${styles["character-create-content"]} ${characterName && smallArtworkBlob ? styles["success-container"] : ""}`}>
+                    <div className={`content-container ${styles["character-create-content"]} ${characterName && smallArtworkBlob && artworkBlob ? styles["success-container"] : ""}`}>
                         <div className={`${styles["content-form-top-container"]}`}>
                             <span className={`container-title`}>Informações do Personagem</span>
                             <div className={`${styles["content-form-top-divider"]}`}>
@@ -425,29 +525,40 @@ const CharacterCreation = () => {
                                 </fieldset>
                                 <fieldset className={`${styles["artwork-fieldset"]}`}>
                                     <legend className={`item-default`} style={{fontSize: "18px"}}>Artes</legend>
-                                    <div className={`artwork-upload-wrapper ${smallArtworkPreview ? `` : `${styles["content-option-item"]} ${styles["character"]}` }`} onClick={() => uploadSmallArtwork()} onContextMenu={handleRemoveSmallArtwork}>
-                                        {smallArtworkPreview 
-                                            ? (<img src={smallArtworkPreview} />)
-                                            : (
-                                                <>
-                                                    <UploadOutlined style={{fontSize: "20px"}} />
-                                                    <span className={`input-label-default`}>Artwork Criação</span>
-                                                </>
-                                            )
-                                        }
-                                        <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleSmallArtwork}/>
+                                    <div className={`${styles["artwork-upload-container"]}`}>
+                                        <div className={`artwork-upload-wrapper ${artworkPreview ? `${styles["success"]}` : `${styles["content-option-item"]} ${styles["character"]}` }`} onClick={() => uploadArtwork()} onContextMenu={handleRemoveArtwork}>
+                                            {artworkPreview 
+                                                ? (<img src={artworkPreview} />)
+                                                : (
+                                                    <>
+                                                        <UploadOutlined style={{fontSize: "20px"}} />
+                                                        <span className={`input-label-default`}>Artwork Principal</span>
+                                                    </>
+                                                )
+                                            }
+                                            <input ref={fileInputRefArtwork} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleArtwork}/>
+                                        </div>
+                                        <div className={`artwork-upload-wrapper ${smallArtworkPreview ? `${styles["success"]}` : `${styles["content-option-item"]} ${styles["character-small"]}` }`} onClick={() => uploadSmallArtwork()} onContextMenu={handleRemoveSmallArtwork}>
+                                            {smallArtworkPreview 
+                                                ? (<img src={smallArtworkPreview} />)
+                                                : (
+                                                    <>
+                                                        <UploadOutlined style={{fontSize: "20px"}} />
+                                                        <span className={`input-label-default`}>Artwork Miniatura</span>
+                                                    </>
+                                                )
+                                            }
+                                            <input ref={fileInputRefSmallArtwork} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleSmallArtwork}/>
+                                        </div>
                                     </div>
                                 </fieldset>
                             </form>
                             <ImageCropModal 
                                 open={isCropModalOpen} 
-                                onClose={handleSmallArtworkCropClose} 
+                                onClose={handleCropClose} 
                                 onApply={handleCropApply} 
-                                image={selectedSmallArtwork} 
-                                cropOptions={{
-                                    width: 140,
-                                    height: 139
-                                }}
+                                image={cropTarget?.image ?? null} 
+                                cropOptions={cropTarget?.options}
                             />
                             <CharacterPreviewModal 
                                 open={isCharacterPreviewModalOpen}

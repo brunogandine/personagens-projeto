@@ -18,6 +18,9 @@ const ImageCropModal = ({ open, onClose, onApply, image, cropOptions }: AvatarCr
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
+    console.log(ImageCropModal)
+    console.log(cropOptions)
+
     const resetCropState = () => {
         setCrop({
             x: 0,
@@ -70,7 +73,10 @@ const ImageCropModal = ({ open, onClose, onApply, image, cropOptions }: AvatarCr
                             image={image} 
                             crop={crop} 
                             zoom={zoom} 
-                            aspect={1} 
+                            aspect={cropOptions?.width && cropOptions?.height 
+                                    ? cropOptions.width / cropOptions.height 
+                                    : 1
+                                } 
                             showGrid={false}
                             onCropChange={setCrop} 
                             onZoomChange={setZoom}

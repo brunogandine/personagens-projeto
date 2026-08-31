@@ -195,7 +195,7 @@ const ContentMain = () => {
                     <ContentOptions type={"characters"} />
                     <div className={`container-default ${styles["list-content"]} ${characters.length > 0 ? styles["character"] : styles["no-results"]}`}>
                         <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
-                            <div className={`${styles["content-option-item"]} ${styles["character"]}`}>
+                            <div className={`${styles["content-option-item"]} ${styles["character-small"]}`}>
                                 <PlusOutlined style={{fontSize: "40px"}}/>
                             </div>
                         </NavLink>

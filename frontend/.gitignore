@@ -33,5 +33,7 @@ dist-ssr
 public/assets/images/cards/*
 public/assets/images/animes/*
 
-!public/assets/images/cards/.gitkeep
+!public/assets/images/cards/
+!public/assets/images/cards/background
+!public/assets/images/cards/background/**
 !public/assets/images/animes/.gitkeep

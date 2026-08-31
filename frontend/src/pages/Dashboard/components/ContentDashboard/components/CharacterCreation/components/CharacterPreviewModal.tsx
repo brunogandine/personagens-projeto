@@ -23,8 +23,13 @@ const CharacterPreviewModal = ({open, onClose, preview}:  CharacterPreviewModalP
             footer
         >
             <div className={`${styles["preview-character-modal-content"]}`}>
-                <div className={`${styles["small-artwork-preview"]}`}>
-                    <img src={preview.smallArtworkPreview} />
+                <div className={`${styles["artwork-preview"]}`}>
+                    <div style={{backgroundImage: `url(/assets/images/cards/background/artwork/normal.png)`}} className={`${styles["artwork-preview-container"]}`}>
+                        <img src={preview.artworkPreview} />
+                    </div>
+                    <div style={{backgroundImage: `url(/assets/images/cards/background/small/normal.png)`}}className={`${styles["small-artwork-preview-container"]}`}>
+                        <img src={preview.smallArtworkPreview} />
+                    </div>
                 </div>
                 <div className={`${styles["preview-character-details"]}`}>
                     <div className={`preview-basic-details`}>
@@ -90,7 +95,10 @@ const CharacterPreviewModal = ({open, onClose, preview}:  CharacterPreviewModalP
                         </div>
                     </div>
                     <div className={`${styles["preview-character-description"]}`}>
-                        {preview.description ? preview.description : "Sem descrição."}
+                        <div className={`${styles["preview-section"]}`}>Descrição do Personagem:</div>
+                        <div className={`${styles["description-content"]}`}>
+                            {preview.description ? preview.description : "Sem descrição."}
+                        </div>
                     </div>
                 </div>
             </div>

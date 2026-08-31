@@ -37,6 +37,8 @@ export type CharacterPreview = {
     };
     active: boolean;
     lock: boolean;
+    artworkBlob: Blob;
+    artworkPreview: string;
     smallArtworkBlob: Blob;
     smallArtworkPreview: string;
 };
