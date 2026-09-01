@@ -1,8 +1,8 @@
 .dashboard-variables {
     --character-item-width: 275px;
     --character-item-height: 325px;
-    --character-small-item-width: 160px;
-    --character-small-item-height: 145px;
+    --character-thumbnail-item-width: 160px;
+    --character-thumbnail-item-height: 145px;
     --anime--item-width: 66px;
     --anime--item-height: 65px;
 }
@@ -739,9 +739,9 @@
     height: var(--anime--item-height);
 }
 
-.content-option-item.character-small {
-    width: var(--character-small-item-width);
-    height: var(--character-small-item-height);
+.content-option-item.character-thumbnail {
+    width: var(--character-thumbnail-item-width);
+    height: var(--character-thumbnail-item-height);
 }
 
 .content-option-item.character {
@@ -970,6 +970,9 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow-y: auto;
+    max-height: 70vh;
+    padding: 0px 5px 1px 10px;
 }
 
 .preview-character-details {
@@ -986,7 +989,7 @@
     display: flex;
 }
 
-.small-artwork-preview-container {
+.thumbnail-preview-container {
     display: flex;
     width: 160px;
     height: auto;
@@ -1109,6 +1112,13 @@
     border-radius: 5px;
     outline: 1px solid #474959;
     padding: 5px;
+}
+
+.preview-character-options {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 7px;
 }
 
 @keyframes progression-stripes {

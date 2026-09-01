@@ -21,7 +21,7 @@ type CropAspectOptions = {
 }
 
 type CropTarget = {
-    target: "artwork" | "smallArtwork";
+    target: "artwork" | "thumbnail";
     image: string;
     options: CropAspectOptions;
 }
@@ -50,18 +50,18 @@ const CharacterCreation = () => {
 
     const [artworkPreview, setArtworkPreview] = useState<string | null>(null);
     const [artworkBlob, setArtworkBlob] = useState<Blob | null>(null);
-    const [smallArtworkPreview, setSmallArtworkPreview] = useState<string | null>(null);
-    const [smallArtworkBlob, setSmallArtworkBlob] = useState<Blob | null>(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+    const [thumbnailBlob, setThumbnailBlob] = useState<Blob | null>(null);
 
     const [isCropModalOpen, setIsCropModalOpen] = useState(false);
     const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
     const [isCharacterPreviewModalOpen, setIsCharacterPreviewModalOpen] = useState(false);
     const [characterPreview, setCharacterPreview] = useState<CharacterPreview | null>(null);
 
-    const canSubmit = confirmedAnime && characterName && smallArtworkBlob;
+    const canSubmit = confirmedAnime && characterName && thumbnailBlob;
 
     const fileInputRefArtwork = useRef<HTMLInputElement | null>(null);
-    const fileInputRefSmallArtwork = useRef<HTMLInputElement | null>(null);
+    const fileInputRefThumbnail = useRef<HTMLInputElement | null>(null);
 
     const loadAnimes = async () => {
         try {
@@ -144,8 +144,8 @@ const CharacterCreation = () => {
         fileInputRefArtwork.current?.click();
     }
 
-    const uploadSmallArtwork = () => {
-        fileInputRefSmallArtwork.current?.click();
+    const uploadThumbnail = () => {
+        fileInputRefThumbnail.current?.click();
     };
 
     const handleArtwork = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,7 +191,7 @@ const CharacterCreation = () => {
         setIsCropModalOpen(true);
     }
 
-    const handleSmallArtwork = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleThumbnail = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
 
         if(!file)
@@ -223,7 +223,7 @@ const CharacterCreation = () => {
         const imageUrl = URL.createObjectURL(file);
 
         setCropTarget({
-            target: "smallArtwork",
+            target: "thumbnail",
             image: imageUrl,
             options: {
                 width: 160,
@@ -256,12 +256,12 @@ const CharacterCreation = () => {
             setArtworkBlob(blob);
         };
 
-        if(cropTarget.target === "smallArtwork") {
-            if(smallArtworkPreview)
-                URL.revokeObjectURL(smallArtworkPreview);
+        if(cropTarget.target === "thumbnail") {
+            if(thumbnailPreview)
+                URL.revokeObjectURL(thumbnailPreview);
 
-            setSmallArtworkPreview(URL.createObjectURL(blob));
-            setSmallArtworkBlob(blob);
+            setThumbnailPreview(URL.createObjectURL(blob));
+            setThumbnailBlob(blob);
         };
 
         URL.revokeObjectURL(cropTarget.image);
@@ -284,17 +284,17 @@ const CharacterCreation = () => {
         }
     };
 
-    const handleRemoveSmallArtwork = (event: React.MouseEvent<HTMLImageElement>) => {
+    const handleRemoveThumbnail = (event: React.MouseEvent<HTMLImageElement>) => {
         event.preventDefault();
 
-        if(smallArtworkPreview)
-            URL.revokeObjectURL(smallArtworkPreview);
+        if(thumbnailPreview)
+            URL.revokeObjectURL(thumbnailPreview);
 
-        setSmallArtworkPreview(null);
-        setSmallArtworkBlob(null);
+        setThumbnailPreview(null);
+        setThumbnailBlob(null);
 
-        if(fileInputRefSmallArtwork.current) {
-            fileInputRefSmallArtwork.current.value = "";
+        if(fileInputRefThumbnail.current) {
+            fileInputRefThumbnail.current.value = "";
         }
     };
 
@@ -306,11 +306,11 @@ const CharacterCreation = () => {
         setActiveCharacter(false);
         setCurrencyLockCharacter(false);
 
-        if(smallArtworkPreview)
-            URL.revokeObjectURL(smallArtworkPreview);
+        if(thumbnailPreview)
+            URL.revokeObjectURL(thumbnailPreview);
 
-        setSmallArtworkPreview(null);
-        setSmallArtworkBlob(null);
+        setThumbnailPreview(null);
+        setThumbnailBlob(null);
 
         setSelectedAnime([])
         setConfirmedAnime(null);
@@ -357,7 +357,7 @@ const CharacterCreation = () => {
             return null;
         }
 
-        if(!smallArtworkBlob || !smallArtworkPreview) {
+        if(!thumbnailBlob || !thumbnailPreview) {
             alert("É preciso adicionar uma arte para o personagem.")
             return null;
         };
@@ -375,8 +375,8 @@ const CharacterCreation = () => {
             lock: currencyLockCharacter,
             artworkBlob: artworkBlob,
             artworkPreview: artworkPreview,
-            smallArtworkBlob: smallArtworkBlob,
-            smallArtworkPreview: smallArtworkPreview
+            thumbnailBlob: thumbnailBlob,
+            thumbnailPreview: thumbnailPreview
         };
     };
 
@@ -389,6 +389,27 @@ const CharacterCreation = () => {
         setCharacterPreview(preview);
         setIsCharacterPreviewModalOpen(true);
     };
+
+    const handleCharacterCreation = async () => {
+        if(!characterPreview)
+            return;
+
+        const formData = new FormData();
+
+        formData.append("anime_id", characterPreview.anime.id.toString());
+        formData.append("name", characterPreview.name);
+        formData.append("description", characterPreview.description);
+        formData.append("attr_hp", characterPreview.stats.hp.toString());
+        formData.append("attr_atk", characterPreview.stats.atk.toString());
+        formData.append("attr_def", characterPreview.stats.def.toString());
+        formData.append("active", characterPreview.active.toString());
+        formData.append("currency_lock", characterPreview.lock.toString());
+
+        formData.append("artwork", characterPreview.artworkBlob);
+        formData.append("thumbnail", characterPreview.thumbnailBlob);
+
+        
+    }
 
     return (
         <>
@@ -448,7 +469,7 @@ const CharacterCreation = () => {
                             )}
                         </div>
                     </div>
-                    <div className={`content-container ${styles["character-create-content"]} ${characterName && smallArtworkBlob && artworkBlob ? styles["success-container"] : ""}`}>
+                    <div className={`content-container ${styles["character-create-content"]} ${characterName && thumbnailBlob && artworkBlob ? styles["success-container"] : ""}`}>
                         <div className={`${styles["content-form-top-container"]}`}>
                             <span className={`container-title`}>Informações do Personagem</span>
                             <div className={`${styles["content-form-top-divider"]}`}>
@@ -463,8 +484,8 @@ const CharacterCreation = () => {
                                                 <span>Vida: <span style={{color: "var(--yellow-800)"}}>{characterHealth}</span></span>
                                                 <span>Personagem {activeCharacter ? (<span style={{color: "var(--yellow-800)"}}>Ativo</span>) : (<span style={{color: "var(--red-300)"}}>Inativo</span>)}</span>
                                                 <span>Personagem {currencyLockCharacter ? (<span style={{color: "var(--red-300)"}}>Bloqueado</span>) : (<span style={{color: "var(--yellow-800)"}}>Desbloqueado</span>)}</span>
-                                                {smallArtworkPreview && (
-                                                    <img src={smallArtworkPreview} />
+                                                {thumbnailPreview && (
+                                                    <img src={thumbnailPreview} />
                                                 )}
                                             </div>
                                         </>
@@ -538,9 +559,9 @@ const CharacterCreation = () => {
                                             }
                                             <input ref={fileInputRefArtwork} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleArtwork}/>
                                         </div>
-                                        <div className={`artwork-upload-wrapper ${smallArtworkPreview ? `${styles["success"]}` : `${styles["content-option-item"]} ${styles["character-small"]}` }`} onClick={() => uploadSmallArtwork()} onContextMenu={handleRemoveSmallArtwork}>
-                                            {smallArtworkPreview 
-                                                ? (<img src={smallArtworkPreview} />)
+                                        <div className={`artwork-upload-wrapper ${thumbnailPreview ? `${styles["success"]}` : `${styles["content-option-item"]} ${styles["character-thumbnail"]}` }`} onClick={() => uploadThumbnail()} onContextMenu={handleRemoveThumbnail}>
+                                            {thumbnailPreview 
+                                                ? (<img src={thumbnailPreview} />)
                                                 : (
                                                     <>
                                                         <UploadOutlined style={{fontSize: "20px"}} />
@@ -548,7 +569,7 @@ const CharacterCreation = () => {
                                                     </>
                                                 )
                                             }
-                                            <input ref={fileInputRefSmallArtwork} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleSmallArtwork}/>
+                                            <input ref={fileInputRefThumbnail} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleThumbnail}/>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -563,6 +584,7 @@ const CharacterCreation = () => {
                             <CharacterPreviewModal 
                                 open={isCharacterPreviewModalOpen}
                                 onClose={() => setIsCharacterPreviewModalOpen(false)}
+                                onConfirm={handleCharacterCreation}
                                 preview={characterPreview}
                             />
                         </div>

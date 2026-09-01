@@ -1,7 +1,12 @@
 import { animeModel } from "../models/Anime";
 import { characterModel } from "../models/Character";
 import { CreateCharacterData, GetCharactersParams } from "../types/character.types";
+import path from "path"
 
+console.log(process.env.FRONTEND_ASSETS_PATH)
+
+const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
+const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "cards");
 class CharacterService {
     async createCharacter(data: CreateCharacterData) {
         const anime = await animeModel.findById(data.anime_id);

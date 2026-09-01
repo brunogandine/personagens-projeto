@@ -7,9 +7,9 @@ export const ALLOWED_TYPES = [
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-const uploadSmallArtwork = CreateImageUpload({
+const uploadImage = CreateImageUpload({
     mimeTypes: ALLOWED_TYPES,
     maxFileSize: MAX_FILE_SIZE
 });
 
-export default uploadSmallArtwork;
+export default uploadImage;

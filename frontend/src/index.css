@@ -169,9 +169,13 @@ img {
     filter: grayscale();
 }
 
-.modal-default .ant-modal-container {
-    background-color: var(--bg-modal);
-    border: 1px solid rgba(93, 93, 93, 0.17);
+.modal-default.ant-modal-wrap {
+    overflow-y: hidden;
+
+    & .ant-modal-container {
+        background-color: var(--bg-modal);
+        border: 1px solid rgba(93, 93, 93, 0.17);
+    }
 
     & .ant-modal-title {
         color: var(--text-color-primary);

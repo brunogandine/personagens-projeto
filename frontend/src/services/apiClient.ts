@@ -56,7 +56,7 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
 
     const res = await fetch(url, config);
 
-    if(res.status === 401  && auth){
+    if(res.status === 401 && auth){
         window.dispatchEvent(new Event("unauthorized"));
 
         throw new Error("Unauthorized")

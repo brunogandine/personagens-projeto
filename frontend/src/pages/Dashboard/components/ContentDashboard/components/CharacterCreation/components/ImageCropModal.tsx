@@ -18,9 +18,6 @@ const ImageCropModal = ({ open, onClose, onApply, image, cropOptions }: AvatarCr
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
-    console.log(ImageCropModal)
-    console.log(cropOptions)
-
     const resetCropState = () => {
         setCrop({
             x: 0,
@@ -59,7 +56,7 @@ const ImageCropModal = ({ open, onClose, onApply, image, cropOptions }: AvatarCr
 
     return (
         <Modal 
-            className={`modal-default`}
+            wrapClassName={`modal-default`}
             title="Editar imagem" 
             open={open} 
             onCancel={handleCancel} 

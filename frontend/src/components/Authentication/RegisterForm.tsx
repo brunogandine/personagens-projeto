@@ -4,7 +4,7 @@ import { Button } from "antd";
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL
 
-function RegisterForm() {
+const RegisterForm = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState<string>("");
 
