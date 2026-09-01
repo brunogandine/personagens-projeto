@@ -1,23 +1,49 @@
 import { animeModel } from "../models/Anime";
 import { characterModel } from "../models/Character";
-import { CreateCharacterData, GetCharactersParams } from "../types/character.types";
+import { CharacterCreationResponse, CreateCharacterPayload, GetCharactersParams } from "../types/character.types";
+import ImageStorageService from "@/services/image-storage.service"
 import path from "path"
-
-console.log(process.env.FRONTEND_ASSETS_PATH)
 
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "cards");
 class CharacterService {
-    async createCharacter(data: CreateCharacterData) {
-        const anime = await animeModel.findById(data.anime_id);
+    async createCharacter(payload: CreateCharacterPayload): Promise<CharacterCreationResponse> {
+        const errors = [];
+
+        const anime = await animeModel.findById(payload.data.anime_id);
 
         if(!anime) {
-            throw new Error("Anime fornecido não existente.");
+            throw ({ type: "not_found", message:"Anime fornecido não existente." });
         };
 
-        await characterModel.create(data);
+        const character = await characterModel.create(payload.data);
 
-        return {ok: true, message: "Personagem criado com sucesso!"};
+        const characterDir = path.resolve(uploadDir, `${character.id}`);
+
+        const artworkExtension = payload.artwork.mimetype.split("/")[1];
+        const thumbnailExtension = payload.thumbnail.mimetype.split("/")[1];
+
+        const artworkDir = path.resolve(characterDir, "artwork", `1`, `1.${artworkExtension}`);
+        const thumbnailDir = path.resolve(characterDir, "thumbnail", `1`, `1.${thumbnailExtension}`);
+
+        const artworkSave = await ImageStorageService.save(payload.artwork.buffer, artworkDir);
+
+        if(!artworkSave.ok) {
+            errors.push({message: `${artworkSave.message} - Artwork`});
+        }
+
+        const thumbnailSave = await ImageStorageService.save(payload.thumbnail.buffer, thumbnailDir);
+
+        if(!thumbnailSave.ok) {
+            errors.push({message: `${thumbnailSave.message} - Thumbnail`});
+        }
+
+        if(errors.length > 0) {
+            errors.push({message: "O personagem foi criado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens. Você pode tentar atualizar as imagens do personagem posteriormente."});
+            throw { type: "storage", errors };
+        };
+
+        return { message: "Personagem criado com sucesso!" };
     }
 
     async getCharacters({

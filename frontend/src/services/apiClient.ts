@@ -72,6 +72,14 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
         };
     };
 
+    if(res.status === 404) {
+        return {
+            ok: false,
+            status: res.status,
+            data: json
+        };
+    }
+
     if(!res.ok) {
         throw new Error(`Erro HTTP: ${res.status}`);
     };

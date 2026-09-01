@@ -312,6 +312,12 @@ const CharacterCreation = () => {
         setThumbnailPreview(null);
         setThumbnailBlob(null);
 
+        if(artworkPreview)
+            URL.revokeObjectURL(artworkPreview);
+
+        setArtworkPreview(null);
+        setArtworkBlob(null);
+
         setSelectedAnime([])
         setConfirmedAnime(null);
 
@@ -408,8 +414,24 @@ const CharacterCreation = () => {
         formData.append("artwork", characterPreview.artworkBlob);
         formData.append("thumbnail", characterPreview.thumbnailBlob);
 
-        
-    }
+        const res = await Request.post("/characters", formData);
+
+        if(!res.ok) {
+            if(res.status === 404) {
+                alert(res.data.message);
+                return;
+            };
+            
+            if(res.data.type === "storage") {
+                alert(res.data.errors.map((e: {message: string}) => e.message).join("\n"));
+            } else {
+                alert(res.data.message);
+            };
+        };
+
+        setIsCharacterPreviewModalOpen(false);
+        resetForm();
+    };
 
     return (
         <>

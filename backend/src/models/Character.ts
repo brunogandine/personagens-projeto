@@ -5,18 +5,9 @@ import { CreateCharacterData, GetCharactersParams } from "../types/character.typ
 
 class CharacterModel {
     create = async (data: CreateCharacterData) => {
-        return prisma.character.create({ 
-            data: {
-                anime_id: data.anime_id,
-                name: data.name,
-                description: data.description,
-                currency_lock: data.currency_lock ?? false,
-                active: data.active ?? false,
-                attr_hp: data.attr_hp,
-                attr_atk: data.attr_atk,
-                attr_def: data.attr_def,
-
-            } });
+        return prisma.character.create({
+            data
+        });
     }
 
     update = async (id: number, data: Prisma.CharacterUpdateInput) => {
