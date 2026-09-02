@@ -12,33 +12,37 @@ import ContentMain from "./pages/Dashboard/components/ContentDashboard/component
 import { AuthContextProvider } from "./contexts/AuthContext";
 import { AuthRoute } from "./routes/guards/AuthRoute";
 import { RoleRoute } from "./routes/guards/RoleRoute";
+import MessageModal from "@/components/MessageModal/MessageModal";
+import { MessageModalContextProvider } from "./contexts/UIFeedbackContext";
 
 function App() {
   return (
       <BrowserRouter>
         <AuthContextProvider>
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path='/' element={<Home/>}/>
-              <Route path='/home' element={<Home/>}/>
-              <Route element={<AuthRoute/>}>
-                <Route path='/profile' element={<Profile />}/>
-              </Route>
-            </Route>
-            <Route element={<RoleRoute allowed={["Admin"]} />}>
-              <Route path='/dashboard' element={<Dashboard />}>
-                <Route index element={<DashboardOverview />} />
-                <Route path="users" element={<UsersDashboard />} />
-                <Route path="content" element={<ContentDashboard />}>
-                  <Route index element={<ContentMain />} />
-                  <Route path="characters/create" element={<CharacterCreation />} />
-                  {/* <Route path="animes/creation" element={<AnimeCreation />} /> */}
-                  {/* <Route path="edit"element={<CharacterEdit />} /> */}
+          <MessageModalContextProvider>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path='/' element={<Home/>}/>
+                <Route path='/home' element={<Home/>}/>
+                <Route element={<AuthRoute/>}>
+                  <Route path='/profile' element={<Profile />}/>
                 </Route>
-                <Route path="settings" />
               </Route>
-            </Route>
-          </Routes>
+              <Route element={<RoleRoute allowed={["Admin"]} />}>
+                <Route path='/dashboard' element={<Dashboard />}>
+                  <Route index element={<DashboardOverview />} />
+                  <Route path="users" element={<UsersDashboard />} />
+                  <Route path="content" element={<ContentDashboard />}>
+                    <Route index element={<ContentMain />} />
+                    <Route path="characters/create" element={<CharacterCreation />} />
+                    {/* <Route path="animes/creation" element={<AnimeCreation />} /> */}
+                    {/* <Route path="edit"element={<CharacterEdit />} /> */}
+                  </Route>
+                  <Route path="settings" />
+                </Route>
+              </Route>
+            </Routes>
+          </MessageModalContextProvider>
         </AuthContextProvider>
       </BrowserRouter>
   )

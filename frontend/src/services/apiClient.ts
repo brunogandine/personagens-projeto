@@ -72,7 +72,7 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
         };
     };
 
-    if(res.status === 404) {
+    if(res.status === 404 || res.status === 500) {
         return {
             ok: false,
             status: res.status,

@@ -4,6 +4,11 @@
     --bg-success: #113311;
 
     --bg-modal: #25242E;
+    --bg-modal-secondary: #E6E6E6;
+
+    --bg-modal-error: #FF0000;
+    --bg-modal-info: #00ff00;
+    --bg-modal-warning: #ff9900;
 
     --item-bg-default: #8787873B;
 
@@ -192,6 +197,45 @@ img {
         &:hover {
             color: var(--text-color-primary-hover);         
         }
+    }
+}
+
+.modal-error.ant-modal-wrap, 
+.modal-warning.ant-modal-wrap,
+.modal-info.ant-modal-wrap {
+    & ul {
+        list-style-type: disc !important;
+        padding-left: 20px;
+    }
+}
+
+.modal-error.ant-modal-wrap {
+    overflow-y: hidden;
+
+    & .ant-modal-container {
+        background-color: var(--bg-modal-secondary);
+        border-radius: 0;
+        box-shadow: inset 0 3px 0 0 var(--bg-modal-error);
+    }
+}
+
+.modal-warning.ant-modal-wrap {
+    overflow-y: hidden;
+
+    & .ant-modal-container {
+        background-color: var(--bg-modal-secondary);
+        border-radius: 0;
+        box-shadow: inset 0 3px 0 0 var(--bg-modal-warning);
+    }
+}
+
+.modal-info.ant-modal-wrap {
+    overflow-y: hidden;
+
+    & .ant-modal-container {
+        background-color: var(--bg-modal-secondary);
+        border-radius: 0;
+        box-shadow: inset 0 3px 0 0 var(--bg-modal-info);
     }
 }
 

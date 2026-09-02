@@ -10,6 +10,7 @@ import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import { validateImageFile } from "@/helpers/validateImageFile";
 import ImageCropModal from "./components/ImageCropModal";
 import CharacterPreviewModal from "./components/CharacterPreviewModal";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -27,6 +28,8 @@ type CropTarget = {
 }
 
 const CharacterCreation = () => {
+    const { showToast,showMessageModal } = useMessageModal();
+
     const [animeFormToggle, setAnimeFormToggle] = useState(true);
     const [characterFormToggle, setCharacterFormToggle] = useState(false);
 
@@ -418,16 +421,29 @@ const CharacterCreation = () => {
 
         if(!res.ok) {
             if(res.status === 404) {
-                alert(res.data.message);
+                showMessageModal({
+                    type: "error",
+                    description: "Anime não encontrado"
+                })
                 return;
             };
             
-            if(res.data.type === "storage") {
-                alert(res.data.errors.map((e: {message: string}) => e.message).join("\n"));
-            } else {
-                alert(res.data.message);
+            if(res.status === 500 && res.data.type === "storage") {
+                showMessageModal({
+                    type: "warning",
+                    description: "Personagem criado com sucesso mas um ou mais erros ocorreram durante o upload das imagens:",
+                    list: res.data.errors,
+                    instructions: "Você pode tentar subir as imagens novamente na sessão Editar Personagem."
+                });
+
+                setIsCharacterPreviewModalOpen(false);
+                resetForm();
+
+                return;
             };
         };
+
+        showToast("Personagem criado com sucesso!");
 
         setIsCharacterPreviewModalOpen(false);
         resetForm();

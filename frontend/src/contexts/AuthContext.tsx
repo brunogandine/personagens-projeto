@@ -51,32 +51,32 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
         };
     }, [navigate]);
 
-const login = async (payload: {email: string, user_key: string}) => { 
-    try{ 
-        const res = await Request.post( 
-            "/auth/login", 
-            payload, 
-        ); 
-        
-        if(!res) 
-            return { success: false };
-
-        if(!res.ok) { 
-            const formattedErrors: Record<string, string> = {}; 
+    const login = async (payload: {email: string, user_key: string}) => { 
+        try{ 
+            const res = await Request.post( 
+                "/auth/login", 
+                payload, 
+            ); 
             
-            if(res.data.errors) { 
-                res.data.errors.forEach((err: { field: string, message: string }) => { 
-                    formattedErrors[err.field] = err.message; 
-                })
+            if(!res) 
+                return { success: false };
+
+            if(!res.ok) { 
+                const formattedErrors: Record<string, string> = {}; 
+                
+                if(res.data.errors) { 
+                    res.data.errors.forEach((err: { field: string, message: string }) => { 
+                        formattedErrors[err.field] = err.message; 
+                    })
+                }; 
+                    
+                    return { success: false, errors: formattedErrors }; 
             }; 
                 
-                return { success: false, errors: formattedErrors }; 
-            }; 
-            
             setUser(res.data.user ?? null); 
             
             return { success: true, message: "Login bem-sucedido" };
-        } catch(err: any) { 
+        }catch(err: any) { 
             return { success: false, message: "Erro de rede."} 
         }
     }
