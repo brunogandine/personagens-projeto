@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import UserService from "../services/user.service";
 import { fileTypeFromBuffer } from "file-type";
-import { validMimeTypes } from "../middlewares/upload-avatar";
+import { ALLOWED_TYPES } from "../middlewares/upload/uploadAvatar";
 import userService from "../services/user.service";
 
 class UserController {
@@ -55,7 +55,7 @@ class UserController {
 
             const detectType = await fileTypeFromBuffer(req.file.buffer);
 
-            if(!detectType || !validMimeTypes.includes(detectType.mime))
+            if(!detectType || !ALLOWED_TYPES.includes(detectType.mime))
                 return res.status(400).json({
                     message: `Tipo do Arquivo inválido.`
                 });

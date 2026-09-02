@@ -25,7 +25,15 @@ dist-ssr
 
 # Variáveis de ambiente
 .env
-.env.local
-.env.development
-.env.production
-.env.test
+.env.*
+!.env.example
+
+# Assets
+
+public/assets/images/cards/*
+public/assets/images/animes/*
+
+!public/assets/images/cards/
+!public/assets/images/cards/background
+!public/assets/images/cards/background/**
+!public/assets/images/animes/.gitkeep

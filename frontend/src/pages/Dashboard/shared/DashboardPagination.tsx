@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import styles from "../../Dashboard.module.css";
+import styles from "../Dashboard.module.css";
 
 type Props = {
+    style?: React.CSSProperties;
     page: number;
     totalPages: number;
+    range: {
+        start: number;
+        end: number;
+    }
     onPageChange: (page: number) => void;
 }
 
-const UsersPagination = ({page, totalPages, onPageChange}: Props) => {
+const DashboardPagination = ({style, page, totalPages, onPageChange, range: {start, end}}: Props) => {
     const [showJump, setShowJump] = useState(false);
     const [jumpValue, setJumpValue] = useState("");
 
@@ -16,8 +21,8 @@ const UsersPagination = ({page, totalPages, onPageChange}: Props) => {
     const getPages = () => {
         const range = [];
 
-        const startEdgeCount = 5
-        const endEdgeCount = 4
+        const startEdgeCount = start
+        const endEdgeCount = end
 
         if (page < startEdgeCount) {
             for (let i = 1; i <= Math.min(startEdgeCount + 1, totalPages); i++) {
@@ -72,7 +77,7 @@ const UsersPagination = ({page, totalPages, onPageChange}: Props) => {
 
     return (
         <>
-            <div className={`${styles["users-pagination"]}`}>
+            <div style={style} className={`${styles["users-pagination"]}`}>
                 {page !== 1 && (
                     <>
                         <button className={btnPageStyle} onClick={() => onPageChange(1)}>{"<<"}</button>
@@ -171,4 +176,4 @@ const UsersPagination = ({page, totalPages, onPageChange}: Props) => {
     )
 }
 
-export default UsersPagination;
+export default DashboardPagination;

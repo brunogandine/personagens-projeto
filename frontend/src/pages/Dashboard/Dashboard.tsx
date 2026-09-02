@@ -6,7 +6,7 @@ import DashboardContent from "./components/DashboardContent";
 const Dashboard = () => {
     return (
         <>
-            <div id="app-dashboard" className={`${styles["dashboard"]}`}>
+            <div id="app-dashboard" className={`${styles["dashboard"]} ${styles["dashboard-variables"]}`}>
                 <Sidebar />
                 <DashboardContent>
                     <Outlet />

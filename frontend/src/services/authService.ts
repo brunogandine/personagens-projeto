@@ -6,10 +6,14 @@ type GetMeResponse =
   | { success: false }
 
 export const getMe = async (): Promise<GetMeResponse> => {
-  const res = await Request.get<{user: AuthUser}>(`/auth/me`);
+  try {
+    const res = await Request.get<{user: AuthUser}>(`/auth/me`);
 
-  if(!res || !res.ok)
+    if(!res?.ok)
+      return { success: false };
+    
+    return { success: true, user: res.data.user };
+  }catch(err) {
     return { success: false };
-  
-  return { success: true, user: res.data.user };
+  }
 }

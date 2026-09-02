@@ -1,7 +1,7 @@
 import { Button, Modal, Slider } from "antd";
 import { useEffect, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
-import { getCroppedImg } from "../utils/cropImage";
+import { getCroppedImg } from "@/utils/cropImage";
 import { PictureFilled } from "@ant-design/icons";
 import styles from "../Profile.module.css";
 

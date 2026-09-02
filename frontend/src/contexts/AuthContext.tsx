@@ -21,7 +21,7 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const load = async () => {
+        const loadUser = async () => {
             const data = await getMe();
 
             if(!data.success) {
@@ -35,7 +35,7 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
             setLoading(false);
         }
 
-        load();
+        loadUser();
     }, []);
 
     useEffect(() => {
@@ -51,32 +51,32 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
         };
     }, [navigate]);
 
-const login = async (payload: {email: string, user_key: string}) => { 
-    try{ 
-        const res = await Request.post( 
-            "/auth/login", 
-            payload, 
-        ); 
-        
-        if(!res) 
-            return { success: false };
-
-        if(!res.ok) { 
-            const formattedErrors: Record<string, string> = {}; 
+    const login = async (payload: {email: string, user_key: string}) => { 
+        try{ 
+            const res = await Request.post( 
+                "/auth/login", 
+                payload, 
+            ); 
             
-            if(res.data.errors) { 
-                res.data.errors.forEach((err: { field: string, message: string }) => { 
-                    formattedErrors[err.field] = err.message; 
-                })
+            if(!res) 
+                return { success: false };
+
+            if(!res.ok) { 
+                const formattedErrors: Record<string, string> = {}; 
+                
+                if(res.data.errors) { 
+                    res.data.errors.forEach((err: { field: string, message: string }) => { 
+                        formattedErrors[err.field] = err.message; 
+                    })
+                }; 
+                    
+                    return { success: false, errors: formattedErrors }; 
             }; 
                 
-                return { success: false, errors: formattedErrors }; 
-            }; 
-            
             setUser(res.data.user ?? null); 
             
             return { success: true, message: "Login bem-sucedido" };
-        } catch(err: any) { 
+        }catch(err: any) { 
             return { success: false, message: "Erro de rede."} 
         }
     }
@@ -93,6 +93,7 @@ const login = async (payload: {email: string, user_key: string}) => {
             }
 
             setUser(null);
+
             return { success: true };
         } catch(err) {
             return { success: false, message: "Erro de rede."}
@@ -108,7 +109,9 @@ const login = async (payload: {email: string, user_key: string}) => {
 
 export const useAuth = () => {
     const ctx = useContext(AuthContext);
-    if(!ctx) throw new Error("useAuth must be used inside AuthProvider");
+    
+    if(!ctx) 
+        throw new Error("useAuth must be used inside AuthProvider");
 
     return ctx;
 }

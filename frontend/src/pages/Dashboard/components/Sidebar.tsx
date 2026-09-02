@@ -18,8 +18,8 @@ const menuItems = [
                 icon: <TeamOutlined />
             },
             {
-                name: "Personagens",
-                path: `${BASE_ADM_PATH}/characters`,
+                name: "Conteúdo",
+                path: `${BASE_ADM_PATH}/content`,
                 icon: <ProfileFilled />
             },
             {

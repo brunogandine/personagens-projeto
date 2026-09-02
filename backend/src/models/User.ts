@@ -78,14 +78,7 @@ class UserModel {
             })
     };
 
-    getUsers = async ({
-        page = 1, 
-        limit = 50, 
-        search = "", 
-        sortBy = "created_at", 
-        order = "asc"
-        }: GetParams) => {
-
+    getUsers = async ({ page = 1, limit = 50, search = "", sortBy = "created_at", order = "asc" }: GetParams) => {
         const where: Prisma.UserWhereInput = search
             ? {
                 OR: [{

@@ -5,6 +5,7 @@ export type RequestOptions = {
     data?: unknown;
     auth?: boolean;
     headers?: Record<string, string>;
+    query?: Record<string, string | number | boolean>;
 };
 
 export type ApiResponse<T> = {
@@ -13,12 +14,13 @@ export type ApiResponse<T> = {
     data: T,
 }
 
-const call = async <T = any>(route: string, options: RequestOptions): Promise<ApiResponse<T> | null> => {
+const call = async <T = any>(route: string, options: RequestOptions): Promise<ApiResponse<T>> => {
     const {
         method = "GET",
         data,
         auth = true,
-        headers = {}
+        headers = {},
+        query = {}
     } = options;
 
     const config: RequestInit = {
@@ -40,12 +42,24 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
         config.body = JSON.stringify(data);
     };
 
-    const res = await fetch(`${BASE_API_URL}${route}`, config);
+    let url = `${BASE_API_URL}${route}`;
 
-    if(res.status === 401  && auth){
+    if(Object.keys(query).length > 0) {
+        const params = new URLSearchParams();
+
+        Object.entries(query).forEach(([key, value]) => {
+            params.append(key, String(value));
+        });
+
+        url += `?${params.toString()}`;
+    }
+
+    const res = await fetch(url, config);
+
+    if(res.status === 401 && auth){
         window.dispatchEvent(new Event("unauthorized"));
 
-        return null;
+        throw new Error("Unauthorized")
     }
 
     const json = await res.json();
@@ -57,6 +71,14 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
             data: json
         };
     };
+
+    if(res.status === 404 || res.status === 500) {
+        return {
+            ok: false,
+            status: res.status,
+            data: json
+        };
+    }
 
     if(!res.ok) {
         throw new Error(`Erro HTTP: ${res.status}`);
