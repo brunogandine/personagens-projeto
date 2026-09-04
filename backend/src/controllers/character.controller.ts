@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import CharacterService from "../services/character.service";
 import { isAppError } from "@/utils/is-app-error.util";
 import { detectImageType } from "@/utils/detectImageType";
+import type { UpdateCharacterSchema, CharacterIdSchema } from "@/validations/character.validations";
 
 class CharacterController {
     createCharacter: RequestHandler = async (req, res) => {
@@ -47,7 +48,7 @@ class CharacterController {
                 if(err.type === "storage") {
                     return res.status(201).json({errors: err.errors});
                 }
-            }
+            };
 
             return res.status(500).json({message: "Erro Interno"});
         }
@@ -66,7 +67,7 @@ class CharacterController {
             ])
 
             const result = await CharacterService.updateCharacter({
-                id: req.params.id,
+                id: Number(req.params.id),
                 data: req.body,
                 ...(files.artwork?.[0] && artworkExt 
                     ? {
@@ -91,7 +92,12 @@ class CharacterController {
             res.status(200).json(result);
         } catch(err) {
             if(isAppError(err)) {
-
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+                if(err.type === "storage") {
+                    return res.status(201).json({errors: err.errors});
+                }
             };
             
             return res.status(500).json({message: "Erro Interno"});

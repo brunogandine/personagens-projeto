@@ -1,6 +1,6 @@
 import { animeModel } from "../models/Anime";
 import { characterModel } from "../models/Character";
-import { CharacterCreationResponse, CreateCharacterPayload, GetCharactersParams } from "../types/character.types";
+import { CharacterCreationResponse, CreateCharacterPayload, EditCharacterPayload, GetCharactersParams } from "../types/character.types";
 import ImageStorageService from "@/services/image-storage.service"
 import path from "path"
 
@@ -46,6 +46,47 @@ class CharacterService {
         };
 
         return { message: "Personagem criado com sucesso!" };
+    };
+
+    async updateCharacter(payload: EditCharacterPayload) {
+        const errors = [];
+
+        const existCharacter = await characterModel.findById(payload.id);
+
+        if(!existCharacter) {
+            throw ({type: "not_found", message: "Personagem não encontrado"});
+        };
+
+        await characterModel.update(payload.id, payload?.data);
+
+        const characterDir = path.resolve(uploadDir, `${payload.id}`);
+
+        if(payload.artwork) {
+            const artworkDir = path.resolve(characterDir, "artwork", `1`, `1.${payload.artwork.ext}`);
+
+            const artworkSave = await ImageStorageService.save(payload.artwork.buffer, artworkDir);
+
+            if(!artworkSave.ok) {
+                errors.push({message: `${artworkSave.message} - Artwork`});
+            };
+        };
+
+        if(payload.thumbnail) {
+            const thumbnailDir = path.resolve(characterDir, "thumbnail", `1`, `1.${payload.thumbnail.ext}`);
+
+            const thumbnailSave = await ImageStorageService.save(payload.thumbnail.buffer, thumbnailDir);
+
+            if(!thumbnailSave.ok) {
+                errors.push({message: `${thumbnailSave.message} - Thumbnail`});
+            };
+        };
+
+        if(errors.length > 0) {
+            errors.push({message: "O personagem foi atualizado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens. Você pode tentar atualizar as imagens do personagem posteriormente."});
+            throw { type: "storage", errors };
+        };
+
+        return { message: "Personagem atualizado com sucesso!"}
     }
 
     async getCharacters({

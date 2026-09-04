@@ -11,6 +11,6 @@ router.get("/", auth, AnimeController.getAll);
 router.get("/:id", auth, AnimeController.getById);
 router.get("/counts", auth, AnimeController.getCount)
 
-router.post("/", auth, authorize("Admin"), validate(createAnimeSchema), AnimeController.createAnime);
+router.post("/", auth, authorize("Admin"), validate(createAnimeSchema, "body"), AnimeController.createAnime);
 
 export default router;

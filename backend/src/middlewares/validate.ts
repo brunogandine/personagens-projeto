@@ -1,8 +1,8 @@
 import { ZodType, ZodError } from "zod";
 import { RequestHandler } from "express";
 
-export const validate = (schema: ZodType<any>): RequestHandler => (req, res, next) => {
-    const result = schema.safeParse(req.body);
+export const validate = (schema: ZodType<any>, source: "body" | "params" | "query"): RequestHandler => (req, res, next) => {
+    const result = schema.safeParse(req[source]);
 
     if(!result.success) {
         const zodError = result.error as ZodError;
@@ -16,7 +16,7 @@ export const validate = (schema: ZodType<any>): RequestHandler => (req, res, nex
         });
     }
 
-    req.body = result.data;
+    req[source] = result.data;
 
     next(); 
 };

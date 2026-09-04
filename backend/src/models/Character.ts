@@ -1,6 +1,7 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import { CreateCharacterData, GetCharactersParams } from "../types/character.types";
+import type { CreateCharacterData, GetCharactersParams } from "../types/character.types";
+import type { UpdateCharacterSchema } from "@/validations/character.validations";
 
 
 class CharacterModel {
@@ -10,12 +11,16 @@ class CharacterModel {
         });
     }
 
-    update = async (id: number, data: Prisma.CharacterUpdateInput) => {
+    update = async (id: number, data: UpdateCharacterSchema) => {
+        const normalizeData = Object.fromEntries(
+            Object.entries(data).filter(([, value]) => value !== undefined)
+        );
+
         return prisma.character.update({
             where: { id },
-            data
+            data: normalizeData
         });
-    }
+    };
 
     delete = async (id: number) => {
         return prisma.character.delete({

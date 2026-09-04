@@ -14,7 +14,7 @@ router.get("/counts", auth, UserController.getCounts);
 router.patch("/me/avatar", auth, UploadAvatar.single('avatar'), UserController.updateAvatar);
 router.get("/me/avatar/recents", auth, UserController.getRecentAvatars);
 
-router.patch("/me/password", auth, validate(changePasswordSchema), UserController.changePassword)
+router.patch("/me/password", auth, validate(changePasswordSchema, "body"), UserController.changePassword)
 
 
 export default router;
