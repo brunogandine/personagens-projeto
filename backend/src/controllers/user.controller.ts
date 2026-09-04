@@ -1,8 +1,9 @@
 import { RequestHandler } from "express";
 import UserService from "../services/user.service";
 import { fileTypeFromBuffer } from "file-type";
-import { ALLOWED_TYPES } from "../middlewares/upload/uploadAvatar";
+import { ALLOWED_PROFILE_IMAGES_TYPES } from "@/middlewares/upload/uploadTypes";
 import userService from "../services/user.service";
+import { detectImageType } from "@/utils/detectImageType";
 
 class UserController {
     getUsers: RequestHandler = async (req, res) => {
@@ -53,9 +54,9 @@ class UserController {
                     message: `Nenhuma imagem enviada.`
                 });
 
-            const detectType = await fileTypeFromBuffer(req.file.buffer);
+            const detectType = await detectImageType(req.file.buffer);
 
-            if(!detectType || !ALLOWED_TYPES.includes(detectType.mime))
+            if(!detectType)
                 return res.status(400).json({
                     message: `Tipo do Arquivo inválido.`
                 });
@@ -63,7 +64,7 @@ class UserController {
             const updatedUser = await UserService.updateAvatar({
                 userId,
                 buffer: req.file.buffer,
-                extension: detectType.ext,
+                extension: detectType,
                 source: req.body.source,
             });
 

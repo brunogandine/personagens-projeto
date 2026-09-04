@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import CharacterService from "../services/character.service";
 import { isAppError } from "@/utils/is-app-error.util";
+import { detectImageType } from "@/utils/detectImageType";
 
 class CharacterController {
     createCharacter: RequestHandler = async (req, res) => {
@@ -10,20 +11,31 @@ class CharacterController {
                 thumbnail?: Express.Multer.File[];
             };
 
-            if(!files.artwork?.[0] || !files.thumbnail?.[0]) {
-                return res.status(400).json({message: "Artes do personagem são obrigatórias."})
-            }
+            const [ artworkExt, thumbnailExt ] = await Promise.all([
+                files.artwork?.[0] ? detectImageType(files.artwork[0].buffer) : null,
+                files.thumbnail?.[0] ? detectImageType(files.thumbnail[0].buffer) : null
+            ]);
 
             const result = await CharacterService.createCharacter({
-                data: req.body, 
-                artwork: {
-                    mimetype: files.artwork[0].mimetype,
-                    buffer: files.artwork[0].buffer
-                },
-                thumbnail: {
-                    mimetype: files.thumbnail[0].mimetype,
-                    buffer: files.thumbnail[0].buffer
-                }
+                data: req.body,
+                ...(files.artwork?.[0] && artworkExt 
+                    ? {
+                        artwork: {
+                            buffer: files.artwork[0].buffer,
+                            ext: artworkExt
+                        }
+                    }
+                    : undefined
+                ),
+                ...(files.thumbnail?.[0] && thumbnailExt 
+                    ? {
+                        thumbnail: {
+                            buffer: files.thumbnail[0].buffer,
+                            ext: thumbnailExt
+                        }
+                    }
+                    : undefined
+                )
             });
 
             res.status(201).json(result);
@@ -37,6 +49,51 @@ class CharacterController {
                 }
             }
 
+            return res.status(500).json({message: "Erro Interno"});
+        }
+    };
+
+    updateCharacter: RequestHandler = async (req, res) => {
+        try {
+            const files = req.files as {
+                artwork?: Express.Multer.File[];
+                thumbnail?: Express.Multer.File[];
+            };
+
+            const [ artworkExt, thumbnailExt ] = await Promise.all([
+                files.artwork?.[0] ? detectImageType(files.artwork[0].buffer) : null,
+                files.thumbnail?.[0] ? detectImageType(files.thumbnail[0].buffer) : null
+            ])
+
+            const result = await CharacterService.updateCharacter({
+                id: req.params.id,
+                data: req.body,
+                ...(files.artwork?.[0] && artworkExt 
+                    ? {
+                        artwork: {
+                            buffer: files.artwork[0].buffer,
+                            ext: artworkExt
+                        },       
+                    }
+                    : undefined
+                ),
+                ...(files.thumbnail?.[0] && thumbnailExt 
+                    ? {
+                        thumbnail: {
+                            buffer: files.thumbnail[0].buffer,
+                            ext: thumbnailExt
+                        },       
+                    }
+                    : undefined
+                ),
+            });
+
+            res.status(200).json(result);
+        } catch(err) {
+            if(isAppError(err)) {
+
+            };
+            
             return res.status(500).json({message: "Erro Interno"});
         }
     }

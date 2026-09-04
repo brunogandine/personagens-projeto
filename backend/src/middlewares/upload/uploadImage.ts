@@ -1,14 +1,10 @@
 import CreateImageUpload from "./createImageUpload";
-
-export const ALLOWED_TYPES = [
-    "image/jpeg",
-    "image/png"
-];
+import { ALLOWED_IMAGES_TYPES } from "@/middlewares/upload/uploadTypes";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const uploadImage = CreateImageUpload({
-    mimeTypes: ALLOWED_TYPES,
+    mimeTypes: ALLOWED_IMAGES_TYPES,
     maxFileSize: MAX_FILE_SIZE
 });
 

@@ -25,13 +25,13 @@ export type CreateCharacterPayload = {
         description: string,
         name: string,
     },
-    artwork: {
-        mimetype: string,
+    artwork?: {
         buffer: Buffer
+        ext: string
     },
-    thumbnail: {
-        mimetype: string,
+    thumbnail?: {
         buffer: Buffer
+        ext: string
     }
 }
 

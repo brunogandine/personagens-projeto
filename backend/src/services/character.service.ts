@@ -20,23 +20,25 @@ class CharacterService {
 
         const characterDir = path.resolve(uploadDir, `${character.id}`);
 
-        const artworkExtension = payload.artwork.mimetype.split("/")[1];
-        const thumbnailExtension = payload.thumbnail.mimetype.split("/")[1];
+        if(payload.artwork) {
+            const artworkDir = path.resolve(characterDir, "artwork", `1`, `1.${payload.artwork.ext}`);
 
-        const artworkDir = path.resolve(characterDir, "artwork", `1`, `1.${artworkExtension}`);
-        const thumbnailDir = path.resolve(characterDir, "thumbnail", `1`, `1.${thumbnailExtension}`);
+            const artworkSave = await ImageStorageService.save(payload.artwork.buffer, artworkDir);
 
-        const artworkSave = await ImageStorageService.save(payload.artwork.buffer, artworkDir);
+            if(!artworkSave.ok) {
+                errors.push({message: `${artworkSave.message} - Artwork`});
+            };
+        };
 
-        if(!artworkSave.ok) {
-            errors.push({message: `${artworkSave.message} - Artwork`});
-        }
+        if(payload.thumbnail) {
+            const thumbnailDir = path.resolve(characterDir, "thumbnail", `1`, `1.${payload.thumbnail.ext}`);
 
-        const thumbnailSave = await ImageStorageService.save(payload.thumbnail.buffer, thumbnailDir);
+            const thumbnailSave = await ImageStorageService.save(payload.thumbnail.buffer, thumbnailDir);
 
-        if(!thumbnailSave.ok) {
-            errors.push({message: `${thumbnailSave.message} - Thumbnail`});
-        }
+            if(!thumbnailSave.ok) {
+                errors.push({message: `${thumbnailSave.message} - Thumbnail`});
+            };
+        };
 
         if(errors.length > 0) {
             errors.push({message: "O personagem foi criado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens. Você pode tentar atualizar as imagens do personagem posteriormente."});

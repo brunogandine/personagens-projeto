@@ -13,5 +13,6 @@ router.get("/:id", auth, CharacterController.getById);
 router.get("/counts", auth, CharacterController.getCounts);
 
 router.post("/", auth, authorize("Admin"), UploadImage.fields([{name: "thumbnail", maxCount: 1}, {name: "artwork", maxCount: 1}]), validate(createCharacterSchema), CharacterController.createCharacter);
+router.patch("/:id", auth, authorize("Admin"), UploadImage.fields([{name: "thumbnail", maxCount: 1}, {name: "artwork", maxCount: 1}]), CharacterController.updateCharacter);
 
 export default router;

@@ -1,15 +1,10 @@
 import CreateImageUpload from "./createImageUpload";
-
-export const ALLOWED_TYPES = [ 
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-];
+import { ALLOWED_PROFILE_IMAGES_TYPES } from "@/middlewares/upload/uploadTypes";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 const uploadAvatar = CreateImageUpload({
-    mimeTypes: ALLOWED_TYPES,
+    mimeTypes: ALLOWED_PROFILE_IMAGES_TYPES,
     maxFileSize: MAX_FILE_SIZE
 });
 
