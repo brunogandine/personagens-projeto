@@ -1,12 +1,10 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
 model Anime {
   id            Int                @id @default(autoincrement()) @db.UnsignedInt
   active        Boolean            @default(false)
@@ -24,14 +22,20 @@ model Character {
   currency_lock Boolean                @default(false)
   active        Boolean                @default(false)
   anime_active  Boolean                @default(false)
-  attr_hp       Int                   @default(0)
-  attr_atk      Int                   @default(0)
-  attr_def      Int                   @default(0)
+  attr_hp       Int                    @default(0)
+  attr_atk      Int                    @default(0)
+  attr_def      Int                    @default(0)
 
   anime         Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
 
   @@index([anime_id], map: "idx_anime")
   @@map("characters")
+}
+model CharacterNames {
+  id                  Int              @id @default(autoincrement()) @db.UnsignedInt
+  character_name      String           @db.VarChar(255)
+
+  @@map("characters_names")
 }
 model UserRestriction {
   id                Int @id @default(autoincrement()) @db.UnsignedInt
@@ -49,7 +53,6 @@ model UserRestriction {
 
   @@map("user_restrictions")
 }
-
 model UserSession {
   id            Int      @id @default(autoincrement()) @db.UnsignedInt
   user_id       Int      @db.UnsignedInt
@@ -62,7 +65,6 @@ model UserSession {
 
   @@map("user_sessions")
 }
-
 model UserUnlocks {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
   characters  UserCharacters[]
@@ -76,7 +78,6 @@ model UserUnlocks {
   @@index([user_id], map: "user_unlocks_user_id_fkey")
   @@map("user_unlocks")
 }
-
 model UserCharacters {
   id           Int          @id @default(autoincrement()) @db.UnsignedInt
   user_id      Int          @db.UnsignedInt
@@ -90,7 +91,6 @@ model UserCharacters {
 
   @@map("user_characters")
 }
-
 model User {
   id                      Int           @id @default(autoincrement()) @db.UnsignedInt
   username                String        @unique
