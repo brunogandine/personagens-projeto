@@ -1,11 +1,11 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import type { CreateCharacterData, GetCharactersParams } from "../types/character.types";
-import type { UpdateCharacterSchema } from "@/validations/character.validations";
+import type { GetCharactersParams } from "../types/character.types";
+import type { CreateCharacterSchema, UpdateCharacterSchema } from "@/validations/character.validations";
 
 
 class CharacterModel {
-    create = async (data: CreateCharacterData) => {
+    create = async (data: CreateCharacterSchema) => {
         return prisma.character.create({
             data
         });
@@ -26,13 +26,16 @@ class CharacterModel {
         return prisma.character.delete({
             where: { id }
         });
-    }
+    };
 
     findById = async (id: number) => {
         return prisma.character.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                anime: true
+            }
         });
-    }
+    };
 
     getCharacters = async ({
         page = 1,

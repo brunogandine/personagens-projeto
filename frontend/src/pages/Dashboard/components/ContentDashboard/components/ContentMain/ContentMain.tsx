@@ -7,9 +7,15 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
-import type { AnimeItem, AnimeItemViewModel, CharacterItem, CharacterItemViewModel } from "../../types/content.types";
+import type { AnimeItem, AnimeItemViewModel, CharacterEdit, CharacterItem, CharacterItemViewModel, EditTypes } from "../../types/content.types";
+import CharacterEditModal from "./components/CharacterEditModal";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
+
+export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
 const ContentMain = () => {
+    const { showMessageModal } = useMessageModal();
+
     const BASE_DASHBOARD_CONTENT_URL = `/dashboard/content`;
 
     const [charactersPage, setCharactersPage] = useState(1);
@@ -29,6 +35,9 @@ const ContentMain = () => {
 
     const [selectedAnimes, setSelectedAnimes] = useState<number[]>([]);
     const [selectedCharacters, setSelectedCharacters] = useState<number[]>([]);
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editModalCharacter, setEditModalCharacter] = useState<CharacterEdit | null>(null)
 
     const { user } = useAuth();
 
@@ -121,6 +130,50 @@ const ContentMain = () => {
         image: `/assets/images/cards/${a.id}/thumbnail/1/thumbnail.jpg`
     }))
 
+    const getCharacter = async (id: number) => {
+        const res = await Request.get(`/characters/${id}`);
+
+        if(!res.ok) {
+            if(res.status === 404) {
+                showMessageModal({
+                    type: "error",
+                    description: res.data.message
+                });
+            };
+        };
+
+        return res.data;
+    };
+
+    const openEditModal = async (type: EditTypes) => {
+        if(selectedCharacters.length <= 0) {
+            showMessageModal({
+                type: "warning",
+                description: "É preciso selecionar um personagem para executar está ação.",
+            });
+            
+            return;
+        }
+
+        if(selectedCharacters.length > 1) {
+            showMessageModal({
+                type: "warning",
+                description: "Não é possível executar está ação com mais de um personagem selecionado."
+            });
+
+            return;
+        }
+
+        const character = await getCharacter(selectedCharacters[0]);
+
+        setEditModalCharacter(character);
+        setIsEditModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+    };
+
     return (
         <>
             <div className={`${styles["content-container"]} ${styles["animes"]}`}>
@@ -141,7 +194,7 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions type={"animes"} />
+                    <ContentOptions type={"anime"} open={openEditModal} />
                     <div className={`container-default ${styles["list-content"]} ${animes.length > 0 ? styles["anime"] : styles["no-results"]}`}>
                         <div className={`${styles["content-list-item"]}`} >
                             <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/animes/creation`}>
@@ -192,7 +245,7 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions type={"characters"} />
+                    <ContentOptions open={openEditModal} type={"character"} />
                     <div className={`container-default ${styles["list-content"]} ${characters.length > 0 ? styles["character"] : styles["no-results"]}`}>
                         <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
                             <div className={`${styles["content-option-item"]} ${styles["character-thumbnail"]}`}>
@@ -219,6 +272,7 @@ const ContentMain = () => {
                     {characters.length > 0 && (
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
+                    <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} />
                 </div>
             </div>
         </>

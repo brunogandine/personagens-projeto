@@ -1,13 +1,13 @@
-import { animeModel } from "../models/Anime";
-import { characterModel } from "../models/Character";
-import { CharacterCreationResponse, CreateCharacterPayload, EditCharacterPayload, GetCharactersParams } from "../types/character.types";
+import { animeModel } from "@/models/Anime";
+import { characterModel } from "@/models/Character";
+import { CreateCharacterResponse, CreateCharacterPayload, EditCharacterPayload, GetCharactersParams, EditCharacterResponse } from "@/types/character.types";
 import ImageStorageService from "@/services/image-storage.service"
 import path from "path"
 
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "cards");
 class CharacterService {
-    async createCharacter(payload: CreateCharacterPayload): Promise<CharacterCreationResponse> {
+    async createCharacter(payload: CreateCharacterPayload): Promise<CreateCharacterResponse> {
         const errors = [];
 
         const anime = await animeModel.findById(payload.data.anime_id);
@@ -110,6 +110,27 @@ class CharacterService {
     async getCharactersCount() {
         return characterModel.getCount();
     }
+
+    async getCharacterById(id: number): Promise<EditCharacterResponse> {
+        const character = await characterModel.findById(id);
+
+        if(!character)
+            throw { type: "not_found", message: "Personagem não encontrado."};
+
+        return {
+            id: character.id,
+            anime: character.anime,
+            name: character.name,
+            description: character.description ?? null,
+            stats: {
+                hp: character.attr_hp,
+                atk: character.attr_atk,
+                def: character.attr_def
+            },
+            active: character.active,
+            lock: character.currency_lock
+        };
+    };
 }
 
 export default new CharacterService();

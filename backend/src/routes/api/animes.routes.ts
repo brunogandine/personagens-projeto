@@ -1,16 +1,17 @@
-import AnimeController from "../../controllers/anime.controller";
 import { Router } from "express"; 
-import { auth } from "../../middlewares/auth";
-import { authorize } from "../../middlewares/authorize";
-import { validate } from "../../middlewares/validate";
-import { createAnimeSchema } from "../../validations/anime.validations";
+
+import AnimeController from "@/controllers/anime.controller";
+import Authenticate from "@/middlewares/auth";
+import AuthorizeUser from "@/middlewares/authorize";
+import ValidateRequest from "@/middlewares/validate";
+import { createAnimeSchema } from "@/validations/anime.validations";
 
 const router = Router();
 
-router.get("/", auth, AnimeController.getAll);
-router.get("/:id", auth, AnimeController.getById);
-router.get("/counts", auth, AnimeController.getCount)
+router.get("/", Authenticate, AnimeController.getAll);
+router.get("/:id", Authenticate, AnimeController.getById);
+router.get("/counts", Authenticate, AnimeController.getCount)
 
-router.post("/", auth, authorize("Admin"), validate(createAnimeSchema, "body"), AnimeController.createAnime);
+router.post("/", Authenticate, AuthorizeUser("Admin"), ValidateRequest(createAnimeSchema, "body"), AnimeController.createAnime);
 
 export default router;

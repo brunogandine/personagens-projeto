@@ -32,4 +32,3 @@ export const characterIdSchema = z.object({
 
 export type CreateCharacterSchema = z.infer<typeof createCharacterSchema>;
 export type UpdateCharacterSchema = z.infer<typeof updateCharacterSchema>;
-export type CharacterIdSchema = z.infer<typeof characterIdSchema>;

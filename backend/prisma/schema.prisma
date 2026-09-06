@@ -24,9 +24,9 @@ model Character {
   currency_lock Boolean                @default(false)
   active        Boolean                @default(false)
   anime_active  Boolean                @default(false)
-  attr_hp       Int?                   @default(0)
-  attr_atk      Int?                   @default(0)
-  attr_def      Int?                   @default(0)
+  attr_hp       Int                   @default(0)
+  attr_atk      Int                   @default(0)
+  attr_def      Int                   @default(0)
 
   anime         Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
 

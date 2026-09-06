@@ -2,8 +2,7 @@ import { RequestHandler } from "express";
 import CharacterService from "../services/character.service";
 import { isAppError } from "@/utils/is-app-error.util";
 import { detectImageType } from "@/utils/detectImageType";
-import type { UpdateCharacterSchema, CharacterIdSchema } from "@/validations/character.validations";
-
+import characterService from "../services/character.service";
 class CharacterController {
     createCharacter: RequestHandler = async (req, res) => {
         try {
@@ -51,7 +50,7 @@ class CharacterController {
             };
 
             return res.status(500).json({message: "Erro Interno"});
-        }
+        };
     };
 
     updateCharacter: RequestHandler = async (req, res) => {
@@ -101,8 +100,8 @@ class CharacterController {
             };
             
             return res.status(500).json({message: "Erro Interno"});
-        }
-    }
+        };
+    };
 
     getCounts: RequestHandler = async (req, res) => {
         try {
@@ -112,11 +111,23 @@ class CharacterController {
         } catch(err) {
             return res.status(500).json({message: "Erro Interno."})
         }
-    }
+    };
 
     getById: RequestHandler = async (req, res) => {
+        try {
+          const result = await characterService.getCharacterById(Number(req.params.id));
+
+          return res.status(200).json(result);
+        } catch(err) {
+            if(isAppError(err)) {
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+            };
         
-    }
+            return res.status(500).json({message: "Erro Interno."});
+        };
+    };
 
     getAll: RequestHandler = async (req, res) => {
         try {

@@ -1,0 +1,111 @@
+import styles from "@/pages/Dashboard/Dashboard.module.css";
+import { Button, Modal } from "antd";
+import type { CharacterEdit } from "../../../types/content.types";
+import { BASE_ATTRIBUTES_URL } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
+
+type CharacterEditModalProps = {
+    open: boolean
+    onClose: () => void
+    character: CharacterEdit | null
+}
+
+const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps) => {
+    if(!character)
+        return null;
+
+    return (
+        <Modal
+            wrapClassName={`modal-default`}
+            title="Resumo do Personagem"
+            width={"fit-content"}
+            open={open}
+            onCancel={onClose}
+            footer
+        >
+            <div className={`${styles["preview-character-modal-content"]}`}>
+                <div className={`${styles["artwork-preview"]}`}>
+                    <div style={{backgroundImage: `url(/assets/images/cards/background/artwork/normal.png)`}} className={`${styles["artwork-preview-container"]}`}>
+                        {character.artwork ? (<img src={character.artwork} />) : <p>?</p>}
+                    </div>
+                    <div style={{backgroundImage: `url(/assets/images/cards/background/thumbnail/normal.png)`}}className={`${styles["thumbnail-preview-container"]}`}>
+                        {character.thumbnail ? (<img src={character.thumbnail} />) : <p>?</p>}
+                    </div>
+                </div>
+                <div className={`${styles["preview-character-details"]}`}>
+                    <div className={`preview-basic-details`}>
+                        <dl>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Personagem:</dt>
+                                <dd>{character.name}</dd>
+                            </div>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Anime:</dt>
+                                <dd>{character.anime.name}</dd>
+                            </div>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Ativo:</dt>
+                                <dd>{character.active ? "Sim" : "Não"}</dd>
+                            </div>
+                            <div className={`${styles["basic-item"]}`}>
+                                <dt>Bloqueado:</dt>
+                                <dd>{character.lock ? "Sim" : "Não"}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <div className={`${styles["preview-character-attributes"]}`}>
+                        <div className={`${styles["preview-section"]}`}>Atributos Base:</div>
+                        <div className={`${styles["stat-item"]}`} data-stat={`life`}>
+                            <div className={`stat-icon`}>
+                                <img src={`${BASE_ATTRIBUTES_URL}/for_life.png`} />
+                            </div>
+                            <span className={`${styles["stat-spacing"]}`}>//</span>
+                            <div className={`${styles["stat-name"]}`}>Vida</div>
+                            <div className={`${styles["stat-bar"]}`}>
+                                <div className={`${styles["stat-fill"]}`} style={{width: `100%`}}></div>
+                                <div className={`${styles["stat-value"]}`}>
+                                    <span>{character.stats.hp}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`${styles["stat-item"]}`} data-stat={`atk`}>
+                            <div className={`stat-icon`}>
+                                <img src={`${BASE_ATTRIBUTES_URL}/for_atk.png`} />
+                            </div>
+                            <span className={`${styles["stat-spacing"]}`}>//</span>
+                            <div className={`${styles["stat-name"]}`}>Ataque</div>
+                            <div className={`${styles["stat-bar"]}`}>
+                                <div className={`${styles["stat-fill"]}`} style={{width: `100%`}}></div>
+                                <div className={`${styles["stat-value"]}`}>
+                                    <span>{character.stats.atk}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`${styles["stat-item"]}`} data-stat={`def`}>
+                            <div className={`stat-icon`}>
+                                <img src={`${BASE_ATTRIBUTES_URL}/for_def.png`} />
+                            </div>
+                            <span className={`${styles["stat-spacing"]}`}>//</span>
+                            <div className={`${styles["stat-name"]}`}>Defesa</div>
+                            <div className={`${styles["stat-bar"]}`}>
+                                <div className={`${styles["stat-fill"]}`} style={{width: `100%`}}></div>
+                                <div className={`${styles["stat-value"]}`}>
+                                    <span>{character.stats.def}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={`${styles["preview-character-description"]}`}>
+                        <div className={`${styles["preview-section"]}`}>Descrição do Personagem:</div>
+                        <div className={`${styles["description-content"]}`}>
+                            {character.description ? character.description : "Sem descrição."}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={`${styles["preview-character-options"]}`}>
+            </div>
+        </Modal>
+    )
+};
+
+export default CharacterEditModal;

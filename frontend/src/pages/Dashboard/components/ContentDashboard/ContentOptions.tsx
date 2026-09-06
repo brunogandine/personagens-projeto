@@ -1,21 +1,18 @@
-import { NavLink } from "react-router-dom";
 import styles from "../../Dashboard.module.css";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
+import type { EditTypes } from "./types/content.types";
 
-type Props = {
-    type: "animes" | "characters"
-}
+type ContentOptionsProps = {
+    type: EditTypes;
+    open: (type: EditTypes) => void;
+};
 
-const ContentOptions = ({type}: Props) => {
-    const BASE_DASHBOARD_URL = `/dashboard/${type}`;
-
+const ContentOptions = ({type, open}: ContentOptionsProps) => {
     return (
         <div className={`${styles["content-options"]}`}>
-            <NavLink to={`${BASE_DASHBOARD_URL}/edit`}>
-                <div className={`${styles["content-option-item"]}`}>
-                    <EditFilled style={{ fontSize: 30, lineHeight: '50px' }} />
-                </div>
-            </NavLink>
+            <div className={`${styles["content-option-item"]}`} onClick={() => open(type)}>
+                <EditFilled style={{ fontSize: 30, lineHeight: '50px' }} />
+            </div>
             <div className={`${styles["content-option-item"]}`}>
                 <DeleteFilled style={{ fontSize: 36, lineHeight: '50px' }} />
             </div>

@@ -423,7 +423,7 @@ const CharacterCreation = () => {
             if(res.status === 404) {
                 showMessageModal({
                     type: "error",
-                    description: "Anime não encontrado"
+                    description: res.data.message
                 })
                 return;
             };

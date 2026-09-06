@@ -36,7 +36,6 @@ function App() {
                     <Route index element={<ContentMain />} />
                     <Route path="characters/create" element={<CharacterCreation />} />
                     {/* <Route path="animes/creation" element={<AnimeCreation />} /> */}
-                    {/* <Route path="edit"element={<CharacterEdit />} /> */}
                   </Route>
                   <Route path="settings" />
                 </Route>

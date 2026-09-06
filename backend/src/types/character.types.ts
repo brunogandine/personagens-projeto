@@ -5,7 +5,7 @@ export type GetCharactersParams = {
     search?: string,
 }
 
-export type CharacterCreationResponse = 
+export type CreateCharacterResponse = 
     | {
         message: string
     }
@@ -15,6 +15,31 @@ export type CharacterCreationResponse =
             message: string
         }[]
     }
+
+export type EditCharacterResponse =
+    | {
+        type: "not_found",
+        message: string
+    }
+    | {
+        id: number;
+        anime: {
+            id: number
+            name: string
+            description: string | null
+            active: boolean
+        };
+        name: string;
+        description: string | null;
+        stats: {
+            hp: number;
+            atk: number;
+            def: number;
+        };
+        active: boolean;
+        lock: boolean;
+    }
+
 
 export type CreateCharacterPayload = {
     data: CreateCharacterSchema,
@@ -39,15 +64,4 @@ export type EditCharacterPayload = {
         buffer: Buffer;
         ext: string
     }
-}
-
-export type CreateCharacterData = {
-    anime_id: number,
-    name: string,
-    description: string,
-    attr_hp: number,
-    attr_atk: number,
-    attr_def: number,
-    currency_lock?: boolean,
-    active?: boolean,
 }
