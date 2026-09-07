@@ -1,15 +1,15 @@
-import styles from "../../../../Dashboard.module.css";
-import ContentItemComponent from "../../ContentItem";
+import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
+import ContentItemComponent from "@/pages/Dashboard/components/ContentDashboard/ContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
-import ContentOptions from "../../ContentOptions";
+import ContentOptions from "@/pages/Dashboard/components/ContentDashboard/ContentOptions";
+import CharacterEditModal from "./components/CharacterEditModal";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
-import type { AnimeItem, AnimeItemViewModel, CharacterEdit, CharacterItem, CharacterItemViewModel, EditTypes } from "../../types/content.types";
-import CharacterEditModal from "./components/CharacterEditModal";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
+import type { AnimeItem, AnimeItemViewModel, CharacterEdit, CharacterItem, CharacterItemViewModel, EditTypes } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 

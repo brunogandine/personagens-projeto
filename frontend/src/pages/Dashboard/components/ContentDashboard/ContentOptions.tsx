@@ -1,4 +1,4 @@
-import styles from "../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import type { EditTypes } from "./types/content.types";
 

@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const ContentDashboard = () => {
     return (
-        <ContentDashboardContainer >
+        <ContentDashboardContainer>
             <Outlet />   
         </ContentDashboardContainer>
     )

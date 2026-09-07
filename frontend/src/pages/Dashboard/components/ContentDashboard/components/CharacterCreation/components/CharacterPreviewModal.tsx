@@ -1,7 +1,7 @@
-import styles from "@/pages/Dashboard/Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/ContentDashboard/components/CharacterCreation/CharacterCreation.module.css";
 import { Button, Modal } from "antd";
-import type { CharacterPreview } from "../../../types/content.types";
 import { BASE_ATTRIBUTES_URL } from "../CharacterCreation";
+import type { CharacterPreview } from "../../../types/content.types";
 
 type CharacterPreviewModalProps = {
     open: boolean

@@ -1,5 +1,5 @@
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
-import styles from "../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import type { AnimeItemViewModel, CharacterItemViewModel } from "./types/content.types";
 
 type Props = 
