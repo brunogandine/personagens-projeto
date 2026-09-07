@@ -1,8 +1,8 @@
-import styles from "../../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import SelectedUsersPreview from "./SelectedUsersPreview";
 import { Avatar, Button, Modal } from "antd";
 import { UserOutlined, WarningFilled } from "@ant-design/icons";
-import type { SelectedUserPreview } from "../types/userPreview";
+import type { SelectedUserPreview } from "../types/userPreview.types";
 
 type Props = {
     open: boolean;

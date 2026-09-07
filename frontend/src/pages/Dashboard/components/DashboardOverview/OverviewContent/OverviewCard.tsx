@@ -1,5 +1,5 @@
+import styles from "@/pages/Dashboard/components/DashboardOverview/DashboardOverview.module.css";
 import type { ReactNode } from "react";
-import styles from "../../../Dashboard.module.css"
 
 type Props = {
     id: string;

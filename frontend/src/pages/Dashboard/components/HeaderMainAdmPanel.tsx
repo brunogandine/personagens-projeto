@@ -5,10 +5,10 @@ const routeTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/dashboard/users": "Dashboard / Usuários",
   "/dashboard/content": "Dashboard / Conteúdo",
+  "/dashboard/content/animes": "Dashboard / Conteúdo / Animes",
   "/dashboard/content/animes/create": "Dashboard / Conteúdo / Animes / Criar",
-  "/dashboard/content/animes/edit": "Dashboard / Conteúdo / Animes / Editar",
+  "/dashboard/content/characters": "Dashboard / Conteúdo / Personagens",
   "/dashboard/content/characters/create": "Dashboard / Conteúdo / Personagens / Criar",
-  "/dashboard/content/characters/edit": "Dashboard / Conteúdo / Personagens / Editar",
   "/dashboard/settings": "Dashboard / Configurações",
 };
 

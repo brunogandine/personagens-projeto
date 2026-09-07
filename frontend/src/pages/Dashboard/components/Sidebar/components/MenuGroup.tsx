@@ -1,4 +1,4 @@
-import styles from "../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/Sidebar/Sidebar.module.css";
 import { NavLink } from "react-router-dom";
 import type { ReactNode } from "react";
 

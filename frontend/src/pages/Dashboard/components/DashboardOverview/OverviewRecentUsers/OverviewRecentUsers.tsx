@@ -1,4 +1,4 @@
-import styles from "../../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/DashboardOverview/DashboardOverview.module.css";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { formatDate } from "@/utils/date";

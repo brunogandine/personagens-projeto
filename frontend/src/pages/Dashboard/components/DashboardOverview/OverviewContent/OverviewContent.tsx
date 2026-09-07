@@ -1,6 +1,6 @@
-import { CrownFilled, ProfileFilled, SafetyOutlined, TeamOutlined } from "@ant-design/icons";
-import styles from "../../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/DashboardOverview/DashboardOverview.module.css";
 import DashboardCardOverview from "./OverviewCard";
+import { CrownFilled, ProfileFilled, SafetyOutlined, TeamOutlined } from "@ant-design/icons";
 import type { ReactNode } from "react";
 
 type DashboardData = {

@@ -1,5 +1,5 @@
+import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import { useEffect, useState } from "react";
-import styles from "../../Dashboard.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import UsersList from "./UsersList"
 import UsersPagination from "../../shared/DashboardPagination";

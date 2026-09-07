@@ -1,8 +1,7 @@
-import styles from "../../Dashboard.module.css";
-
+import styles from "@/pages/Dashboard/components/DashboardOverview/DashboardOverview.module.css";
 import OverviewContent from "./OverviewContent/OverviewContent";
-import { useEffect, useState } from "react";
 import DashboardRecentsUsers from "./OverviewRecentUsers/OverviewRecentUsers";
+import { useEffect, useState } from "react";
 import { Request } from "@/services/apiClient";
 
 type DashboardData = {
