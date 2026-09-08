@@ -24,7 +24,7 @@ const CharacterPreviewModal = ({open, onClose, onConfirm, preview}:  CharacterPr
             footer
         >
             <div className={`${styles["preview-character-modal-content"]}`}>
-                <div className={`${styles["artwork-preview"]}`}>
+                <div className={`${styles["artwork-container"]}`}>
                     <div style={{backgroundImage: `url(/assets/images/cards/background/artwork/normal.png)`}} className={`${styles["artwork-preview-container"]}`}>
                         <img src={preview.artworkPreview} />
                     </div>

@@ -593,3 +593,13 @@ img {
         vertical-align: middle;
     }
 }
+
+@keyframes progression-stripes {
+    from {
+        background-position: 1rem 0;
+    }
+
+    to {
+        background-position: 0 0;
+    }
+}

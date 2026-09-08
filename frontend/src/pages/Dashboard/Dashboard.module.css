@@ -126,13 +126,3 @@
     font-weight: bold;
     border: 1px solid #91919141;
 }
-
-@keyframes progression-stripes {
-    from {
-        background-position: 1rem 0;
-    }
-
-    to {
-        background-position: 0 0;
-    }
-}

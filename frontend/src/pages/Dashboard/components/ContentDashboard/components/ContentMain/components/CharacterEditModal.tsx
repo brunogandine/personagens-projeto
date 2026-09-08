@@ -1,4 +1,4 @@
-import styles from "@/pages/Dashboard/Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import { Button, Modal } from "antd";
 import type { CharacterEdit } from "../../../types/content.types";
 import { BASE_ATTRIBUTES_URL } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
@@ -22,38 +22,38 @@ const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps
             onCancel={onClose}
             footer
         >
-            <div className={`${styles["preview-character-modal-content"]}`}>
-                <div className={`${styles["artwork-preview"]}`}>
-                    <div style={{backgroundImage: `url(/assets/images/cards/background/artwork/normal.png)`}} className={`${styles["artwork-preview-container"]}`}>
-                        {character.artwork ? (<img src={character.artwork} />) : <p>?</p>}
+            <div className={`${styles["edit-character-modal-content"]}`}>
+                <div className={`${styles["artwork-edit"]}`}>
+                    <div style={{backgroundImage: `url(/assets/images/cards/background/artwork/normal.png)`}} className={`${styles["artwork-container"]}`}>
+                        {character.artwork ? (<img src={character.artwork} />) : <p className={`${styles["inner-text-artwork"]}`}>?</p>}
                     </div>
-                    <div style={{backgroundImage: `url(/assets/images/cards/background/thumbnail/normal.png)`}}className={`${styles["thumbnail-preview-container"]}`}>
-                        {character.thumbnail ? (<img src={character.thumbnail} />) : <p>?</p>}
+                    <div style={{backgroundImage: `url(/assets/images/cards/background/thumbnail/normal.png)`}} className={`${styles["thumbnail-container"]}`}>
+                        {character.thumbnail ? (<img src={character.thumbnail} />) : <p className={`${styles["inner-text-artwork"]}`}>?</p>}
                     </div>
                 </div>
-                <div className={`${styles["preview-character-details"]}`}>
-                    <div className={`preview-basic-details`}>
-                        <dl>
-                            <div className={`${styles["basic-item"]}`}>
-                                <dt>Personagem:</dt>
-                                <dd>{character.name}</dd>
-                            </div>
-                            <div className={`${styles["basic-item"]}`}>
-                                <dt>Anime:</dt>
-                                <dd>{character.anime.name}</dd>
-                            </div>
-                            <div className={`${styles["basic-item"]}`}>
-                                <dt>Ativo:</dt>
-                                <dd>{character.active ? "Sim" : "Não"}</dd>
-                            </div>
-                            <div className={`${styles["basic-item"]}`}>
-                                <dt>Bloqueado:</dt>
-                                <dd>{character.lock ? "Sim" : "Não"}</dd>
-                            </div>
-                        </dl>
+                <div className={`${styles["basic-details"]}`}>
+                    <dl>
+                        <div className={`${styles["basic-item"]}`}>
+                            <dt>Personagem:</dt>
+                            <dd>{character.name}</dd>
+                        </div>
+                        <div className={`${styles["basic-item"]}`}>
+                            <dt>Anime:</dt>
+                            <dd>{character.anime.name}</dd>
+                        </div>
+                        <div className={`${styles["basic-item"]}`}>
+                            <dt>Ativo:</dt>
+                            <dd>{character.active ? "Sim" : "Não"}</dd>
+                        </div>
+                        <div className={`${styles["basic-item"]}`}>
+                            <dt>Bloqueado:</dt>
+                            <dd>{character.lock ? "Sim" : "Não"}</dd>
+                        </div>
+                    </dl>
+                    <div className={`${styles["details-section-title"]}`}>
+                        <span>Atributos Base:</span>
                     </div>
-                    <div className={`${styles["preview-character-attributes"]}`}>
-                        <div className={`${styles["preview-section"]}`}>Atributos Base:</div>
+                    <div className={`${styles["basic-stats"]}`}>
                         <div className={`${styles["stat-item"]}`} data-stat={`life`}>
                             <div className={`stat-icon`}>
                                 <img src={`${BASE_ATTRIBUTES_URL}/for_life.png`} />
@@ -94,15 +94,13 @@ const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps
                             </div>
                         </div>
                     </div>
-                    <div className={`${styles["preview-character-description"]}`}>
-                        <div className={`${styles["preview-section"]}`}>Descrição do Personagem:</div>
-                        <div className={`${styles["description-content"]}`}>
+                    <div className={`${styles["details-section-title"]}`}>Descrição do Personagem:</div>
+                    <div className={`${styles["description-container"]}`}>
+                        <div className={`${styles["description-textbox"]}`}>
                             {character.description ? character.description : "Sem descrição."}
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className={`${styles["preview-character-options"]}`}>
             </div>
         </Modal>
     )
