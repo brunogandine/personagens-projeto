@@ -9,8 +9,8 @@ import { characterIdSchema, createCharacterSchema, updateCharacterSchema } from 
 const router = Router();
 
 router.get("/", Authenticate, CharacterController.getAll);
-router.get("/:id", Authenticate, ValidateRequest(characterIdSchema, "params"), CharacterController.getById);
 router.get("/counts", Authenticate, CharacterController.getCounts);
+router.get("/:id", Authenticate, ValidateRequest(characterIdSchema, "params"), CharacterController.getById);
 
 router.post(
     "/", 

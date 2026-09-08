@@ -110,7 +110,7 @@ class CharacterController {
             return res.status(200).json({count});
         } catch(err) {
             return res.status(500).json({message: "Erro Interno."})
-        }
+        };
     };
 
     getById: RequestHandler = async (req, res) => {

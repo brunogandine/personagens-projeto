@@ -10,9 +10,11 @@ const HomeLogged = () => {
 
     useEffect(() => {  
         const loadData = async () => {
-            try { const [users, characters] = await Promise.all([ 
-                getUsersCount(), 
-                getCharactersCount() ]) 
+            try { 
+                const [users, characters] = await Promise.all([ 
+                    getUsersCount(), 
+                    getCharactersCount() 
+                ]);
 
                 if(users !== null) setUsersValue(users); 
                 if(characters !== null) setCharactersValue(characters);
