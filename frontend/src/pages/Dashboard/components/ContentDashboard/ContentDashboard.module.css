@@ -235,11 +235,15 @@
     gap: 5px;
 
     & dt {
+        align-self: center;
         color: var(--orange-500);
         font-weight: bold;
     }
 
     & dd {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         font-weight: normal;
         color: var(--text-color-default);
         margin: 0;

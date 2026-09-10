@@ -1,7 +1,9 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
-import { Button, Modal } from "antd";
-import type { CharacterEdit } from "../../../types/content.types";
+import { Input, Modal } from "antd";
 import { BASE_ATTRIBUTES_URL } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
+import { EditFilled } from "@ant-design/icons";
+import { useState } from "react";
+import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 
 type CharacterEditModalProps = {
     open: boolean
@@ -9,15 +11,25 @@ type CharacterEditModalProps = {
     character: CharacterEdit | null
 }
 
+type EditingFields = 
+    | "anime"
+    | "name"
+
+
 const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps) => {
+    const [editedName, setEditedName] = useState<string | null>(null);
+    const [draftName, setDraftName] = useState("");
+
+    const [isEditing, setIsEditing] = useState<EditingFields | null>(null);
+
     if(!character)
         return null;
 
     return (
         <Modal
             wrapClassName={`modal-default`}
-            title="Resumo do Personagem"
-            width={"fit-content"}
+            title="Editar Personagem"
+            width={"600px"}
             open={open}
             onCancel={onClose}
             footer
@@ -35,7 +47,30 @@ const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps
                     <dl>
                         <div className={`${styles["basic-item"]}`}>
                             <dt>Personagem:</dt>
-                            <dd>{character.name}</dd>
+                            <dd>
+                                {isEditing === "name"
+                                ? (
+                                    <>
+                                        <Input className={"field-default"} value={draftName} onChange={(e) => setDraftName(e.target.value)}/>
+                                        <span style={{fontSize: "20px", fontWeight: "bold", color: "#00ff40", cursor: "pointer"}} onClick={() => setIsEditing(null)}>✓</span>
+                                        <span style={{fontSize: "20px", fontWeight: "bold", color: "#ff5656", cursor: "pointer"}} onClick={() => setIsEditing(null)}>✕</span>
+                                    </>
+                                )
+                                : (editedName !== null
+                                    ? (
+                                        <>
+                                            <span>editedName</span>
+                                            <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditing("name")}/>
+                                        </>
+                                    ) 
+                                    : (
+                                        <>
+                                            <span>{character.name}</span>
+                                            <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditing("name")}/>
+                                        </>
+                                    )
+                                )}
+                            </dd>
                         </div>
                         <div className={`${styles["basic-item"]}`}>
                             <dt>Anime:</dt>
