@@ -272,7 +272,7 @@ const ContentMain = () => {
                     {characters.length > 0 && (
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
-                    <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} />
+                    <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesItems.map((a) => ({value: a.id, label: a.name}))} />
                 </div>
             </div>
         </>

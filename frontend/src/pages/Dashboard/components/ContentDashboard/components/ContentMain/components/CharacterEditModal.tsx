@@ -1,14 +1,18 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
-import { Input, Modal } from "antd";
+import { Input, Modal, Select, Tooltip } from "antd";
 import { BASE_ATTRIBUTES_URL } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
 import { EditFilled } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 
 type CharacterEditModalProps = {
     open: boolean
     onClose: () => void
     character: CharacterEdit | null
+    animesList: {
+        value: number,
+        label: string
+    }[]
 }
 
 type EditingFields = 
@@ -16,14 +20,19 @@ type EditingFields =
     | "name"
 
 
-const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps) => {
+const CharacterEditModal = ({open, onClose, character, animesList}:  CharacterEditModalProps) => {
+    if(!character)
+        return null;
+
     const [editedName, setEditedName] = useState<string | null>(null);
     const [draftName, setDraftName] = useState("");
+    const [selectedAnimeId, setSelectedAnimeId] = useState(character.anime.id);
 
     const [isEditing, setIsEditing] = useState<EditingFields | null>(null);
 
-    if(!character)
-        return null;
+    useEffect(() => {
+        setSelectedAnimeId(character.anime.id);
+    }, [character]);
 
     return (
         <Modal
@@ -51,9 +60,19 @@ const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps
                                 {isEditing === "name"
                                 ? (
                                     <>
-                                        <Input className={"field-default"} value={draftName} onChange={(e) => setDraftName(e.target.value)}/>
-                                        <span style={{fontSize: "20px", fontWeight: "bold", color: "#00ff40", cursor: "pointer"}} onClick={() => setIsEditing(null)}>✓</span>
-                                        <span style={{fontSize: "20px", fontWeight: "bold", color: "#ff5656", cursor: "pointer"}} onClick={() => setIsEditing(null)}>✕</span>
+                                        <Input className={`field-default ${styles["edit-input"]}`} value={draftName} onChange={(e) => setDraftName(e.target.value)}/>
+                                        <Tooltip
+                                            title={"Confirmar Edição"}
+                                            destroyOnHidden={true}
+                                        >
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={() => setIsEditing(null)}>✓</span>
+                                        </Tooltip>
+                                        <Tooltip
+                                            title={"Cancelar Edição"}
+                                            destroyOnHidden={true}
+                                        >
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={() => setIsEditing(null)}>✕</span>
+                                        </Tooltip>
                                     </>
                                 )
                                 : (editedName !== null
@@ -74,7 +93,15 @@ const CharacterEditModal = ({open, onClose, character}:  CharacterEditModalProps
                         </div>
                         <div className={`${styles["basic-item"]}`}>
                             <dt>Anime:</dt>
-                            <dd>{character.anime.name}</dd>
+                            <dd>
+                                <Select 
+                                    className={`field-default select-default ${styles["edit-input"]}`}
+                                    classNames={{popup: { root: "select-default-popup"} }} 
+                                    value={selectedAnimeId}
+                                    options={animesList}
+                                    onChange={(value) => setSelectedAnimeId(value)}
+                                />
+                            </dd>
                         </div>
                         <div className={`${styles["basic-item"]}`}>
                             <dt>Ativo:</dt>
