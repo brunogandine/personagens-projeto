@@ -11,8 +11,13 @@ type MessageModalData = {
     instructions?: string;
 }
 
+type ToastData = {
+    text: string
+    type: "info" | "warning" | "error" | "success"
+}
+
 type MessageModalContextType = {
-    showToast: (message: string) => void;
+    showToast: (data: ToastData) => void;
     showMessageModal: (data: MessageModalData) => void;
     closeMessageModal: () => void;
 };
@@ -23,8 +28,8 @@ export const MessageModalContextProvider = ({ children }: { children: React.Reac
     const [open, setOpen] = useState(false);
     const [modalData, setModalData] = useState<MessageModalData | null>(null);
 
-    const showToast = (text: string) => {
-        message.success(text, 5);
+    const showToast = (data: ToastData) => {
+        message[data.type](data.text, 5);
     }
 
     const showMessageModal = (data: MessageModalData) => {

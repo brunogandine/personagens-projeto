@@ -3,6 +3,7 @@ import ContentItemComponent from "@/pages/Dashboard/components/ContentDashboard/
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import ContentOptions from "@/pages/Dashboard/components/ContentDashboard/ContentOptions";
 import CharacterEditModal from "./components/CharacterEditModal";
+import { toggleId, toggleBoolean } from "@/utils/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -80,14 +81,6 @@ const ContentMain = () => {
         }
     }
 
-    const toggle = (id: number, setState: React.Dispatch<React.SetStateAction<number[]>>) => {
-        setState(prev => 
-            prev.includes(id)
-                ? prev.filter(animeId =>  animeId !== id)
-                : [...prev, id]
-        );
-    }
-
     useEffect(() => {
         const timer = setTimeout(() => {
             setCharactersDebounceSearch(charactersSearch);
@@ -129,6 +122,8 @@ const ContentMain = () => {
         active: a.active,
         image: `/assets/images/cards/${a.id}/thumbnail/1/thumbnail.jpg`
     }))
+
+    const animesList = animesItems.map((a) => ({value: a.id, label: a.name}))
 
     const getCharacter = async (id: number) => {
         const res = await Request.get(`/characters/${id}`);
@@ -210,7 +205,7 @@ const ContentMain = () => {
                                         key={anime.id} 
                                         item={anime} 
                                         selected={selectedAnimes} 
-                                        onToggle={() => toggle(anime.id, setSelectedAnimes)}
+                                        onToggle={() => toggleId(anime.id, setSelectedAnimes)}
                                     />
                                 </>
                             ))
@@ -258,7 +253,7 @@ const ContentMain = () => {
                                         key={character.id} 
                                         item={character} 
                                         selected={selectedCharacters} 
-                                        onToggle={() => toggle(character.id, setSelectedCharacters)} 
+                                        onToggle={() => toggleId(character.id, setSelectedCharacters)} 
                                     />
                             ))
                             : (
@@ -272,7 +267,7 @@ const ContentMain = () => {
                     {characters.length > 0 && (
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
-                    <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesItems.map((a) => ({value: a.id, label: a.name}))} />
+                    <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean}/>
                 </div>
             </div>
         </>

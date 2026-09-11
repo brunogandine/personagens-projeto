@@ -9,7 +9,7 @@ type Props = {
     onToggle?: () => void;
 }
 
-const CheckboxComponent = ({id,mixed, style, className, checked, onToggle}: Props) => {
+const CheckboxComponent = ({id, mixed, style, className, checked, onToggle}: Props) => {
 
     return (                            
             <div

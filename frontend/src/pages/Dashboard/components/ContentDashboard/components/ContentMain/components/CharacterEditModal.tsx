@@ -1,9 +1,11 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
+import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import { Input, Modal, Select, Tooltip } from "antd";
 import { BASE_ATTRIBUTES_URL } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
 import { EditFilled } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
 
 type CharacterEditModalProps = {
     open: boolean
@@ -13,26 +15,79 @@ type CharacterEditModalProps = {
         value: number,
         label: string
     }[]
+    toggleBoolean: (setState: React.Dispatch<React.SetStateAction<boolean>>) => void;
 }
 
-type EditingFields = 
-    | "anime"
-    | "name"
 
+const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean}:  CharacterEditModalProps) => {
+    const { showToast } = useMessageModal();
 
-const CharacterEditModal = ({open, onClose, character, animesList}:  CharacterEditModalProps) => {
     if(!character)
         return null;
 
     const [editedName, setEditedName] = useState<string | null>(null);
-    const [draftName, setDraftName] = useState("");
+    const [draftName, setDraftName] = useState(character.name);
     const [selectedAnimeId, setSelectedAnimeId] = useState(character.anime.id);
+    const [isActive, setIsActive] = useState(character.active);
+    const [isLock, setIsLock] = useState(character.lock);
 
-    const [isEditing, setIsEditing] = useState<EditingFields | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const editNameRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         setSelectedAnimeId(character.anime.id);
+        setIsActive(character.active);
     }, [character]);
+
+    useEffect(() => {
+        if(!isEditing)
+            return;
+
+        const handleOutsideClick = (event: PointerEvent) => {
+            if(editNameRef.current && !editNameRef.current.contains(event.target as Node)) {
+                handleCancelEdit();
+            };
+        };
+
+        document.addEventListener("pointerdown", handleOutsideClick);
+
+        return () => {
+            document.removeEventListener("pointerdown", handleOutsideClick);
+        };
+    }, [isEditing])
+
+    const handleConfirmEditName = () => {
+        const name = draftName.trim();
+
+        if(!name)
+            return;
+
+        if(name === character.name) {
+            if(editedName !== null) {
+                setEditedName(null);
+                setIsEditing(false);
+                return;
+            } else {
+                showToast({text: "Coloque um nome diferente do nome original.", type: "error"});
+                return;
+            };
+        };
+
+        if(name === editedName) {
+            showToast({text: "O nome que você editou anteriormente é igual ao que você está tentando confirmar.", type: "error"});
+            return;
+        };
+
+        setEditedName(name);
+        setIsEditing(false);
+        return;
+    };
+
+    const handleCancelEdit = () => {
+        setDraftName(editedName !== null ? editedName : character.name);
+        setIsEditing(false);
+    };
 
     return (
         <Modal
@@ -57,35 +112,35 @@ const CharacterEditModal = ({open, onClose, character, animesList}:  CharacterEd
                         <div className={`${styles["basic-item"]}`}>
                             <dt>Personagem:</dt>
                             <dd>
-                                {isEditing === "name"
+                                {isEditing
                                 ? (
-                                    <>
+                                    <div ref={editNameRef}>
                                         <Input className={`field-default ${styles["edit-input"]}`} value={draftName} onChange={(e) => setDraftName(e.target.value)}/>
                                         <Tooltip
                                             title={"Confirmar Edição"}
                                             destroyOnHidden={true}
                                         >
-                                            <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={() => setIsEditing(null)}>✓</span>
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={() => handleConfirmEditName()}>✓</span>
                                         </Tooltip>
                                         <Tooltip
                                             title={"Cancelar Edição"}
                                             destroyOnHidden={true}
                                         >
-                                            <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={() => setIsEditing(null)}>✕</span>
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={() => handleCancelEdit()}>✕</span>
                                         </Tooltip>
-                                    </>
+                                    </div>
                                 )
                                 : (editedName !== null
                                     ? (
                                         <>
-                                            <span>editedName</span>
-                                            <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditing("name")}/>
+                                            <span>{editedName}</span>
+                                            <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditing(true)}/>
                                         </>
                                     ) 
                                     : (
                                         <>
                                             <span>{character.name}</span>
-                                            <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditing("name")}/>
+                                            <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditing(true)}/>
                                         </>
                                     )
                                 )}
@@ -105,11 +160,15 @@ const CharacterEditModal = ({open, onClose, character, animesList}:  CharacterEd
                         </div>
                         <div className={`${styles["basic-item"]}`}>
                             <dt>Ativo:</dt>
-                            <dd>{character.active ? "Sim" : "Não"}</dd>
+                            <dd>
+                                <CheckboxComponent checked={isActive} onToggle={() => toggleBoolean(setIsActive)}/>
+                            </dd>
                         </div>
                         <div className={`${styles["basic-item"]}`}>
                             <dt>Bloqueado:</dt>
-                            <dd>{character.lock ? "Sim" : "Não"}</dd>
+                            <dd>
+                                <CheckboxComponent checked={isLock} onToggle={() => toggleBoolean(setIsLock)}/>
+                            </dd>
                         </div>
                     </dl>
                     <div className={`${styles["details-section-title"]}`}>

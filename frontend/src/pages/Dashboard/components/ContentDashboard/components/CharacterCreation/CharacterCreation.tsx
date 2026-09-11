@@ -444,7 +444,7 @@ const CharacterCreation = () => {
             };
         };
 
-        showToast("Personagem criado com sucesso!");
+        showToast({text: "Personagem criado com sucesso!", type: "success"});
 
         setIsCharacterPreviewModalOpen(false);
         resetForm();
