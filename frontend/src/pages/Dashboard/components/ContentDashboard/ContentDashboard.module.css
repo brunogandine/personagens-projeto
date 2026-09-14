@@ -281,7 +281,7 @@
 .stat-name {
     color: var(--text-color-primary);
     font-weight: bold;
-    width: 55%;
+    width: 25%;
 }
 
 .stat-bar {
@@ -289,7 +289,7 @@
     position: relative;
     align-self: center;
     background-color: #555555;
-    width: 100%;
+    width: 30%;
     height: 20px;
     border-radius: 10px;
     overflow: hidden;
@@ -331,7 +331,26 @@
     font-size: 14px;
     border-radius: 5px;
     outline: 1px solid #474959;
-    padding: 5px;
+    padding: 5px 0 5px 10px;
+    transition: background-color 0.3s ease;
+    overflow-y: auto;
+
+    &:hover {
+        background-color: var(--bg-secondary);
+        cursor: pointer;
+    }
+
+    &:focus {
+        background-color: var(--bg-secondary);
+        cursor: pointer;
+    }
+}
+
+.description-edit-actions {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    gap: 5px;
 }
 
 .edit-actions {

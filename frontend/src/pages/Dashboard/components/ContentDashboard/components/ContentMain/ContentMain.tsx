@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
-import type { AnimeItem, AnimeItemViewModel, CharacterEdit, CharacterItem, CharacterItemViewModel, EditTypes } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
+import type { AnimeItem, AnimeItemViewModel, CharacterEdit, CharacterItem, CharacterItemViewModel } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
@@ -140,7 +140,7 @@ const ContentMain = () => {
         return res.data;
     };
 
-    const openEditModal = async (type: EditTypes) => {
+    const openEditModal = async () => {
         if(selectedCharacters.length <= 0) {
             showMessageModal({
                 type: "warning",
@@ -267,7 +267,9 @@ const ContentMain = () => {
                     {characters.length > 0 && (
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
-                    <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean}/>
+                    {editModalCharacter && (
+                        <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean}/>
+                    )}
                 </div>
             </div>
         </>

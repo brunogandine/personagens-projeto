@@ -1,6 +1,6 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/components/CharacterCreation/CharacterCreation.module.css";
 import contentStyles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
-import ImageCropModal from "./components/ImageCropModal";
+import ImageCropModal from "../../../../shared/ImageCropModal";
 import CharacterPreviewModal from "./components/CharacterPreviewModal";
 import ContentItemComponent from "../../ContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";

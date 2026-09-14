@@ -456,8 +456,21 @@ img {
         }
     }
 
-    & .ant-input-number-action-down {
-        border-block-start: 1px solid #7975a8 !important;
+    &.ant-input-number-outlined .ant-input-number-action-down {
+        border-block-start: 1px solid #7975a8;
+    }
+
+    &.ant-input-number.ant-input-number-mode-spinner .ant-input-number-action-down {
+        border-inline-start: none;
+    }
+
+    &.ant-input-number.ant-input-number-mode-spinner .ant-input-number-action-up {
+        border-inline-start: 1px solid #7975a8;   
+    }
+
+    &.ant-input-number.ant-input-number-mode-spinner .ant-input-number-action-down {
+        border-inline-end: 1px solid #7975a8;
+        border-block-start: none;
     }
 }
 
@@ -539,6 +552,7 @@ img {
 
     & .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
         background-color: #635e7a;
+        color: var(--text-color-default)
     }
 }
 
