@@ -57,7 +57,18 @@ class CharacterService {
             throw ({type: "not_found", message: "Personagem não encontrado"});
         };
 
-        await characterModel.update(payload.id, payload?.data);
+        const data = {
+            anime_id: payload.data.anime_id,
+            name: payload.data.name,
+            description: payload.data.description,
+            attr_hp: payload.data.attr_hp,
+            attr_atk: payload.data.attr_atk,
+            attr_def: payload.data.attr_def,
+            currency_lock: payload.data.currency_lock,
+            active: payload.data.active
+        };
+
+        await characterModel.update(payload.id, data);
 
         const characterDir = path.resolve(uploadDir, `${payload.id}`);
 
@@ -69,6 +80,14 @@ class CharacterService {
             if(!artworkSave.ok) {
                 errors.push({message: `${artworkSave.message} - Artwork`});
             };
+        } else if(payload.data.remove_artwork) {
+            const artworkDir = path.resolve(characterDir, "artwork", `1`);
+
+            const artworkDelete = await ImageStorageService.delete(path.resolve(artworkDir, `1.png`));
+
+            if(!artworkDelete.ok) {
+                errors.push({message: `${artworkDelete.message} - Artwork`});
+            };
         };
 
         if(payload.thumbnail) {
@@ -79,15 +98,22 @@ class CharacterService {
             if(!thumbnailSave.ok) {
                 errors.push({message: `${thumbnailSave.message} - Thumbnail`});
             };
+        } else if(payload.data.remove_thumbnail) {
+            const thumbnailDir = path.resolve(characterDir, "thumbnail", `1`);
+
+            const thumbnailDelete = await ImageStorageService.delete(path.resolve(thumbnailDir, `1.png`));
+
+            if(!thumbnailDelete.ok) {
+                errors.push({message: `${thumbnailDelete.message} - Thumbnail`});
+            };
         };
 
         if(errors.length > 0) {
-            errors.push({message: "O personagem foi atualizado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens. Você pode tentar atualizar as imagens do personagem posteriormente."});
             throw { type: "storage", errors };
         };
 
-        return { message: "Personagem atualizado com sucesso!"}
-    }
+        return { message: "Personagem atualizado com sucesso!"};
+    };
 
     async getCharacters({
         page = 1,

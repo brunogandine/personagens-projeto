@@ -425,26 +425,37 @@ const CharacterCreation = () => {
                 showMessageModal({
                     type: "error",
                     description: res.data.message
-                })
+                });
+                
                 return;
             };
             
-            if(res.status === 500 && res.data.type === "storage") {
+            if(res.status === 500) {
                 showMessageModal({
-                    type: "warning",
-                    description: "Personagem criado com sucesso mas um ou mais erros ocorreram durante o upload das imagens:",
-                    list: res.data.errors,
-                    instructions: "Você pode tentar subir as imagens novamente na sessão Editar Personagem."
+                    type: "error",
+                    description: res.data.message,
+                    instructions: "Tente novamente."
                 });
-
-                setIsCharacterPreviewModalOpen(false);
-                resetForm();
 
                 return;
             };
         };
+        
+        if(res.data.errors) {
+            showMessageModal({
+                type: "warning",
+                description: "Personagem criado com sucesso mas um ou mais erros ocorreram durante o upload das imagens:",
+                list: res.data.errors,
+                instructions: "Você pode tentar subir as imagens novamente na sessão Editar Personagem."
+            });
 
-        showToast({text: "Personagem criado com sucesso!", type: "success"});
+            setIsCharacterPreviewModalOpen(false);
+            resetForm();
+
+            return;
+        }
+
+        showToast({text: res.data.message, type: "success"});
 
         setIsCharacterPreviewModalOpen(false);
         resetForm();

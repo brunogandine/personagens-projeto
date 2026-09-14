@@ -1,6 +1,6 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import type { GetCharactersParams } from "../types/character.types";
+import type { EditCharacterData, GetCharactersParams } from "../types/character.types";
 import type { CreateCharacterSchema, UpdateCharacterSchema } from "@/validations/character.validations";
 
 
@@ -11,7 +11,7 @@ class CharacterModel {
         });
     }
 
-    update = async (id: number, data: UpdateCharacterSchema) => {
+    update = async (id: number, data: EditCharacterData) => {
         const normalizeData = Object.fromEntries(
             Object.entries(data).filter(([, value]) => value !== undefined)
         );

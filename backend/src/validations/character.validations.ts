@@ -23,7 +23,9 @@ export const updateCharacterSchema = z.object({
     attr_atk: z.coerce.number().int().min(5).optional(),
     attr_def: z.coerce.number().int().min(5).optional(),
     currency_lock: formBoolean.optional(),
-    active: formBoolean.optional()
+    active: formBoolean.optional(),
+    remove_artwork: formBoolean.optional(),
+    remove_thumbnail: formBoolean.optional()
 });
 
 export const characterIdSchema = z.object({

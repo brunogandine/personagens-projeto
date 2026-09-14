@@ -8,6 +8,7 @@ import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboar
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import { validateImageFile } from "@/helpers/validateImageFile";
 import ImageCropModal from "@/pages/Dashboard/shared/ImageCropModal";
+import { Request } from "@/services/apiClient";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
@@ -36,7 +37,7 @@ type CropTarget = {
 }
 
 const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean}:  CharacterEditModalProps) => {
-    const { showToast } = useMessageModal();
+    const { showToast, showMessageModal } = useMessageModal();
 
     const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
 
@@ -70,6 +71,10 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
     const fileInputRefThumbnail = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
+        setDraftName(character.name);
+    }, [character]);
+
+    useEffect(() => {
         if(!isEditingName)
             return;
 
@@ -86,8 +91,8 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         };
     }, [isEditingName]);
 
-    const artworkUrl = `${BASE_CARDS_PATH}${character.id}/artwork/${character.id}/1.png`
-    const thumbnailUrl = `${BASE_CARDS_PATH}${character.id}/thumbnail/${character.id}/1.png`;
+    const artworkUrl = `${BASE_CARDS_PATH}${character.id}/artwork/1/1.png`
+    const thumbnailUrl = `${BASE_CARDS_PATH}${character.id}/thumbnail/1/1.png`;
 
     const isCropOpen = cropTarget !== null;
 
@@ -277,6 +282,9 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
     const displayedDescription = currentDescription.trim() || "Sem descrição";
  
     const handleStartEditingDescription = () => {
+        if(isEditingDescription)
+            return;
+
         setIsEditingDescription(true);
 
         if(descriptionRef.current)
@@ -333,7 +341,6 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         setArtworkLoadError(false);
         setThumbnailLoadError(false);
 
-        setDraftName(character.name);
         setEditedName(null);
 
         setSelectedAnimeId(character.anime.id);
@@ -355,6 +362,112 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         onClose();
     };
 
+    const buildEditPayload = () => {
+        const formData = new FormData();
+
+        if(artworkBlob !== null) {
+            formData.append("artwork", artworkBlob);
+        } else if(pendingRemoveArtwork)
+            formData.append("remove_artwork", String(pendingRemoveArtwork));
+
+        if(thumbnailBlob !== null) {
+            formData.append("thumbnail", thumbnailBlob)
+        } else if(pendingRemoveThumbnail)
+            formData.append("remove_thumbnail", String(pendingRemoveThumbnail));
+
+        if(editedName !== null)
+            formData.append("name", editedName);
+
+        if(selectedAnimeId !== character.anime.id)
+            formData.append("anime_id", String(selectedAnimeId));
+
+        if(isActive !== character.active)
+            formData.append("active", String(isActive));
+
+        if(isLock !== character.lock)
+            formData.append("currency_lock", String(isLock));
+
+        if(editedHP !== null && editedHP !== character.stats.hp)
+            formData.append("attr_hp", String(editedHP));
+
+        if(editedATK !== null && editedATK !== character.stats.atk)
+            formData.append("attr_atk", String(editedATK));
+
+        if(editedDEF !== null && editedDEF !== character.stats.def)
+            formData.append("attr_def", String(editedDEF));
+
+        if(editedDescription !== null)
+            formData.append("description", editedDescription);
+
+        if([...formData.entries()].length === 0)
+            return null;
+
+        return formData;
+    };
+
+    const handleConfirmEditModal = async () => {
+        if(isEditingDescription)
+            return showToast({
+                type: "warning",
+                text: "Há uma edição em andamento na descrição de personagem. Confirme ou Cancele antes de aplicar alterações no personagem."
+            });
+
+        const payload = buildEditPayload();
+
+        if(payload === null) {
+            showToast({
+                type: "error",
+                text: "Nenhuma alteração foi feita no personagem."
+            });
+
+            return;
+        };
+
+        const res = await Request.patch(`/characters/${character.id}`, payload);
+
+        if(!res.ok) {
+            if(res.status === 404) {
+                showMessageModal({
+                    type: "error",
+                    description: res.data.message
+                });
+
+                return;
+            };
+
+            if(res.status === 500) {
+                showMessageModal({
+                    type: "error",
+                    description: res.data.message,
+                    instructions: "Tente novamente."
+                });
+
+                return;
+            };
+        };
+
+        if(res.data.errors) {
+            if(res.data.type === "storage") {
+                showMessageModal({
+                    type: "warning",
+                    description: "O personagem foi atualizado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens:",
+                    list: res.data.errors,
+                    instructions: "Tente novamente."
+                });
+
+                resetStates();
+                onClose();
+
+                return;
+            };
+        };
+
+        showToast({type: "success", text: res.data.message, });
+
+        resetStates();
+        onClose();
+    };
+
     return (
         <>
             <Modal
@@ -367,7 +480,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
             >
                 <div className={`${styles["edit-character-modal-content"]}`}>
                     <div className={`${styles["artwork-edit"]}`}>
-                        <div style={{backgroundImage: `url(/assets/images/cards/background/artwork/normal.png)`, cursor: "pointer"}} className={`${styles["artwork-container"]}`} onClick={() => uploadArtwork()} onContextMenu={handleRemoveArtwork} >
+                        <div style={{backgroundImage: `url(/assets/images/cards/background/artwork/normal.png)`, cursor: "pointer"}} className={`${styles["artwork-container"]}`} onClick={uploadArtwork} onContextMenu={handleRemoveArtwork} >
                             {artworkPreview ? (<img src={artworkPreview} />) 
                             : artworkLoadError ? (<p className={`${styles["inner-text-artwork"]}`}>?</p>)
                                 : pendingRemoveArtwork ? (<p className={`${styles["inner-text-artwork"]}`}>?</p>)
@@ -375,7 +488,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                             }
                             <input ref={fileInputRefArtwork} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleArtwork} />
                         </div>
-                        <div style={{backgroundImage: `url(${BASE_CARDS_PATH}background/thumbnail/normal.png)`, cursor: "pointer"}} className={`${styles["thumbnail-container"]}`} onClick={() => uploadThumbnail()} onContextMenu={handleRemoveThumbnail} >
+                        <div style={{backgroundImage: `url(${BASE_CARDS_PATH}background/thumbnail/normal.png)`, cursor: "pointer"}} className={`${styles["thumbnail-container"]}`} onClick={uploadThumbnail} onContextMenu={handleRemoveThumbnail} >
                             {thumbnailPreview ? (<img src={thumbnailPreview} />) 
                                 : thumbnailLoadError ? (<p className={`${styles["inner-text-artwork"]}`}>?</p>)
                                     : pendingRemoveThumbnail ? (<p className={`${styles["inner-text-artwork"]}`}>?</p>)
@@ -392,9 +505,9 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                     {isEditingName
                                     ? (
                                         <div ref={editNameRef}>
-                                            <Input className={`field-default ${styles["edit-input"]}`} value={draftName} onChange={(e) => setDraftName(e.target.value)}/>
-                                            <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={() => handleConfirmEditName()}>✓</span>
-                                            <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={() => handleCancelEditName()}>✕</span>
+                                            <Input className={`field-default ${styles["edit-input"]}`} value={draftName} onChange={(e) => setDraftName(e.target.value)} onPressEnter={handleConfirmEditName} />
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={handleConfirmEditName}>✓</span>
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={handleCancelEditName}>✕</span>
                                         </div>
                                     )
                                     : (editedName !== null
@@ -469,7 +582,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                     mode="spinner" 
                                     style={{width: "20%"}} 
                                     size={"small"} 
-                                    min={0} 
+                                    min={50} 
                                     max={500} 
                                     value={editedHP !== null ? editedHP : character.stats.hp} 
                                     onChange={(value) => setEditedHP(value ?? character.stats.hp)}
@@ -500,7 +613,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                     className={`field-default input-default`} 
                                     mode="spinner" style={{width: "20%"}} 
                                     size={"small"} 
-                                    min={0} 
+                                    min={5} 
                                     max={50} 
                                     value={editedATK !== null ? editedATK : character.stats.atk}
                                     onChange={(value) => setEditedATK(value ?? character.stats.atk)}
@@ -531,7 +644,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                     className={`field-default input-default`} 
                                     mode="spinner" style={{width: "20%"}} 
                                     size={"small"} 
-                                    min={0} 
+                                    min={5}
                                     max={50}  
                                     value={editedDEF !== null ? editedDEF : character.stats.def} 
                                     onChange={(value) => setEditedDEF(value ?? character.stats.def)}
@@ -577,13 +690,13 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                             title={`Confirmar Edição`}
                                             destroyOnHidden={true}
                                         >
-                                            <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={() => handleConfirmEditDescription()}>✓</span>
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={handleConfirmEditDescription}>✓</span>
                                         </Tooltip>
                                         <Tooltip
                                             title={`Cancelar Edição`}
                                             destroyOnHidden={true}
                                         >
-                                            <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={() => handleCancelEditDescription()}>✕</span>
+                                            <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={handleCancelEditDescription}>✕</span>
                                         </Tooltip>
                                     </>
                                 )}
@@ -591,8 +704,8 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                         </div>
                     </div>
                 </div>
-                <div className={`${styles["modal-options"]}`}>
-                    <Button type="primary" className={`btn-default primary-btn`}>Confirmar</Button>
+                <div className={`modal-options`}>
+                    <Button type="primary" className={`btn-default primary-btn`} onClick={handleConfirmEditModal} >Confirmar</Button>
                     <Button type="primary" className={`btn-default danger-btn`} onClick={handleClose} >Cancelar</Button>
                 </div>
             </Modal>

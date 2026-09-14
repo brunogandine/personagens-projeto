@@ -64,4 +64,15 @@ export type EditCharacterPayload = {
         buffer: Buffer;
         ext: string
     }
+};
+
+export type EditCharacterData = {
+    anime_id?: number | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    attr_hp?: number | undefined;
+    attr_atk?: number | undefined;
+    attr_def?: number | undefined;
+    currency_lock?: boolean | undefined;
+    active?: boolean | undefined;
 }

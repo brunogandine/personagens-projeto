@@ -45,7 +45,7 @@ class CharacterController {
                     return res.status(404).json({message: err.message});
                 };
                 if(err.type === "storage") {
-                    return res.status(201).json({errors: err.errors});
+                    return res.status(201).json({errors: err.errors, type: err.type});
                 }
             };
 
@@ -63,7 +63,7 @@ class CharacterController {
             const [ artworkExt, thumbnailExt ] = await Promise.all([
                 files.artwork?.[0] ? detectImageType(files.artwork[0].buffer) : null,
                 files.thumbnail?.[0] ? detectImageType(files.thumbnail[0].buffer) : null
-            ])
+            ]);
 
             const result = await CharacterService.updateCharacter({
                 id: Number(req.params.id),
@@ -95,7 +95,7 @@ class CharacterController {
                     return res.status(404).json({message: err.message});
                 };
                 if(err.type === "storage") {
-                    return res.status(201).json({errors: err.errors});
+                    return res.status(200).json({errors: err.errors, type: err.type});
                 }
             };
             
