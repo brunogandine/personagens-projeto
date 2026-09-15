@@ -172,10 +172,17 @@
     display: flex;
 }
 
+.artwork-preview-container {
+    display: flex;
+    width: var(--character-item-width);
+    height: var(--character-item-height);
+    margin: auto;
+}
+
 .thumbnail-preview-container {
     display: flex;
-    width: 160px;
-    height: auto;
+    width: var(--character-thumbnail-item-width);
+    height: var(--character-thumbnail-item-height);
     margin: auto;
 }
 

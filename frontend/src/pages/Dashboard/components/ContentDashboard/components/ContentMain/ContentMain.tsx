@@ -120,7 +120,7 @@ const ContentMain = () => {
         anime_id: a.anime_id,
         name: a.name,
         active: a.active,
-        image: `/assets/images/cards/${a.id}/thumbnail/1/thumbnail.jpg`
+        image: `/assets/images/cards/${a.id}/thumbnail/1/1.png`
     }))
 
     const animesList = animesItems.map((a) => ({value: a.id, label: a.name}))
@@ -242,7 +242,7 @@ const ContentMain = () => {
                 <div className={`${styles["content-list-container"]}`}>
                     <ContentOptions open={openEditModal} type={"character"} />
                     <div className={`container-default ${styles["list-content"]} ${characters.length > 0 ? styles["character"] : styles["no-results"]}`}>
-                        <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
+                        <NavLink style={{display: "flex", justifyContent: "center", alignItems: "flex-end"}} to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
                             <div className={`${styles["content-option-item"]} ${styles["character-thumbnail"]}`}>
                                 <PlusOutlined style={{fontSize: "40px"}}/>
                             </div>

@@ -94,9 +94,16 @@
 .list-content.character {
     display: grid;
     gap: 5px;
-    grid-template-columns: repeat(auto-fit, 140px);
-    max-width: calc(6 * 140px);
+    grid-template-columns: repeat(auto-fit, 165px);
+    max-width: calc(6 * 165px);
     align-self: center;
+
+    & .content-list-item {
+        background-image: url(/assets/images/cards/background/thumbnail/normal.png);
+        width: var(--character-thumbnail-item-width);
+        height: var(--character-thumbnail-item-height);
+        align-self: center;
+    }
 }
 
 .no-results {
@@ -115,7 +122,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-self: center;
     align-items: center;
     background-color: var(--bg-default);
     width: 50px;

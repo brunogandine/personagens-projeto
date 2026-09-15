@@ -615,7 +615,7 @@ const CharacterCreation = () => {
                                                 : (
                                                     <>
                                                         <UploadOutlined style={{fontSize: "20px"}} />
-                                                        <span className={`input-label-default`}>Artwork Miniatura</span>
+                                                        <span className={`input-label-default`} style={{textAlign: "center"}}>Artwork Miniatura</span>
                                                     </>
                                                 )
                                             }
