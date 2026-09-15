@@ -23,6 +23,8 @@ type CharacterEditModalProps = {
         label: string
     }[]
     toggleBoolean: (setState: React.Dispatch<React.SetStateAction<boolean>>) => void;
+    imageCacheVersion: number | null;
+    onChangeImage: (characterId: number) => void;
 };
 
 type CropAspectOptions = {
@@ -36,7 +38,7 @@ type CropTarget = {
     options: CropAspectOptions;
 }
 
-const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean}:  CharacterEditModalProps) => {
+const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean, imageCacheVersion, onChangeImage }:  CharacterEditModalProps) => {
     const { showToast, showMessageModal } = useMessageModal();
 
     const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
@@ -95,8 +97,10 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         };
     }, [isEditingName]);
 
-    const artworkUrl = `${BASE_CARDS_PATH}${character.id}/artwork/1/1.png`
-    const thumbnailUrl = `${BASE_CARDS_PATH}${character.id}/thumbnail/1/1.png`;
+    const imageCacheQuery = imageCacheVersion !== null ? `?v=${imageCacheVersion}` : "";
+
+    const artworkUrl = `${BASE_CARDS_PATH}${character.id}/artwork/1/1.png${imageCacheQuery}`
+    const thumbnailUrl = `${BASE_CARDS_PATH}${character.id}/thumbnail/1/1.png${imageCacheQuery}`;
 
     const isCropOpen = cropTarget !== null;
 
@@ -427,6 +431,12 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
             return;
         };
 
+        const imageChanged = 
+            artworkBlob !== null ||
+            thumbnailBlob !== null ||
+            pendingRemoveArtwork ||
+            pendingRemoveThumbnail
+
         const res = await Request.patch(`/characters/${character.id}`, payload);
 
         if(!res.ok) {
@@ -465,6 +475,9 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                 return;
             };
         };
+
+        if(imageChanged)
+            onChangeImage(character.id);
 
         showToast({type: "success", text: res.data.message, });
 

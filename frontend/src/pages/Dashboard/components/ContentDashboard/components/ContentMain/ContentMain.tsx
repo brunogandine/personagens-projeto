@@ -40,6 +40,8 @@ const ContentMain = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editModalCharacter, setEditModalCharacter] = useState<CharacterEdit | null>(null)
 
+    const [imageCacheVersions, setImageCacheVersions] = useState<Record<number, number>>({})
+
     const { user } = useAuth();
 
     if(!user)
@@ -57,6 +59,8 @@ const ContentMain = () => {
             setCharacters(response.data.data);
             setTotalCharactersPage(response.data.meta.totalPages);
             setSelectedCharacters([])
+
+            console.log("Novos personagens recebidos", response.data.data);
         }catch(err) {
             setCharacters([]);
             setSelectedCharacters([]);
@@ -115,13 +119,21 @@ const ContentMain = () => {
         image: `/assets/images/animes/${a.id}/symbol.jpg`
     }))
 
-    const charactersItems: CharacterItemViewModel[] = characters.map(a => ({
-        id: a.id,
-        anime_id: a.anime_id,
-        name: a.name,
-        active: a.active,
-        image: `/assets/images/cards/${a.id}/thumbnail/1/1.png`
-    }))
+    const charactersItems: CharacterItemViewModel[] = characters.map(a => {
+        
+        const imageCacheVersion = imageCacheVersions[a.id];
+        const imageCacheQuery = imageCacheVersion !== undefined
+            ? `?v=${imageCacheVersion}`
+            : "";
+
+        return { 
+            id: a.id,
+            anime_id: a.anime_id,
+            name: a.name,
+            active: a.active,
+            image: `/assets/images/cards/${a.id}/thumbnail/1/1.png${imageCacheQuery}`
+        }
+    })
 
     const animesList = animesItems.map((a) => ({value: a.id, label: a.name}))
 
@@ -167,6 +179,15 @@ const ContentMain = () => {
 
     const closeEditModal = () => {
         setIsEditModalOpen(false);
+    };
+
+    const handleImagesChanged = (characterId: number) => {
+        console.log("IMAGEM ALTERADA:", characterId);
+
+        setImageCacheVersions((current) => ({
+            ...current,
+            [characterId]: (current[characterId] ?? 0) + 1
+        }));
     };
 
     return (
@@ -268,7 +289,7 @@ const ContentMain = () => {
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
                     {editModalCharacter && (
-                        <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean}/>
+                        <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean} imageCacheVersion={imageCacheVersions[editModalCharacter.id] ?? null} onChangeImage={handleImagesChanged}/>
                     )}
                 </div>
             </div>

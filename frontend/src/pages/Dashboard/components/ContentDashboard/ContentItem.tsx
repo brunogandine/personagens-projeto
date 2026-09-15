@@ -16,6 +16,9 @@ type Props =
 
 
 const ContentItemComponent = ({item, selected, onToggle}: Props) => {
+    if(item.id === 1)
+        console.log("ITEM 1:", item.image);
+
     return (
         <>
             <div 

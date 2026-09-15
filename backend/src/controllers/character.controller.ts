@@ -133,8 +133,6 @@ class CharacterController {
         try {
             const { page, search } = req.query;
 
-            console.log(search)
-
             const result = await CharacterService.getCharacters({
                 page: Number(page ?? 1),
                 search: search as string
