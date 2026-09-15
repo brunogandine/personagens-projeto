@@ -1,8 +1,8 @@
-import styles from "../Dashboard.module.css";
+import styles from "./Sidebar.module.css";
 import { NavLink } from "react-router-dom";
 import { Avatar } from "antd";
 import { UserOutlined, TeamOutlined, ProfileFilled, SettingFilled } from "@ant-design/icons";
-import MenuGroup from "./MenuGroup";
+import MenuGroup from "./components/MenuGroup";
 import { useAuth } from "@/contexts/AuthContext";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;

@@ -1,9 +1,9 @@
+import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
+import dayjs from "dayjs";
 import { Button, DatePicker, InputNumber, Modal, Select } from "antd";
 import { useState, useEffect } from "react";
-import styles from "../../../Dashboard.module.css";
 import type { Dayjs } from "dayjs";
-import dayjs from "dayjs";
-import type { CustomDuration, DurationUnit } from "../types/punishment";
+import type { CustomDuration, DurationUnit } from "../types/punishment.types";
 
 type Props = {
     open: boolean;

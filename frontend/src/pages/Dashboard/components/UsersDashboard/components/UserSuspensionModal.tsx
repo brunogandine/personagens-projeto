@@ -1,12 +1,12 @@
-import styles from "../../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import dayjs from "dayjs";
 import CustomDurationModal from "./CustomDurationModal";
 import SelectedUsersPreview from "./SelectedUsersPreview";
 import { Button, Modal } from "antd";
 import { useState } from "react";
 import { WarningFilled } from "@ant-design/icons";
-import type { CustomDuration } from "../types/punishment";
-import type { SelectedUserPreview } from "../types/userPreview";
+import type { CustomDuration } from "../types/punishment.types";
+import type { SelectedUserPreview } from "../types/userPreview.types";
 
 type Props = {
     open: boolean;
@@ -79,6 +79,8 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
             reason: reason.trim(),
             expiresAt
         };
+
+        console.log(payload)
     }
 
     if(step === "default")

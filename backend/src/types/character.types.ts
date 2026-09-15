@@ -1,9 +1,11 @@
+import type { CreateCharacterSchema, UpdateCharacterSchema } from "@/validations/character.validations"
+
 export type GetCharactersParams = {
     page?: number,
     search?: string,
 }
 
-export type CharacterCreationResponse = 
+export type CreateCharacterResponse = 
     | {
         message: string
     }
@@ -14,34 +16,63 @@ export type CharacterCreationResponse =
         }[]
     }
 
-export type CreateCharacterPayload = {
-    data: {
-        anime_id: number,
-        currency_lock?: boolean,
-        active?: boolean,
-        attr_hp: number,
-        attr_atk: number,
-        attr_def: number,
-        description: string,
-        name: string,
-    },
-    artwork: {
-        mimetype: string,
-        buffer: Buffer
-    },
-    thumbnail: {
-        mimetype: string,
-        buffer: Buffer
+export type EditCharacterResponse =
+    | {
+        type: "not_found",
+        message: string
     }
-}
+    | {
+        id: number;
+        anime: {
+            id: number
+            name: string
+            description: string | null
+            active: boolean
+        };
+        name: string;
+        description: string | null;
+        stats: {
+            hp: number;
+            atk: number;
+            def: number;
+        };
+        active: boolean;
+        lock: boolean;
+    }
 
-export type CreateCharacterData = {
-    anime_id: number,
-    currency_lock?: boolean,
-    active?: boolean,
-    attr_hp: number,
-    attr_atk: number,
-    attr_def: number,
-    description: string,
-    name: string,
+
+export type CreateCharacterPayload = {
+    data: CreateCharacterSchema,
+    artwork?: {
+        buffer: Buffer
+        ext: string
+    },
+    thumbnail?: {
+        buffer: Buffer
+        ext: string
+    }
+};
+
+export type EditCharacterPayload = {
+    id: number;
+    data: UpdateCharacterSchema
+    artwork?: {
+        buffer: Buffer;
+        ext: string;
+    };
+    thumbnail?: {
+        buffer: Buffer;
+        ext: string
+    }
+};
+
+export type EditCharacterData = {
+    anime_id?: number | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    attr_hp?: number | undefined;
+    attr_atk?: number | undefined;
+    attr_def?: number | undefined;
+    currency_lock?: boolean | undefined;
+    active?: boolean | undefined;
 }

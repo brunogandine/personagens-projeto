@@ -1,33 +1,41 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import { CreateCharacterData, GetCharactersParams } from "../types/character.types";
+import type { EditCharacterData, GetCharactersParams } from "../types/character.types";
+import type { CreateCharacterSchema, UpdateCharacterSchema } from "@/validations/character.validations";
 
 
 class CharacterModel {
-    create = async (data: CreateCharacterData) => {
+    create = async (data: CreateCharacterSchema) => {
         return prisma.character.create({
             data
         });
     }
 
-    update = async (id: number, data: Prisma.CharacterUpdateInput) => {
+    update = async (id: number, data: EditCharacterData) => {
+        const normalizeData = Object.fromEntries(
+            Object.entries(data).filter(([, value]) => value !== undefined)
+        );
+
         return prisma.character.update({
             where: { id },
-            data
+            data: normalizeData
         });
-    }
+    };
 
     delete = async (id: number) => {
         return prisma.character.delete({
             where: { id }
         });
-    }
+    };
 
     findById = async (id: number) => {
         return prisma.character.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                anime: true
+            }
         });
-    }
+    };
 
     getCharacters = async ({
         page = 1,

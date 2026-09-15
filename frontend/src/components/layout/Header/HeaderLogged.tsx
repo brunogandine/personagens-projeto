@@ -1,10 +1,10 @@
-import { Dropdown, Avatar} from 'antd';
-import type { MenuProps } from 'antd';
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import type { AuthUser } from '../../../types/authUser';
 import styles from './Header.module.css'
+import { Dropdown, Avatar} from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import type { AuthUser } from '@/types/AuthUser';
+import type { MenuProps } from 'antd';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

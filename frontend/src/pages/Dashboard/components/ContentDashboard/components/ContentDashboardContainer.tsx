@@ -1,4 +1,4 @@
-import styles from "../../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import type { ReactNode } from "react";
 
 type Props = {

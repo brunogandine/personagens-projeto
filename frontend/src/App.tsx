@@ -12,7 +12,6 @@ import ContentMain from "./pages/Dashboard/components/ContentDashboard/component
 import { AuthContextProvider } from "./contexts/AuthContext";
 import { AuthRoute } from "./routes/guards/AuthRoute";
 import { RoleRoute } from "./routes/guards/RoleRoute";
-import MessageModal from "@/components/MessageModal/MessageModal";
 import { MessageModalContextProvider } from "./contexts/UIFeedbackContext";
 
 function App() {
@@ -36,7 +35,6 @@ function App() {
                     <Route index element={<ContentMain />} />
                     <Route path="characters/create" element={<CharacterCreation />} />
                     {/* <Route path="animes/creation" element={<AnimeCreation />} /> */}
-                    {/* <Route path="edit"element={<CharacterEdit />} /> */}
                   </Route>
                   <Route path="settings" />
                 </Route>

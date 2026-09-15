@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import type { AuthUser } from "../../types/authUser";
+import type { AuthUser } from "@/types/AuthUser";
 
 type UserPowers = AuthUser["user_power"];
 

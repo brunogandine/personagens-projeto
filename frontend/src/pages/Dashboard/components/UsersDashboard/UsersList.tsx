@@ -1,8 +1,8 @@
-import type { UserAdmin } from "@/types/user";
-import type { UserAction } from "@/types/userActions";
-import styles from "../../Dashboard.module.css";
+import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import { Avatar, Tooltip } from "antd";
 import { EditOutlined, StopFilled, UserOutlined } from "@ant-design/icons";
+import type { UserAdmin } from "@/types/user";
+import type { UserAction } from "@/types/userActions";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

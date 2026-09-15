@@ -1,15 +1,22 @@
-import styles from "../../../../Dashboard.module.css";
-import ContentItemComponent from "../../ContentItem";
+import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
+import ContentItemComponent from "@/pages/Dashboard/components/ContentDashboard/ContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
-import ContentOptions from "../../ContentOptions";
+import ContentOptions from "@/pages/Dashboard/components/ContentDashboard/ContentOptions";
+import CharacterEditModal from "./components/CharacterEditModal";
+import { toggleId, toggleBoolean } from "@/utils/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
-import type { AnimeItem, AnimeItemViewModel, CharacterItem, CharacterItemViewModel } from "../../types/content.types";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
+import type { AnimeItem, AnimeItemViewModel, CharacterEdit, CharacterItem, CharacterItemViewModel } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
+
+export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
 const ContentMain = () => {
+    const { showMessageModal } = useMessageModal();
+
     const BASE_DASHBOARD_CONTENT_URL = `/dashboard/content`;
 
     const [charactersPage, setCharactersPage] = useState(1);
@@ -30,6 +37,11 @@ const ContentMain = () => {
     const [selectedAnimes, setSelectedAnimes] = useState<number[]>([]);
     const [selectedCharacters, setSelectedCharacters] = useState<number[]>([]);
 
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editModalCharacter, setEditModalCharacter] = useState<CharacterEdit | null>(null)
+
+    const [imageCacheVersions, setImageCacheVersions] = useState<Record<number, number>>({})
+
     const { user } = useAuth();
 
     if(!user)
@@ -46,7 +58,8 @@ const ContentMain = () => {
 
             setCharacters(response.data.data);
             setTotalCharactersPage(response.data.meta.totalPages);
-            setSelectedCharacters([])
+            setSelectedCharacters([]);
+
         }catch(err) {
             setCharacters([]);
             setSelectedCharacters([]);
@@ -69,14 +82,6 @@ const ContentMain = () => {
             setAnimes([]);
             setSelectedAnimes([]);
         }
-    }
-
-    const toggle = (id: number, setState: React.Dispatch<React.SetStateAction<number[]>>) => {
-        setState(prev => 
-            prev.includes(id)
-                ? prev.filter(animeId =>  animeId !== id)
-                : [...prev, id]
-        );
     }
 
     useEffect(() => {
@@ -113,13 +118,74 @@ const ContentMain = () => {
         image: `/assets/images/animes/${a.id}/symbol.jpg`
     }))
 
-    const charactersItems: CharacterItemViewModel[] = characters.map(a => ({
-        id: a.id,
-        anime_id: a.anime_id,
-        name: a.name,
-        active: a.active,
-        image: `/assets/images/cards/${a.id}/thumbnail/1/thumbnail.jpg`
-    }))
+    const charactersItems: CharacterItemViewModel[] = characters.map(a => {
+
+        const imageCacheVersion = imageCacheVersions[a.id];
+        const imageCacheQuery = imageCacheVersion !== undefined
+            ? `?v=${imageCacheVersion}`
+            : "";
+
+        return { 
+            id: a.id,
+            anime_id: a.anime_id,
+            name: a.name,
+            active: a.active,
+            image: `/assets/images/cards/${a.id}/thumbnail/1/1.png${imageCacheQuery}`
+        }
+    })
+
+    const animesList = animesItems.map((a) => ({value: a.id, label: a.name}))
+
+    const getCharacter = async (id: number) => {
+        const res = await Request.get(`/characters/${id}`);
+
+        if(!res.ok) {
+            if(res.status === 404) {
+                showMessageModal({
+                    type: "error",
+                    description: res.data.message
+                });
+            };
+        };
+
+        return res.data;
+    };
+
+    const openEditModal = async () => {
+        if(selectedCharacters.length <= 0) {
+            showMessageModal({
+                type: "warning",
+                description: "É preciso selecionar um personagem para executar está ação.",
+            });
+            
+            return;
+        }
+
+        if(selectedCharacters.length > 1) {
+            showMessageModal({
+                type: "warning",
+                description: "Não é possível executar está ação com mais de um personagem selecionado."
+            });
+
+            return;
+        }
+
+        const character = await getCharacter(selectedCharacters[0]);
+
+        setEditModalCharacter(character);
+        setIsEditModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+    };
+
+    const handleImagesChanged = (characterId: number) => {
+        setImageCacheVersions((current) => ({
+            ...current,
+            [characterId]: (current[characterId] ?? 0) + 1
+        }));
+    };
 
     return (
         <>
@@ -141,7 +207,7 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions type={"animes"} />
+                    <ContentOptions type={"anime"} open={openEditModal} />
                     <div className={`container-default ${styles["list-content"]} ${animes.length > 0 ? styles["anime"] : styles["no-results"]}`}>
                         <div className={`${styles["content-list-item"]}`} >
                             <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/animes/creation`}>
@@ -157,7 +223,7 @@ const ContentMain = () => {
                                         key={anime.id} 
                                         item={anime} 
                                         selected={selectedAnimes} 
-                                        onToggle={() => toggle(anime.id, setSelectedAnimes)}
+                                        onToggle={() => toggleId(anime.id, setSelectedAnimes)}
                                     />
                                 </>
                             ))
@@ -192,9 +258,9 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions type={"characters"} />
+                    <ContentOptions open={openEditModal} type={"character"} />
                     <div className={`container-default ${styles["list-content"]} ${characters.length > 0 ? styles["character"] : styles["no-results"]}`}>
-                        <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
+                        <NavLink style={{display: "flex", justifyContent: "center", alignItems: "flex-end"}} to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
                             <div className={`${styles["content-option-item"]} ${styles["character-thumbnail"]}`}>
                                 <PlusOutlined style={{fontSize: "40px"}}/>
                             </div>
@@ -205,7 +271,7 @@ const ContentMain = () => {
                                         key={character.id} 
                                         item={character} 
                                         selected={selectedCharacters} 
-                                        onToggle={() => toggle(character.id, setSelectedCharacters)} 
+                                        onToggle={() => toggleId(character.id, setSelectedCharacters)} 
                                     />
                             ))
                             : (
@@ -218,6 +284,9 @@ const ContentMain = () => {
                     </div>
                     {characters.length > 0 && (
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
+                    )}
+                    {editModalCharacter && (
+                        <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean} imageCacheVersion={imageCacheVersions[editModalCharacter.id] ?? null} onChangeImage={handleImagesChanged}/>
                     )}
                 </div>
             </div>
