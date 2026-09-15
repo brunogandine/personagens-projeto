@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
-import type { AuthUser } from "../types/authUser";
+import type { AuthUser } from "@/types/AuthUser";
 import { getMe } from "../services/authService";
 import { Request } from "@/services/apiClient";
 import { useNavigate } from "react-router-dom";

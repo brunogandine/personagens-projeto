@@ -79,6 +79,8 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
             reason: reason.trim(),
             expiresAt
         };
+
+        console.log(payload)
     }
 
     if(step === "default")

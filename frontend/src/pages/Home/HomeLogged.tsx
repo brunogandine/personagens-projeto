@@ -1,7 +1,7 @@
+import styles from "./Home.module.css";
+import VerticalRuler from "@/components/Utils/VerticalRuler";
 import { useEffect, useState } from "react";
-import styles from "./Home.module.css"
 import { getCharactersCount, getUsersCount } from "../../services/statisticsService";
-import VerticalRuler from "../../components/Utils/VerticalRuler";
 
 const HomeLogged = () => {
     const [loading, setLoading] = useState(true);
