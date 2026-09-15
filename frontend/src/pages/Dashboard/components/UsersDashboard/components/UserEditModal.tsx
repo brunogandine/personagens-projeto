@@ -17,8 +17,6 @@ const UserEditModal = ({open, onClose, selectedUsers}: Props) => {
         onClose();
     }
 
-    console.log(selectedUsers)
-
     const isMultiple = selectedUsers.length > 1;
 
     return (

@@ -58,9 +58,8 @@ const ContentMain = () => {
 
             setCharacters(response.data.data);
             setTotalCharactersPage(response.data.meta.totalPages);
-            setSelectedCharacters([])
+            setSelectedCharacters([]);
 
-            console.log("Novos personagens recebidos", response.data.data);
         }catch(err) {
             setCharacters([]);
             setSelectedCharacters([]);
@@ -120,7 +119,7 @@ const ContentMain = () => {
     }))
 
     const charactersItems: CharacterItemViewModel[] = characters.map(a => {
-        
+
         const imageCacheVersion = imageCacheVersions[a.id];
         const imageCacheQuery = imageCacheVersion !== undefined
             ? `?v=${imageCacheVersion}`
@@ -182,8 +181,6 @@ const ContentMain = () => {
     };
 
     const handleImagesChanged = (characterId: number) => {
-        console.log("IMAGEM ALTERADA:", characterId);
-
         setImageCacheVersions((current) => ({
             ...current,
             [characterId]: (current[characterId] ?? 0) + 1
