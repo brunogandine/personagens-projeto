@@ -3,6 +3,10 @@
     --character-item-height: 325px;
     --character-thumbnail-item-width: 160px;
     --character-thumbnail-item-height: 145px;
+    --character-item-outline-width: 235px;
+    --character-item-outline-height: 287px;
+    --character-thumbnail-item-outline-width: 110px;
+    --character-thumbnail-item-outline-height: 110px;
     --anime--item-width: 66px;
     --anime--item-height: 65px;
 }

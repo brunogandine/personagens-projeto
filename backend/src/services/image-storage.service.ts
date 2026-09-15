@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import sharp from "sharp";
 
 type ImageStorageResponse = {
     ok: boolean;
@@ -11,7 +12,11 @@ class ImageStorageService {
         try {
             await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
 
-            await fs.promises.writeFile(filePath, buffer);
+            const pngBuffer = await sharp(buffer)
+                .png()
+                .toBuffer();
+
+            await fs.promises.writeFile(filePath, pngBuffer);
 
             return { ok: true };
         }catch(err) {

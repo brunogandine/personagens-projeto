@@ -72,6 +72,10 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
 
     useEffect(() => {
         setDraftName(character.name);
+        setSelectedAnimeId(character.anime.id);
+        setIsActive(character.active);
+        setIsLock(character.lock);
+        
     }, [character]);
 
     useEffect(() => {
@@ -684,8 +688,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                     <UndoOutlined style={{fontSize: "18px", fontWeight: "bold", color: "var(--text-color-default)"}} onClick={handleResetDescription}/>
                                 </Tooltip>
                                 {isEditingDescription && (
-                                    <>
-
+                                    <div className={`${styles["description-main-actions"]}`}>
                                         <Tooltip 
                                             title={`Confirmar Edição`}
                                             destroyOnHidden={true}
@@ -698,7 +701,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                         >
                                             <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={handleCancelEditDescription}>✕</span>
                                         </Tooltip>
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         </div>
