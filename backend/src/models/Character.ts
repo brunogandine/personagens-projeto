@@ -22,6 +22,32 @@ class CharacterModel {
         });
     };
 
+    softDeleteCharacter = async (ids: number[]) => {
+        return prisma.character.updateMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            data: {
+                deleted_at: new Date()
+            }
+        });
+    };
+
+    restoreCharacter = async (ids: number[]) => {
+        return prisma.character.updateMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            data: {
+                deleted_at: null
+            }
+        });
+    };
+
     delete = async (id: number) => {
         return prisma.character.delete({
             where: { id }
@@ -33,6 +59,20 @@ class CharacterModel {
             where: { id },
             include: {
                 anime: true
+            }
+        });
+    };
+
+    findManyByIds = async (ids: number[]) => {
+        return prisma.character.findMany({
+            where: { 
+                id: {
+                    in: ids
+                }
+            },
+            select: {
+                id: true,
+                deleted_at: true
             }
         });
     };

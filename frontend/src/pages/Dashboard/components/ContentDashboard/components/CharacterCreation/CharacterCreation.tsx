@@ -2,7 +2,7 @@ import styles from "@/pages/Dashboard/components/ContentDashboard/components/Cha
 import contentStyles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import ImageCropModal from "../../../../shared/ImageCropModal";
 import CharacterPreviewModal from "./components/CharacterPreviewModal";
-import ContentItemComponent from "../../ContentItem";
+import ContentItemComponent from "@/pages/Dashboard/components/ContentDashboard/SelectableContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import { Request } from "@/services/apiClient";

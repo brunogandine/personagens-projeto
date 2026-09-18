@@ -28,6 +28,15 @@ export const updateCharacterSchema = z.object({
     remove_thumbnail: formBoolean.optional()
 });
 
+export const deleteCharacterSchema = z.object({
+    ids: z.array(z.number().int()).min(1, {message: "É preciso selecionar pelo menos um personagem para executar está ação."}).max(5, {message: "Não é possível excluir mais do que 5 personagens ao mesmo tempo."}).refine((ids) => new Set(ids).size === ids.length, {message: "Não é permitido informar IDs duplicados."}), 
+    confirmationText: z.literal("DELETAR PERSONAGEM", {error: "Texto de confirmação inválido."})
+});
+
+export const restoreCharacterSchema = z.object({
+    ids: z.array(z.number().int()).min(1, {message: "É preciso selecionar pelo menos um personagem para executar está ação."}).max(5, {message: "Não é possível restaurar mais do que 5 personagens ao mesmo tempo."}).refine((ids) => new Set(ids).size === ids.length, {message: "Não é permitido informar IDs duplicados."})
+})
+
 export const characterIdSchema = z.object({
     id: z.coerce.number().int().positive(),
 });

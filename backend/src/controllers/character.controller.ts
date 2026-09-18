@@ -3,6 +3,8 @@ import CharacterService from "../services/character.service";
 import { isAppError } from "@/utils/is-app-error.util";
 import { detectImageType } from "@/utils/detectImageType";
 import characterService from "../services/character.service";
+import { ZodError } from "zod";
+import { deleteCharacterSchema, restoreCharacterSchema } from "@/validations/character.validations";
 class CharacterController {
     createCharacter: RequestHandler = async (req, res) => {
         try {
@@ -103,6 +105,79 @@ class CharacterController {
         };
     };
 
+    softDelete: RequestHandler = async (req, res) => {
+        try {
+            const data = deleteCharacterSchema.parse(req.body);
+
+            const result = await characterService.softDeleteCharacter({
+                data: {
+                    ids: data.ids
+                }
+            });
+
+            res.status(200).json(result);
+        } catch(err) {
+            if(err instanceof ZodError) {
+                const issues = err.issues[0];
+
+                if(!issues)
+                    return res.status(400).json({
+                        message: "Dados inválidos."
+                });
+
+                return res.status(400).json({message: issues.message});
+            };
+
+            if(isAppError(err)) {
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+            };
+
+            return res.status(500).json({message: "Erro Interno"});
+        };
+    };
+
+    restoreCharacter: RequestHandler = async (req, res) => {
+        try {
+            const data = restoreCharacterSchema.parse(req.body);
+
+            const result = characterService.restoreCharacter({
+                data: {
+                    ids: data.ids
+                }
+            });
+
+            res.status(200).json(result);
+        } catch(err){
+            if(err instanceof ZodError) {
+                const issues = err.issues[0];
+
+                if(!issues) {
+                    return res.status(400).json({
+                        message: "Dados Inválidos"
+                    });
+                };
+
+                return res.status(400).json({
+                    message: issues.message
+                });
+            };
+
+            if(isAppError(err)) {
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+
+                if(err.type === "conflict") {
+                    return res.status(409).json({message: err.message});
+                };
+
+                return res.status(500).json({message: "Erro Interno"});
+            }
+        }
+    }
+
     getCounts: RequestHandler = async (req, res) => {
         try {
             const count = await CharacterService.getCharactersCount();
@@ -141,8 +216,8 @@ class CharacterController {
             return res.status(200).json(result);
         } catch(err) {
             return res.status(500).json({message: "Erro Interno."})
-        }
-    }
+        };
+    };
 }
 
 export default new CharacterController();

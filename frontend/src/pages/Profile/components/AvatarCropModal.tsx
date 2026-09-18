@@ -55,7 +55,7 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
 
     return (
         <Modal 
-            className={`modal-default`}
+            wrapClassName={`modal-default`}
             title="Editar imagem" 
             open={open} 
             onCancel={handleCancel} 

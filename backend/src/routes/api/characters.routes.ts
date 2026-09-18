@@ -4,7 +4,7 @@ import AuthorizeUser from '@/middlewares/authorize';
 import ValidateRequest from '@/middlewares/validate';
 import CharacterController from '@/controllers/character.controller';
 import UploadImage from '@/middlewares/upload/uploadImage';
-import { characterIdSchema, createCharacterSchema, updateCharacterSchema } from '@/validations/character.validations';
+import { characterIdSchema, createCharacterSchema, deleteCharacterSchema, restoreCharacterSchema, updateCharacterSchema } from '@/validations/character.validations';
 
 const router = Router();
 
@@ -20,6 +20,9 @@ router.post(
     ValidateRequest(createCharacterSchema, "body"), 
     CharacterController.createCharacter
 );
+
+router.patch("/delete", Authenticate, AuthorizeUser("Admin"), ValidateRequest(deleteCharacterSchema, "body"), CharacterController.softDelete);
+router.patch("/restore", Authenticate, AuthorizeUser("Admin"), ValidateRequest(restoreCharacterSchema, "body"), CharacterController.restoreCharacter)
 router.patch(
     "/:id", 
     Authenticate, AuthorizeUser("Admin"), 

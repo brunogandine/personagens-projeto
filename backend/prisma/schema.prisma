@@ -10,6 +10,8 @@ model Anime {
   active        Boolean            @default(false)
   name          String             @db.VarChar(255)
   description   String?            @db.Text
+  deleted_at    DateTime?
+
   characters    Character[]
 
   @@map("animes")
@@ -21,10 +23,10 @@ model Character {
   description   String?                @db.Text
   currency_lock Boolean                @default(false)
   active        Boolean                @default(false)
-  anime_active  Boolean                @default(false)
   attr_hp       Int                    @default(0)
   attr_atk      Int                    @default(0)
   attr_def      Int                    @default(0)
+  deleted_at    DateTime?
 
   anime         Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
 

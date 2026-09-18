@@ -1,6 +1,6 @@
 import { animeModel } from "@/models/Anime";
 import { characterModel } from "@/models/Character";
-import { CreateCharacterResponse, CreateCharacterPayload, EditCharacterPayload, GetCharactersParams, EditCharacterResponse } from "@/types/character.types";
+import { CreateCharacterResponse, CreateCharacterPayload, EditCharacterPayload, GetCharactersParams, EditCharacterResponse, DeleteCharacterPayload, RestoreCharacterPayload } from "@/types/character.types";
 import ImageStorageService from "@/services/image-storage.service"
 import path from "path"
 
@@ -112,7 +112,47 @@ class CharacterService {
             throw { type: "storage", errors };
         };
 
-        return { message: "Personagem atualizado com sucesso!"};
+        return { message: "Personagem atualizado com sucesso!" };
+    };
+
+    async softDeleteCharacter({data}: DeleteCharacterPayload) {
+        const existCharacters = await characterModel.findManyByIds(data.ids);
+
+        if(existCharacters.length !== data.ids.length) {
+            throw { type: "not_found", message: "Um ou mais personagens não foram encontrados."};
+        };
+
+        const alreadyDeleted = existCharacters.some(
+            (c) => c.deleted_at !== null
+        );
+
+        if(alreadyDeleted) {
+            throw { type: "conflict", message: "Um ou mais personagens já foram deletados." };
+        };
+
+        await characterModel.softDeleteCharacter(data.ids);
+
+        return { message: "Exclusão efetuada com sucesso!" };
+    };
+
+    async restoreCharacter({data}: RestoreCharacterPayload) {
+        const existCharacters = await characterModel.findManyByIds(data.ids);
+
+        if(existCharacters.length !== data.ids.length) {
+            throw { type: "not_found", message: "Um ou mais personagens não foram encontrados."};
+        };
+
+        const notDeleted = existCharacters.some(
+            (c) => c.deleted_at === null
+        );
+
+        if(notDeleted) {
+            throw { type: "conflict", message: "Um ou mais personagens não precisam ser restaurados." };
+        };
+
+        await characterModel.restoreCharacter(data.ids);
+
+        return { message: "Personagens restaurados com sucesso."};
     };
 
     async getCharacters({

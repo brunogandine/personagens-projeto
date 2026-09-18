@@ -1,14 +1,14 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
+import ImageCropModal from "@/pages/Dashboard/shared/ImageCropModal";
 import { Button, Input, InputNumber, Modal, Select, Tooltip } from "antd";
 import { BASE_ATTRIBUTES_URL } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
 import { EditFilled, UndoOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
-import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import { validateImageFile } from "@/helpers/validateImageFile";
-import ImageCropModal from "@/pages/Dashboard/shared/ImageCropModal";
 import { Request } from "@/services/apiClient";
+import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];

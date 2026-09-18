@@ -1,8 +1,9 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
-import ContentItemComponent from "@/pages/Dashboard/components/ContentDashboard/ContentItem";
+import SelectableContentItem from "@/pages/Dashboard/components/ContentDashboard/SelectableContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import ContentOptions from "@/pages/Dashboard/components/ContentDashboard/ContentOptions";
 import CharacterEditModal from "./components/CharacterEditModal";
+import CharacterDeleteModal from "./components/CharacterDeleteModal";
 import { toggleId, toggleBoolean } from "@/utils/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
@@ -10,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
-import type { AnimeItem, AnimeItemViewModel, CharacterEdit, CharacterItem, CharacterItemViewModel } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
+import type { AnimeItem, AnimeItemViewModel, CharacterDelete, CharacterEdit, CharacterItem, CharacterItemViewModel } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
@@ -37,8 +38,11 @@ const ContentMain = () => {
     const [selectedAnimes, setSelectedAnimes] = useState<number[]>([]);
     const [selectedCharacters, setSelectedCharacters] = useState<number[]>([]);
 
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [editModalCharacter, setEditModalCharacter] = useState<CharacterEdit | null>(null)
+    const [isEditCharacterModalOpen, setIsEditCharacterModalOpen] = useState(false);
+    const [editModalCharacter, setEditModalCharacter] = useState<CharacterEdit | null>(null);
+
+    const [isDeleteCharacterModalOpen, setIsDeleteCharacterModalOpen] = useState(false);
+    const [deleteModalCharacters, setDeleteModalCharacters] = useState<CharacterDelete[] | null>(null);
 
     const [imageCacheVersions, setImageCacheVersions] = useState<Record<number, number>>({})
 
@@ -115,6 +119,7 @@ const ContentMain = () => {
         id: a.id,
         name: a.name,
         active: a.active,
+        deleted_at: a.deleted_at,
         image: `/assets/images/animes/${a.id}/symbol.jpg`
     }))
 
@@ -130,6 +135,7 @@ const ContentMain = () => {
             anime_id: a.anime_id,
             name: a.name,
             active: a.active,
+            deleted_at: a.deleted_at,
             image: `/assets/images/cards/${a.id}/thumbnail/1/1.png${imageCacheQuery}`
         }
     })
@@ -151,7 +157,7 @@ const ContentMain = () => {
         return res.data;
     };
 
-    const openEditModal = async () => {
+    const openEditCharacterModal = async () => {
         if(selectedCharacters.length <= 0) {
             showMessageModal({
                 type: "warning",
@@ -159,7 +165,7 @@ const ContentMain = () => {
             });
             
             return;
-        }
+        };
 
         if(selectedCharacters.length > 1) {
             showMessageModal({
@@ -168,16 +174,51 @@ const ContentMain = () => {
             });
 
             return;
-        }
+        };
 
         const character = await getCharacter(selectedCharacters[0]);
 
         setEditModalCharacter(character);
-        setIsEditModalOpen(true);
+        setIsEditCharacterModalOpen(true);
     };
 
-    const closeEditModal = () => {
-        setIsEditModalOpen(false);
+    const openDeleteCharacterModal = async () => {
+        if(selectedCharacters.length <= 0) {
+            showMessageModal({
+                type: "warning",
+                description: "É preciso selecionar pelo menos um personagem para executar está ação.",
+            });
+            
+            return;
+        };
+
+        if(selectedCharacters.length > 5) {
+            showMessageModal({
+                type: "warning",
+                description: "Não é possível excluir mais do que 5 personagens ao mesmo tempo."
+            });
+
+            return;
+        };
+
+        const selected = charactersItems
+            .filter((character) => selectedCharacters.includes(character.id))
+            .map((character) => ({
+                id: character.id,
+                name: character.name    
+            }));
+
+        setDeleteModalCharacters(selected);
+        setIsDeleteCharacterModalOpen(true);
+    };
+
+    const closeEditCharacterModal = () => {
+        setIsEditCharacterModalOpen(false);
+    };
+
+    const closeDeleteCharacterModal = () => {
+        setDeleteModalCharacters(null);
+        setIsDeleteCharacterModalOpen(false);
     };
 
     const handleImagesChanged = (characterId: number) => {
@@ -207,7 +248,7 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions type={"anime"} open={openEditModal} />
+                    <ContentOptions openEdit={openEditCharacterModal} openDelete={openDeleteCharacterModal} />
                     <div className={`container-default ${styles["list-content"]} ${animes.length > 0 ? styles["anime"] : styles["no-results"]}`}>
                         <div className={`${styles["content-list-item"]}`} >
                             <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/animes/creation`}>
@@ -219,7 +260,7 @@ const ContentMain = () => {
                         {animesItems.length > 0 
                             ? animesItems.map((anime) => (
                                 <>
-                                    <ContentItemComponent 
+                                    <SelectableContentItem 
                                         key={anime.id} 
                                         item={anime} 
                                         selected={selectedAnimes} 
@@ -258,7 +299,7 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions open={openEditModal} type={"character"} />
+                    <ContentOptions openEdit={openEditCharacterModal} openDelete={openDeleteCharacterModal}/>
                     <div className={`container-default ${styles["list-content"]} ${characters.length > 0 ? styles["character"] : styles["no-results"]}`}>
                         <NavLink style={{display: "flex", justifyContent: "center", alignItems: "flex-end"}} to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
                             <div className={`${styles["content-option-item"]} ${styles["character-thumbnail"]}`}>
@@ -267,7 +308,7 @@ const ContentMain = () => {
                         </NavLink>
                         {charactersItems.length > 0 
                             ? charactersItems.map((character) => (
-                                    <ContentItemComponent 
+                                    <SelectableContentItem 
                                         key={character.id} 
                                         item={character} 
                                         selected={selectedCharacters} 
@@ -286,8 +327,9 @@ const ContentMain = () => {
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
                     {editModalCharacter && (
-                        <CharacterEditModal open={isEditModalOpen} onClose={closeEditModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean} imageCacheVersion={imageCacheVersions[editModalCharacter.id] ?? null} onChangeImage={handleImagesChanged}/>
+                        <CharacterEditModal open={isEditCharacterModalOpen} onClose={closeEditCharacterModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean} imageCacheVersion={imageCacheVersions[editModalCharacter.id] ?? null} onChangeImage={handleImagesChanged}/>
                     )}
+                    <CharacterDeleteModal open={isDeleteCharacterModalOpen} onClose={closeDeleteCharacterModal} selectedCharacters={deleteModalCharacters} />
                 </div>
             </div>
         </>
