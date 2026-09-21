@@ -1,9 +1,10 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
 import { CreateAnimeData, GetAnimeParams } from "../types/anime.types";
+import { CreateAnimeSchema } from "@/validations/anime.validations";
 
 class AnimeModel {
-    create = async (data: CreateAnimeData) => {
+    create = async (data: CreateAnimeSchema) => {
         return prisma.anime.create({
             data: {
                 active: data.active,

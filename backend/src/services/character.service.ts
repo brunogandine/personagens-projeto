@@ -1,8 +1,8 @@
+import ImageStorageService from "@/services/image-storage.service"
+import path from "path"
 import { animeModel } from "@/models/Anime";
 import { characterModel } from "@/models/Character";
 import { CreateCharacterResponse, CreateCharacterPayload, EditCharacterPayload, GetCharactersParams, EditCharacterResponse, DeleteCharacterPayload, RestoreCharacterPayload } from "@/types/character.types";
-import ImageStorageService from "@/services/image-storage.service"
-import path from "path"
 
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "cards");

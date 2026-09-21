@@ -1,13 +1,42 @@
 import { RequestHandler } from "express";
 import AnimeService from "../services/anime.service";
+import { detectImageType } from "@/utils/detectImageType";
+import { isAppError } from "@/utils/is-app-error.util";
 
 class AnimeController {
     createAnime: RequestHandler = async (req, res) => {
         try {
-            const result = await AnimeService.createAnime(req.body);
+            const file = req.file;
 
-            return res.status(200).json(result);
+            const imageExt = file
+                ? await detectImageType(file.buffer)
+                : null;
+
+            const result = await AnimeService.createAnime({
+                data: req.body,
+                ...(file && imageExt 
+                    ? {
+                        image: {
+                            buffer: file.buffer,
+                            ext: imageExt
+                        }
+                    }
+                    : undefined
+                )
+            });
+
+            return res.status(201).json(result);
         } catch(err) {
+            if(isAppError(err)) {
+                if(err.type === "conflict") {
+                    return res.status(409).json({message: err.message});
+                };
+
+                if(err.type === "storage") {
+                    return res.status(200).json({message: err.message, type: err.type})
+                }
+            }
+
             return res.status(500).json({message: "Erro Interno"});
         }
     }

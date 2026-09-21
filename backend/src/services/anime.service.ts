@@ -1,16 +1,39 @@
-import { animeModel } from "../models/Anime";
-import { CreateAnimeData, GetAnimeParams } from "../types/anime.types";
+import path from "path";
+import ImageStorageService from "@/services/image-storage.service";
+import { animeModel } from "@/models/Anime";
+import { CreateAnimeData, GetAnimeParams } from "@/types/anime.types";
 
+const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
+const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "animes");
 class AnimeService {
-    createAnime = async (data: CreateAnimeData) => {
-        const sameName = await animeModel.findByName(data.name);
+    createAnime = async (payload: CreateAnimeData) => {
+        const errors = [];
+
+        const sameName = await animeModel.findByName(payload.data.name);
 
         if(sameName) 
-            throw new Error("Já existe um anime com esse nome.");
+            throw ({type: "conflict", message: "Já existe um anime com esse nome."});
 
-        await animeModel.create(data);
+        const anime = await animeModel.create(payload.data);
 
-        return {ok: true, message: "Anime criado com sucesso!"};
+        const animeDir = path.resolve(uploadDir, `${anime.id}`);
+
+        if(payload.symbol) {
+            const symbolDir = path.resolve(animeDir, `symbol.${payload.symbol.ext}`);
+
+            const symbolSave = await ImageStorageService.save(payload.symbol.buffer, symbolDir);
+
+            if(!symbolSave.ok) {
+                errors.push({message: `${symbolSave.message} - Anime Symbol`})
+            };
+        };
+
+        if(errors.length > 0) {
+            errors.push({message: "O anime foi criado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens. Você pode tentar atualizar as imagens na edição de anime."});
+            throw { type: "storage", errors };
+        };
+
+        return { message: "Anime criado com sucesso!" };
     };
 
     getAnimes = async ({

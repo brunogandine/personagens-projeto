@@ -1,10 +1,14 @@
+import { CreateAnimeSchema } from "@/validations/anime.validations"
+
 export type GetAnimeParams = {
     page: number,
     search: string
 }
 
 export type CreateAnimeData = {
-    active: boolean,
-    name: string,
-    description: string
+    data: CreateAnimeSchema
+    symbol?:  {
+        buffer: Buffer,
+        ext: string
+    }
 }
