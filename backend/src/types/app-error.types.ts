@@ -15,3 +15,7 @@ export type AppError =
         message?: string; 
         errors?: { message: string }[];
     }
+    | {
+        type: "conflict";
+        message?: string;
+    }

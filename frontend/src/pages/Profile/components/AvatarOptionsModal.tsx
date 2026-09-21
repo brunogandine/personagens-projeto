@@ -17,7 +17,14 @@ const AvatarOptionsModal = ({ open, onClose, onChooseImage, recentAvatars, onSel
     const slots = Array.from({ length: 6 }, (_, index) => recentAvatars[index] ?? null);
 
     return (
-        <Modal title="Selecione uma imagem" className={`modal-default`} closable open={open} onCancel={onClose} footer={null}>
+        <Modal 
+            wrapClassName={`modal-default`} 
+            title="Selecione uma imagem" 
+            closable 
+            open={open} 
+            onCancel={onClose} 
+            footer
+        >
             <div className={`${styles["options-modal-content"]}`}>
                 <div className={`${styles["upload-image"]}`} onClick={onChooseImage}>
                     <UploadOutlined className={`${styles["upload-icon"]}`} style={{fontSize: '24px'}} />

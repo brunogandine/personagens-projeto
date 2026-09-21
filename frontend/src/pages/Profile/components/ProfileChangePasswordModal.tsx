@@ -82,7 +82,7 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
     return (
         <>
             <Modal 
-                className={`modal-default`}
+                wrapClassName={`modal-default`}
                 title="Atualize sua senha" 
                 open={open} 
                 closable 

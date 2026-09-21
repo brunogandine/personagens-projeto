@@ -1,14 +1,14 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
+import ImageCropModal from "@/pages/Dashboard/shared/ImageCropModal";
 import { Button, Input, InputNumber, Modal, Select, Tooltip } from "antd";
 import { BASE_ATTRIBUTES_URL } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
 import { EditFilled, UndoOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
-import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import { validateImageFile } from "@/helpers/validateImageFile";
-import ImageCropModal from "@/pages/Dashboard/shared/ImageCropModal";
 import { Request } from "@/services/apiClient";
+import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
@@ -25,6 +25,7 @@ type CharacterEditModalProps = {
     toggleBoolean: (setState: React.Dispatch<React.SetStateAction<boolean>>) => void;
     imageCacheVersion: number | null;
     onChangeImage: (characterId: number) => void;
+    onSuccess: () => void;
 };
 
 type CropAspectOptions = {
@@ -38,7 +39,7 @@ type CropTarget = {
     options: CropAspectOptions;
 }
 
-const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean, imageCacheVersion, onChangeImage }:  CharacterEditModalProps) => {
+const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean, imageCacheVersion, onChangeImage, onSuccess }:  CharacterEditModalProps) => {
     const { showToast, showMessageModal } = useMessageModal();
 
     const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
@@ -442,8 +443,10 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         if(!res.ok) {
             if(res.status === 404) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    }
                 });
 
                 return;
@@ -451,9 +454,11 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
 
             if(res.status === 500) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message,
-                    instructions: "Tente novamente."
+                    data: {
+                        type: "error",
+                        description: res.data.message,
+                        instructions: "Tente novamente."
+                    }
                 });
 
                 return;
@@ -463,10 +468,12 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         if(res.data.errors) {
             if(res.data.type === "storage") {
                 showMessageModal({
-                    type: "warning",
-                    description: "O personagem foi atualizado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens:",
-                    list: res.data.errors,
-                    instructions: "Tente novamente."
+                    data: {
+                        type: "warning",
+                        description: "O personagem foi atualizado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens:",
+                        list: res.data.errors,
+                        instructions: "Tente novamente."
+                    }
                 });
 
                 resetStates();
@@ -482,6 +489,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         showToast({type: "success", text: res.data.message, });
 
         resetStates();
+        onSuccess();
         onClose();
     };
 

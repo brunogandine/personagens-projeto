@@ -2,7 +2,7 @@ import styles from "@/pages/Dashboard/components/ContentDashboard/components/Cha
 import contentStyles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import ImageCropModal from "../../../../shared/ImageCropModal";
 import CharacterPreviewModal from "./components/CharacterPreviewModal";
-import ContentItemComponent from "../../ContentItem";
+import SelectableContentItem from "@/pages/Dashboard/components/ContentDashboard/SelectableContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import { Request } from "@/services/apiClient";
@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Input, InputNumber, Tooltip } from "antd";
 import { validateImageFile } from "@/helpers/validateImageFile";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
-import type { AnimeItem, AnimeItemViewModel, CharacterPreview } from "../../types/content.types";
+import type { AnimeItem, AnimeContentItem, CharacterPreview } from "../../types/content.types";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -41,7 +41,7 @@ const CharacterCreation = () => {
 
     const [animesDebounceSearch, setAnimesDebounceSearch] = useState("");
     
-    const [confirmedAnime, setConfirmedAnime] = useState<AnimeItemViewModel | null>(null);
+    const [confirmedAnime, setConfirmedAnime] = useState<AnimeContentItem | null>(null);
     const [selectedAnime, setSelectedAnime] = useState<number[]>([]);
 
     const [characterName, setCharacterName] = useState("");
@@ -127,7 +127,7 @@ const CharacterCreation = () => {
         if(confirmedAnime?.id === selectedAnime[0])
             return {message: "Anime já está selecionado", type: "error"};
 
-        const anime = animesItems.find(a => a.id === selectedAnime[0]);
+        const anime = animes.find(a => a.id === selectedAnime[0]);
 
         if(!anime)
             return {message: "Anime não encontrado", type: "error"};
@@ -136,13 +136,6 @@ const CharacterCreation = () => {
         setAnimeFormToggle(false);
         setCharacterFormToggle(true);
     };
-
-    const animesItems: AnimeItemViewModel[] = animes.map(a => ({
-        id: a.id,
-        name: a.name,
-        active: a.active,
-        image: `/assets/images/animes/${a.id}/symbol.jpg`
-    }));
 
     const uploadArtwork = () => {
         fileInputRefArtwork.current?.click();
@@ -423,8 +416,10 @@ const CharacterCreation = () => {
         if(!res.ok) {
             if(res.status === 404) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    }
                 });
                 
                 return;
@@ -432,9 +427,11 @@ const CharacterCreation = () => {
             
             if(res.status === 500) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message,
-                    instructions: "Tente novamente."
+                    data: {
+                        type: "error",
+                        description: res.data.message,
+                        instructions: "Tente novamente."
+                    }
                 });
 
                 return;
@@ -443,10 +440,12 @@ const CharacterCreation = () => {
         
         if(res.data.errors) {
             showMessageModal({
-                type: "warning",
-                description: "Personagem criado com sucesso mas um ou mais erros ocorreram durante o upload das imagens:",
-                list: res.data.errors,
-                instructions: "Você pode tentar subir as imagens novamente na sessão Editar Personagem."
+                data: {
+                    type: "warning",
+                    description: "Personagem criado com sucesso mas um ou mais erros ocorreram durante o upload das imagens:",
+                    list: res.data.errors,
+                    instructions: "Você pode tentar subir as imagens novamente na sessão Editar Personagem."
+                }
             });
 
             setIsCharacterPreviewModalOpen(false);
@@ -480,14 +479,16 @@ const CharacterCreation = () => {
                         </div>
                         <div className={`${styles["content-form-content"]} ${animeFormToggle ? styles["open"] : ""}`} >
                             <div className={`container-default ${contentStyles["list-content"]} ${animes.length > 0 ? contentStyles["anime"] : contentStyles["no-results"]}`}>
-                                {animesItems.length > 0 
-                                    ? animesItems.map((anime) => (
+                                {animes.length > 0 
+                                    ? animes.map((a) => (
                                         <>
-                                            <ContentItemComponent 
-                                                key={anime.id} 
-                                                item={anime} 
+                                            <SelectableContentItem 
+                                                key={a.id} 
+                                                item={a} 
                                                 selected={selectedAnime} 
-                                                onToggle={() => selectAnime(anime.id, setSelectedAnime)}
+                                                onToggle={() => selectAnime(a.id, setSelectedAnime)}
+                                                type={"anime"}
+                                                imageVersion={""}
                                             />
                                         </>
                                     ))
@@ -597,7 +598,7 @@ const CharacterCreation = () => {
                                 <fieldset className={`${styles["artwork-fieldset"]}`}>
                                     <legend className={`item-default`} style={{fontSize: "18px"}}>Artes</legend>
                                     <div className={`${styles["artwork-upload-container"]}`}>
-                                        <div className={`artwork-upload-wrapper ${artworkPreview ? `${contentStyles["success"]}` : `${contentStyles["content-option-item"]} ${contentStyles["character"]}` }`} onClick={() => uploadArtwork()} onContextMenu={handleRemoveArtwork}>
+                                        <div className={`artwork-upload-wrapper  ${artworkPreview ? `${styles["success"]} ${styles["artwork"]}` : `${contentStyles["content-option-item"]} ${contentStyles["artwork"]}`}`} onClick={() => uploadArtwork()} onContextMenu={handleRemoveArtwork}>
                                             {artworkPreview 
                                                 ? (<img src={artworkPreview} />)
                                                 : (
@@ -609,7 +610,7 @@ const CharacterCreation = () => {
                                             }
                                             <input ref={fileInputRefArtwork} type="file" accept="image/jpeg,image/png" style={{display: "none"}} onChange={handleArtwork}/>
                                         </div>
-                                        <div className={`artwork-upload-wrapper ${thumbnailPreview ? `${contentStyles["success"]}` : `${contentStyles["content-option-item"]} ${contentStyles["character-thumbnail"]}` }`} onClick={() => uploadThumbnail()} onContextMenu={handleRemoveThumbnail}>
+                                        <div className={`artwork-upload-wrapper ${thumbnailPreview ? `${styles["success"]} ${styles["thumbnail"]}` : `${contentStyles["content-option-item"]} ${contentStyles["thumbnail"]}` }`} onClick={() => uploadThumbnail()} onContextMenu={handleRemoveThumbnail}>
                                             {thumbnailPreview 
                                                 ? (<img src={thumbnailPreview} />)
                                                 : (

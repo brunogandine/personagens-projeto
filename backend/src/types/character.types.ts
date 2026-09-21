@@ -76,3 +76,15 @@ export type EditCharacterData = {
     currency_lock?: boolean | undefined;
     active?: boolean | undefined;
 }
+
+export type DeleteCharacterPayload = {
+    data: {
+        ids: number[];
+    }
+}
+
+export type RestoreCharacterPayload = {
+    data: {
+        ids: number[];
+    }
+}
