@@ -3,7 +3,8 @@ import SelectableContentItem from "@/pages/Dashboard/components/ContentDashboard
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import ContentOptions from "@/pages/Dashboard/components/ContentDashboard/ContentOptions";
 import CharacterEditModal from "./components/CharacterEditModal";
-import CharacterDeleteModal from "./components/CharacterDeleteModal";
+import CharacterSoftDeleteModal from "./components/CharacterSoftDeleteModal";
+import CharacterRestoreModal from "./components/CharacterRestoreModal";
 import { toggleId, toggleBoolean } from "@/utils/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
@@ -11,7 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
-import type { AnimeItem, AnimeItemViewModel, CharacterDelete, CharacterEdit, CharacterItem, CharacterItemViewModel } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
+import type { AnimeItem, CharacterDelete, CharacterEdit, CharacterItem, CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
@@ -44,6 +45,10 @@ const ContentMain = () => {
     const [isDeleteCharacterModalOpen, setIsDeleteCharacterModalOpen] = useState(false);
     const [deleteModalCharacters, setDeleteModalCharacters] = useState<CharacterDelete[] | null>(null);
 
+    const [isRestoreCharacterModalOpen, setIsRestoreCharacterModalOpen] = useState(false);
+    const [restoreModalCharacters, setRestoreModalCharacters] = useState<CharacterRestore[] | null>(null);
+
+    const [charactersRefreshKey, setCharactersRefreshKey] = useState(0);
     const [imageCacheVersions, setImageCacheVersions] = useState<Record<number, number>>({})
 
     const { user } = useAuth();
@@ -100,7 +105,7 @@ const ContentMain = () => {
     useEffect(() => {
         getCharacters();
 
-    }, [charactersPage, charactersDebounceSearch]);
+    }, [charactersPage, charactersDebounceSearch, charactersRefreshKey]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -115,32 +120,7 @@ const ContentMain = () => {
 
     }, [animesPage, animesDebounceSearch]);
 
-    const animesItems: AnimeItemViewModel[] = animes.map(a => ({
-        id: a.id,
-        name: a.name,
-        active: a.active,
-        deleted_at: a.deleted_at,
-        image: `/assets/images/animes/${a.id}/symbol.jpg`
-    }))
-
-    const charactersItems: CharacterItemViewModel[] = characters.map(a => {
-
-        const imageCacheVersion = imageCacheVersions[a.id];
-        const imageCacheQuery = imageCacheVersion !== undefined
-            ? `?v=${imageCacheVersion}`
-            : "";
-
-        return { 
-            id: a.id,
-            anime_id: a.anime_id,
-            name: a.name,
-            active: a.active,
-            deleted_at: a.deleted_at,
-            image: `/assets/images/cards/${a.id}/thumbnail/1/1.png${imageCacheQuery}`
-        }
-    })
-
-    const animesList = animesItems.map((a) => ({value: a.id, label: a.name}))
+    const animesList = animes.map((a) => ({value: a.id, label: a.name}))
 
     const getCharacter = async (id: number) => {
         const res = await Request.get(`/characters/${id}`);
@@ -148,8 +128,10 @@ const ContentMain = () => {
         if(!res.ok) {
             if(res.status === 404) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    }
                 });
             };
         };
@@ -160,8 +142,10 @@ const ContentMain = () => {
     const openEditCharacterModal = async () => {
         if(selectedCharacters.length <= 0) {
             showMessageModal({
-                type: "warning",
-                description: "É preciso selecionar um personagem para executar está ação.",
+                data: {
+                    type: "warning",
+                    description: "É preciso selecionar pelo menos um personagem para executar está ação.",
+                }
             });
             
             return;
@@ -169,8 +153,10 @@ const ContentMain = () => {
 
         if(selectedCharacters.length > 1) {
             showMessageModal({
-                type: "warning",
-                description: "Não é possível executar está ação com mais de um personagem selecionado."
+                data: {
+                    type: "warning",
+                    description: "Não é possível executar está ação com mais de um personagem selecionado."
+                }
             });
 
             return;
@@ -185,8 +171,10 @@ const ContentMain = () => {
     const openDeleteCharacterModal = async () => {
         if(selectedCharacters.length <= 0) {
             showMessageModal({
-                type: "warning",
-                description: "É preciso selecionar pelo menos um personagem para executar está ação.",
+                data: {
+                    type: "warning",
+                    description: "É preciso selecionar pelo menos um personagem para executar está ação.",
+                }
             });
             
             return;
@@ -194,22 +182,58 @@ const ContentMain = () => {
 
         if(selectedCharacters.length > 5) {
             showMessageModal({
-                type: "warning",
-                description: "Não é possível excluir mais do que 5 personagens ao mesmo tempo."
+                data: {
+                    type: "warning",
+                    description: "Não é possível excluir mais do que 5 personagens ao mesmo tempo."
+                }
             });
 
             return;
         };
 
-        const selected = charactersItems
-            .filter((character) => selectedCharacters.includes(character.id))
-            .map((character) => ({
-                id: character.id,
-                name: character.name    
+        const selected = characters
+            .filter((c) => selectedCharacters.includes(c.id))
+            .map((c) => ({
+                id: c.id,
+                name: c.name    
             }));
 
         setDeleteModalCharacters(selected);
         setIsDeleteCharacterModalOpen(true);
+    };
+
+    const openRestoreCharacterModal = async () => {
+        if(selectedCharacters.length <= 0) {
+            showMessageModal({
+                data: {
+                    type: "warning",
+                    description: "É preciso selecionar pelo menos um personagem para executar está ação.",
+                }
+            });
+            
+            return;
+        };
+
+        if(selectedCharacters.length > 5) {
+            showMessageModal({
+                data: {
+                    type: "warning",
+                    description: "Não é possível excluir mais do que 5 personagens ao mesmo tempo."
+                }
+            });
+
+            return;
+        };
+
+        const selected = characters
+            .filter((c) => selectedCharacters.includes(c.id))
+            .map((c) => ({
+                id: c.id,
+                name: c.name    
+            }));
+
+        setRestoreModalCharacters(selected);
+        setIsRestoreCharacterModalOpen(true);
     };
 
     const closeEditCharacterModal = () => {
@@ -219,6 +243,11 @@ const ContentMain = () => {
     const closeDeleteCharacterModal = () => {
         setDeleteModalCharacters(null);
         setIsDeleteCharacterModalOpen(false);
+    };
+
+    const closeRestoreCharacterModal = () => {
+        setRestoreModalCharacters(null);
+        setIsRestoreCharacterModalOpen(false);
     };
 
     const handleImagesChanged = (characterId: number) => {
@@ -248,7 +277,7 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions openEdit={openEditCharacterModal} openDelete={openDeleteCharacterModal} />
+                    <ContentOptions openEdit={openEditCharacterModal} openDelete={openDeleteCharacterModal} openRestore={openRestoreCharacterModal}/>
                     <div className={`container-default ${styles["list-content"]} ${animes.length > 0 ? styles["anime"] : styles["no-results"]}`}>
                         <div className={`${styles["content-list-item"]}`} >
                             <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/animes/creation`}>
@@ -257,17 +286,29 @@ const ContentMain = () => {
                                 </div>
                             </NavLink>
                         </div>
-                        {animesItems.length > 0 
-                            ? animesItems.map((anime) => (
-                                <>
+                        {animes.length > 0 
+                            ? animes.map((a) => {
+                                const imageCacheVersion = imageCacheVersions[a.id];
+                                const imageCacheQuery = imageCacheVersion !== undefined
+                                    ? `?v=${imageCacheVersion}`
+                                    : "";
+
+                                return (
                                     <SelectableContentItem 
-                                        key={anime.id} 
-                                        item={anime} 
+                                        key={a.id} 
+                                        item={{
+                                            id: a.id,
+                                            name: a.name,
+                                            active: a.active,
+                                            deleted_at: a.deleted_at
+                                        }} 
                                         selected={selectedAnimes} 
-                                        onToggle={() => toggleId(anime.id, setSelectedAnimes)}
+                                        onToggle={() => toggleId(a.id, setSelectedAnimes)}
+                                        type={"anime"}
+                                        imageVersion={imageCacheQuery}
                                     />
-                                </>
-                            ))
+                                )
+                            })
                             : (
                                 <>
                                     <span style={{textAlign: "center", fontWeight: "bold"}}>Nenhum anime encontrado</span>
@@ -292,30 +333,39 @@ const ContentMain = () => {
                         onChange={(e) => {
                             setCharactersSearch(e.target.value);
                             setCharactersPage(1);
-                        } }    
+                        }}    
                     />
                     <div className={`${styles["content-list-filters"]}`}>
                         <span className={`item-default item-select`}>Filtrar</span>
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions openEdit={openEditCharacterModal} openDelete={openDeleteCharacterModal}/>
+                    <ContentOptions openEdit={openEditCharacterModal} openDelete={openDeleteCharacterModal} openRestore={openRestoreCharacterModal} />
                     <div className={`container-default ${styles["list-content"]} ${characters.length > 0 ? styles["character"] : styles["no-results"]}`}>
                         <NavLink style={{display: "flex", justifyContent: "center", alignItems: "flex-end"}} to={`${BASE_DASHBOARD_CONTENT_URL}/characters/create`}>
-                            <div className={`${styles["content-option-item"]} ${styles["character-thumbnail"]}`}>
+                            <div className={`${styles["content-option-item"]} ${styles["character"]}`}>
                                 <PlusOutlined style={{fontSize: "40px"}}/>
                             </div>
                         </NavLink>
-                        {charactersItems.length > 0 
-                            ? charactersItems.map((character) => (
+                        {characters.length > 0
+                            ? characters.map((c) => {
+                                const imageCacheVersion = imageCacheVersions[c.id];
+                                const imageCacheQuery = imageCacheVersion !== undefined
+                                    ? `?v=${imageCacheVersion}`
+                                    : "";
+
+                                return (                                    
                                     <SelectableContentItem 
-                                        key={character.id} 
-                                        item={character} 
+                                        key={c.id} 
+                                        item={c} 
                                         selected={selectedCharacters} 
-                                        onToggle={() => toggleId(character.id, setSelectedCharacters)} 
+                                        onToggle={() => toggleId(c.id, setSelectedCharacters)}
+                                        type={"character"}
+                                        imageVersion={imageCacheQuery}
                                     />
-                            ))
-                            : (
+                                )
+                            })
+                            :   (                              
                                 <>
                                     <span style={{textAlign: "center", fontWeight: "bold"}}>Nenhum personagem encontrado</span>
                                     {charactersSearch && <span style={{textAlign: "center"}}>({charactersSearch})</span>}
@@ -327,9 +377,33 @@ const ContentMain = () => {
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
                     {editModalCharacter && (
-                        <CharacterEditModal open={isEditCharacterModalOpen} onClose={closeEditCharacterModal} character={editModalCharacter} animesList={animesList} toggleBoolean={toggleBoolean} imageCacheVersion={imageCacheVersions[editModalCharacter.id] ?? null} onChangeImage={handleImagesChanged}/>
+                        <CharacterEditModal 
+                            open={isEditCharacterModalOpen} 
+                            onClose={closeEditCharacterModal} 
+                            character={editModalCharacter} 
+                            animesList={animesList} 
+                            toggleBoolean={toggleBoolean} 
+                            imageCacheVersion={imageCacheVersions[editModalCharacter.id] ?? null} 
+                            onChangeImage={handleImagesChanged} 
+                            onSuccess={() => { setCharactersRefreshKey((current) => current + 1);}} 
+                        />
                     )}
-                    <CharacterDeleteModal open={isDeleteCharacterModalOpen} onClose={closeDeleteCharacterModal} selectedCharacters={deleteModalCharacters} />
+                    <CharacterSoftDeleteModal 
+                        open={isDeleteCharacterModalOpen} 
+                        onClose={closeDeleteCharacterModal} 
+                        hide={() => setIsDeleteCharacterModalOpen(false)} 
+                        reopen={() => setIsDeleteCharacterModalOpen(true)} 
+                        onSuccess={() => { setCharactersRefreshKey((current) => current + 1);}}
+                        selectedCharacters={deleteModalCharacters} 
+                    />
+                    <CharacterRestoreModal 
+                        open={isRestoreCharacterModalOpen} 
+                        onClose={closeRestoreCharacterModal} 
+                        hide={() => setIsRestoreCharacterModalOpen(false)} 
+                        reopen={() => setIsRestoreCharacterModalOpen(true)} 
+                        onSuccess={() => { setCharactersRefreshKey((current) => current + 1);}} 
+                        selectedCharacters={restoreModalCharacters}  
+                    />
                 </div>
             </div>
         </>

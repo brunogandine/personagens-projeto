@@ -10,10 +10,13 @@ import { Request } from "@/services/apiClient";
 type CharacterDeleteProps = {
     open: boolean;
     onClose: () => void;
+    hide: () =>  void;
+    reopen: () => void;
+    onSuccess: () => void;
     selectedCharacters: CharacterDelete[] | null;
 }
 
-const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDeleteProps) => {
+const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selectedCharacters}: CharacterDeleteProps) => {
     const [step, setStep] = useState<"warning" | "confirmation">("warning");
     const [confirmationText, setConfirmationText] = useState("");
 
@@ -62,8 +65,12 @@ const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDele
         if(!res.ok) {
             if(res.status === 400) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
                 });
 
                 return;
@@ -71,8 +78,12 @@ const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDele
 
             if(res.status === 404) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
                 });
 
                 return;
@@ -80,8 +91,12 @@ const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDele
 
             if(res.status === 409) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
                 });
 
                 return;
@@ -89,9 +104,13 @@ const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDele
 
             if(res.status === 500) {
                 showMessageModal({
-                    type: "error",
-                    description: res.data.message,
-                    instructions: "Tente novamente mais tarde."
+                    data: {
+                        type: "error",
+                        description: res.data.message,
+                        instructions: "Tente novamente mais tarde."
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
                 });
 
                 return;
@@ -103,6 +122,7 @@ const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDele
             text: res.data.message, 
         });
 
+        onSuccess();
         handleClose();
     };
 
@@ -119,7 +139,7 @@ const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDele
                 {step === "warning" && (
                     <>
                         <div className={`${styles["delete-character-warning"]}`} >
-                            <span>
+                            <span style={{color: "var(--red-300)"}}>
                                 <WarningFilled /> Você está tentando deletar os seguintes personagens:
                             </span>
                         </div>
@@ -157,4 +177,4 @@ const CharacterDeleteModal = ({open, onClose, selectedCharacters}: CharacterDele
     );
 };
 
-export default CharacterDeleteModal;
+export default CharacterSoftDeleteModal;

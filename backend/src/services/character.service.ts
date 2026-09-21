@@ -147,7 +147,7 @@ class CharacterService {
         );
 
         if(notDeleted) {
-            throw { type: "conflict", message: "Um ou mais personagens não precisam ser restaurados." };
+            throw { type: "conflict", message: "Um ou mais personagens não precisam ser restaurados."};
         };
 
         await characterModel.restoreCharacter(data.ids);

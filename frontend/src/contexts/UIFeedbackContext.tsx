@@ -18,26 +18,48 @@ type ToastData = {
 
 type MessageModalContextType = {
     showToast: (data: ToastData) => void;
-    showMessageModal: (data: MessageModalData) => void;
+    showMessageModal: ({data, closePreviousModal, reopenPreviousModal}: showMessageModalProps) => void;
     closeMessageModal: () => void;
 };
+
+type showMessageModalProps = {
+    data: MessageModalData
+    closePreviousModal?: () => void;
+    reopenPreviousModal?: () => void; 
+}
 
 const MessageModalContext = createContext<MessageModalContextType | null>(null);
 
 export const MessageModalContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [open, setOpen] = useState(false);
     const [modalData, setModalData] = useState<MessageModalData | null>(null);
+    const [reopenPreviousModal, setReopenPreviousModal] = useState<(() => void) | null>(null);
 
     const showToast = (data: ToastData) => {
         message[data.type](data.text, 5);
     }
 
-    const showMessageModal = (data: MessageModalData) => {
+    const showMessageModal = ({data, closePreviousModal, reopenPreviousModal}: showMessageModalProps) => {
+        if(closePreviousModal) {
+            closePreviousModal();
+        };
+
+        if(reopenPreviousModal) {
+            setReopenPreviousModal(() => reopenPreviousModal);
+        } else {
+            setReopenPreviousModal(null);
+        };
+
         setModalData(data);
         setOpen(true);
     };
 
     const closeMessageModal = () => {
+        if(reopenPreviousModal) {
+            reopenPreviousModal();
+            setReopenPreviousModal(null);
+        };
+
         setOpen(false);
     };
 

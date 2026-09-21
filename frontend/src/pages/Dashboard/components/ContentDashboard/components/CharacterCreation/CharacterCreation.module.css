@@ -144,9 +144,18 @@
     gap: 10px;
 }
 
-.artwork-upload-container > .success {
-    background-color: var(--bg-default);
-    border-radius: 10px;
+.artwork-upload-container .success.artwork {
+    background-image: url(/assets/images/cards/background/artwork/normal.png);
+    width: var(--character-item-width);
+    height: var(--character-item-height);
+    align-self: center;
+}
+
+.artwork-upload-container .success.thumbnail {
+    background-image: url(/assets/images/cards/background/thumbnail/normal.png);
+    width: var(--character-thumbnail-item-width);
+    height: var(--character-thumbnail-item-height);
+    align-self: center;
 }
 
 .preview-character-modal-content {

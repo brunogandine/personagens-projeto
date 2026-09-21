@@ -142,7 +142,7 @@ class CharacterController {
         try {
             const data = restoreCharacterSchema.parse(req.body);
 
-            const result = characterService.restoreCharacter({
+            const result = await characterService.restoreCharacter({
                 data: {
                     ids: data.ids
                 }
@@ -174,9 +174,9 @@ class CharacterController {
                 };
 
                 return res.status(500).json({message: "Erro Interno"});
-            }
-        }
-    }
+            };
+        };
+    };
 
     getCounts: RequestHandler = async (req, res) => {
         try {
