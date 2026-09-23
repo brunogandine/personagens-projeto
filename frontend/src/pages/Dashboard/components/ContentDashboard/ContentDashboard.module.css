@@ -208,6 +208,82 @@
     opacity: 1;
 }
 
+.create-anime-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    max-height: 70vh;
+    padding: 0px 5px 1px 10px;
+}
+
+.create-anime-top {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.create-anime-bottom {
+    display: flex;
+    flex-direction: column;
+}
+
+.anime-symbol {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+}
+
+.empty-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-default);
+    border-radius: 5px;
+    outline: 2px dashed var(--text-color-primary);
+    outline-offset: -2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: var(--item-bg-default);
+    }
+}
+
+.empty-upload.symbol {
+    width: var(--anime--item-width);
+    height: var(--anime--item-height);
+}
+
+.anime-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.anime-info .name-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.anime-info .active-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.anime-description .description-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .edit-character-modal-content {
     display: flex;
     flex-direction: column;

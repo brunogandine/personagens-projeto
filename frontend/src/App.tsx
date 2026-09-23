@@ -34,7 +34,6 @@ function App() {
                   <Route path="content" element={<ContentDashboard />}>
                     <Route index element={<ContentMain />} />
                     <Route path="characters/create" element={<CharacterCreation />} />
-                    {/* <Route path="animes/creation" element={<AnimeCreation />} /> */}
                   </Route>
                   <Route path="settings" />
                 </Route>

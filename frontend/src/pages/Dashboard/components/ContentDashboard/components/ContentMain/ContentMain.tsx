@@ -2,9 +2,9 @@ import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboa
 import SelectableContentItem from "@/pages/Dashboard/components/ContentDashboard/SelectableContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import ContentOptions from "@/pages/Dashboard/components/ContentDashboard/ContentOptions";
-import CharacterEditModal from "./components/CharacterEditModal";
-import CharacterSoftDeleteModal from "./components/CharacterSoftDeleteModal";
-import CharacterRestoreModal from "./components/CharacterRestoreModal";
+import CharacterEditModal from "./components/CharacterCreationModals/CharacterEditModal";
+import CharacterSoftDeleteModal from "./components/CharacterCreationModals/CharacterSoftDeleteModal";
+import CharacterRestoreModal from "./components/CharacterCreationModals/CharacterRestoreModal";
 import { toggleId, toggleBoolean } from "@/utils/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import type { AnimeItem, CharacterDelete, CharacterEdit, CharacterItem, CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard//types/content.types";
+import AnimeCreationModal from "./components/AnimeCreationModals/AnimeCreationModal";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
@@ -38,6 +39,8 @@ const ContentMain = () => {
 
     const [selectedAnimes, setSelectedAnimes] = useState<number[]>([]);
     const [selectedCharacters, setSelectedCharacters] = useState<number[]>([]);
+
+    const [isCreateAnimeModalOpen, setIsCreateAnimeModalOpen] = useState(false);
 
     const [isEditCharacterModalOpen, setIsEditCharacterModalOpen] = useState(false);
     const [editModalCharacter, setEditModalCharacter] = useState<CharacterEdit | null>(null);
@@ -236,6 +239,10 @@ const ContentMain = () => {
         setIsRestoreCharacterModalOpen(true);
     };
 
+    const closeCreateAnimeModal = () => {
+        setIsCreateAnimeModalOpen(false);
+    };
+
     const closeEditCharacterModal = () => {
         setIsEditCharacterModalOpen(false);
     };
@@ -280,11 +287,9 @@ const ContentMain = () => {
                     <ContentOptions openEdit={openEditCharacterModal} openDelete={openDeleteCharacterModal} openRestore={openRestoreCharacterModal}/>
                     <div className={`container-default ${styles["list-content"]} ${animes.length > 0 ? styles["anime"] : styles["no-results"]}`}>
                         <div className={`${styles["content-list-item"]}`} >
-                            <NavLink to={`${BASE_DASHBOARD_CONTENT_URL}/animes/creation`}>
-                                <div className={`${styles["content-option-item"]} ${styles["anime"]}`}>
-                                    <PlusOutlined style={{fontSize: "30px"}}/>
-                                </div>
-                            </NavLink>
+                            <div className={`${styles["content-option-item"]} ${styles["anime"]}`} onClick={() => setIsCreateAnimeModalOpen(true)}>
+                                <PlusOutlined style={{fontSize: "30px"}}/>
+                            </div>
                         </div>
                         {animes.length > 0 
                             ? animes.map((a) => {
@@ -376,6 +381,10 @@ const ContentMain = () => {
                     {characters.length > 0 && (
                         <DashboardPagination style={{alignSelf: "center", justifySelf: "flex-end"}} page={charactersPage} totalPages={totalCharactersPage} onPageChange={setCharactersPage} range={{start: 3, end: 2}} />
                     )}
+                    <AnimeCreationModal 
+                        open={isCreateAnimeModalOpen}
+                        onClose={closeCreateAnimeModal}
+                    />
                     {editModalCharacter && (
                         <CharacterEditModal 
                             open={isEditCharacterModalOpen} 

@@ -1,9 +1,9 @@
-import { Router } from 'express';
 import Authenticate from '@/middlewares/auth';
 import AuthorizeUser from '@/middlewares/authorize';
 import ValidateRequest from '@/middlewares/validate';
 import CharacterController from '@/controllers/character.controller';
 import UploadImage from '@/middlewares/upload/uploadImage';
+import { Router } from 'express';
 import { createCharacterSchema, deleteCharacterSchema, restoreCharacterSchema, updateCharacterSchema } from '@/validations/character.validations';
 import { idParamsSchema } from "@/validations/common/common.validations";
 

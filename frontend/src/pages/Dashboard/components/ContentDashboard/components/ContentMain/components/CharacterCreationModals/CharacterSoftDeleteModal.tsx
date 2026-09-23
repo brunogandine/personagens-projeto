@@ -3,7 +3,7 @@ import ContentItem from "@/pages/Dashboard/components/ContentDashboard/ContentIt
 import { Button, Input, Modal } from "antd";
 import { WarningFilled } from "@ant-design/icons";
 import { useState } from "react";
-import type { CharacterDelete } from "../../../types/content.types";
+import type { CharacterDelete } from "../../../../types/content.types";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import { Request } from "@/services/apiClient";
 

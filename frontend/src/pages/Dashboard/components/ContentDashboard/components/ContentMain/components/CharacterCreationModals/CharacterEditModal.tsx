@@ -119,8 +119,9 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         if(!file)
             return;
 
-        if(!ALLOWED_TYPES.includes(file.type))
+        if(!ALLOWED_TYPES.includes(file.type)) {
             return;
+        }
 
         if(file.size > MAX_FILE_SIZE)
             return;
