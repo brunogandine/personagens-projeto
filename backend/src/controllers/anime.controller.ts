@@ -1,5 +1,5 @@
-import { RequestHandler } from "express";
 import AnimeService from "../services/anime.service";
+import { RequestHandler } from "express";
 import { detectImageType } from "@/utils/detectImageType";
 import { isAppError } from "@/utils/is-app-error.util";
 
@@ -12,11 +12,13 @@ class AnimeController {
                 ? await detectImageType(file.buffer)
                 : null;
 
+            console.log(imageExt, file)
+
             const result = await AnimeService.createAnime({
                 data: req.body,
                 ...(file && imageExt 
                     ? {
-                        image: {
+                        symbol: {
                             buffer: file.buffer,
                             ext: imageExt
                         }
@@ -33,7 +35,7 @@ class AnimeController {
                 };
 
                 if(err.type === "storage") {
-                    return res.status(200).json({message: err.message, type: err.type})
+                    return res.status(201).json({message: err.message, type: err.type})
                 }
             }
 
@@ -43,10 +45,18 @@ class AnimeController {
 
     getById: RequestHandler = async (req, res) => {
         try {
+          const result = await AnimeService.getAnimeById(Number(req.params.id));
 
+          return res.status(200).json(result);
         } catch(err) {
-            
-        }
+            if(isAppError(err)) {
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+            };
+        
+            return res.status(500).json({message: "Erro Interno."});
+        };
     }
 
     getAll: RequestHandler = async (req, res) => {

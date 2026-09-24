@@ -5,10 +5,15 @@ import { validateImageFile } from "@/helpers/validateImageFile";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Input, Modal } from "antd";
 import { useRef, useState } from "react";
+import { Request } from "@/services/apiClient";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
 
 type AnimeCreationProps = {
     open: boolean;
     onClose: () => void;
+    hide: () => void;
+    reopen: () => void;
+    onSuccessCallback: () => void;
 }
 
 type CropAspectOptions = {
@@ -23,9 +28,10 @@ type CropData = {
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
-const BASE_ANIME_PATH = "/assets/images/animes/"
 
-const AnimeCreationModal = ({open, onClose}: AnimeCreationProps) => {
+const AnimeCreationModal = ({open, onClose, hide, reopen, onSuccessCallback}: AnimeCreationProps) => {
+    const { showMessageModal, showToast } = useMessageModal();
+
     const [animeName, setAnimeName] = useState("");
     const [animeDescription, setAnimeDescription] = useState("");
     const [animeActive, setAnimeActive] = useState(false);
@@ -129,6 +135,98 @@ const AnimeCreationModal = ({open, onClose}: AnimeCreationProps) => {
         onClose();
     };
 
+    const buildCreateAnimePayload = () => {
+        const formData = new FormData();
+
+        if(symbolImageBlob !== null)
+            formData.append("symbol", symbolImageBlob);
+
+        if(animeDescription.trim())
+            formData.append("description", animeDescription);
+
+        formData.append("name", animeName);
+        formData.append("active", String(animeActive));
+
+        return formData;
+    };
+
+    const handleConfirmCreateAnime = async () => {
+        const payload = buildCreateAnimePayload();
+
+        const res = await Request.post("/animes", payload);
+
+        if(!res.ok) {
+            if(res.status === 400) {
+                showMessageModal({
+                    data: {
+                        type: "error",
+                        description: res.data.message,
+                        list: res.data.errors
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+
+                return;
+            };
+
+            if(res.status === 409) {
+                showMessageModal({
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+
+                return;
+            };
+
+            if(res.status === 500) {
+                showMessageModal({
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+
+                return;
+            };
+        };
+
+        if(res.data.errors) {
+            if(res.data.type === "storage") {
+                showMessageModal({
+                    data: {
+                        type: "warning",
+                        description: "O anime foi criado com sucesso, mas ocorreram errors ao salvar a imagem de símbolo do anime.",
+                        list: res.data.errors,
+                        instructions: "Tente novamente."
+                    },
+                    closePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+
+                handleClose();
+
+                return;
+            };
+        };
+
+        showToast({
+            type: "success",
+            text: res.data.message
+        });
+
+        onSuccessCallback();
+        handleClose();
+
+        return;
+    };
+
     return (
         <>
             <Modal
@@ -175,7 +273,7 @@ const AnimeCreationModal = ({open, onClose}: AnimeCreationProps) => {
                     </div>
                 </div>
                 <div className={`modal-options`}>
-                    <Button type="primary" className={`btn-default primary-btn`} >Confirmar</Button>
+                    <Button type="primary" className={`btn-default primary-btn`} onClick={handleConfirmCreateAnime} >Confirmar</Button>
                     <Button type="primary" className={`btn-default danger-btn`} onClick={handleClose} >Cancelar</Button>
                 </div>
             </Modal>

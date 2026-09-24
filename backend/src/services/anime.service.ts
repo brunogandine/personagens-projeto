@@ -6,7 +6,7 @@ import { CreateAnimeData, GetAnimeParams } from "@/types/anime.types";
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "animes");
 class AnimeService {
-    createAnime = async (payload: CreateAnimeData) => {
+    async createAnime(payload: CreateAnimeData) {
         const errors = [];
 
         const sameName = await animeModel.findByName(payload.data.name);
@@ -17,6 +17,8 @@ class AnimeService {
         const anime = await animeModel.create(payload.data);
 
         const animeDir = path.resolve(uploadDir, `${anime.id}`);
+
+        console.log(payload);
 
         if(payload.symbol) {
             const symbolDir = path.resolve(animeDir, `symbol.${payload.symbol.ext}`);
@@ -36,10 +38,10 @@ class AnimeService {
         return { message: "Anime criado com sucesso!" };
     };
 
-    getAnimes = async ({
+    async getAnimes ({
         page = 1,
         search = ""
-    }: GetAnimeParams) => {
+    }: GetAnimeParams){
         const MAX_PAGES = 100;
 
         const safePages = page > 0
@@ -54,10 +56,24 @@ class AnimeService {
         return result;
     };
 
-    getCounts = async () => {
+    async getCounts() {
         const totalAnimes = await animeModel.getCount();
 
         return totalAnimes;
+    };
+
+    async getAnimeById(id: number) {
+        const anime = await animeModel.findById(id);
+
+        if(!anime)
+            throw { type: "not_found", message: "Personagem não encontrado."};
+
+        return {
+            id: anime.id,
+            name: anime.name,
+            active: anime.active,
+            description: anime.description ?? null,
+        };
     };
 }
 

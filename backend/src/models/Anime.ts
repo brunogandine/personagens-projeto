@@ -1,6 +1,6 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import { CreateAnimeData, GetAnimeParams } from "../types/anime.types";
+import { GetAnimeParams } from "../types/anime.types";
 import { CreateAnimeSchema } from "@/validations/anime.validations";
 
 class AnimeModel {
@@ -9,7 +9,7 @@ class AnimeModel {
             data: {
                 active: data.active,
                 name: data.name,
-                description: data.description
+                description: data.description ?? null
             }
         })
     }

@@ -29,6 +29,23 @@ export type CharacterContentItem = {
     deleted_at: Date;
 };
 
+export type AnimeEdit = {
+    id: number;
+    name: string;
+    description?: string;
+    active: boolean;
+};
+
+export type AnimeDelete = {
+    id: number;
+    name: string;
+};
+
+export type AnimeRestore = {
+    id: number;
+    name: string;
+};
+
 export type CharacterPreview = {
     anime: AnimeContentItem;
     name: string;
@@ -58,8 +75,6 @@ export type CharacterEdit = {
     };
     active: boolean;
     lock: boolean;
-    artwork: string;
-    thumbnail: string;
 };
 
 export type CharacterDelete = {

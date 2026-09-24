@@ -32,7 +32,7 @@ const SelectableContentItem = ({item, selected, onToggle, type, imageVersion}: P
                 data-id={item.id}
                 onClick={onToggle}
             >
-                <img className={`${item.deleted_at ? "unavailable no-hover" : item.active ? "" : "inactive no-hover"}}`} src={`/assets/images/${imagePath[type]}${imageVersion}`} />
+                <img className={`${item.deleted_at ? "unavailable no-hover" : item.active ? "" : "inactive no-hover"}`} src={`/assets/images/${imagePath[type]}${imageVersion}`} />
                 <CheckboxComponent 
                     className={`${styles["content-checkbox-custom"]} ${selected.includes(item.id) ? `${styles["selected"]}` : ""}`} 
                     checked={selected.includes(item.id)} 
