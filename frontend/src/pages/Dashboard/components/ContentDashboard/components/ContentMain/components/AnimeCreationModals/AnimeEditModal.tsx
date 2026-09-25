@@ -1,11 +1,13 @@
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
 import ImageCropModal from "@/pages/Dashboard/shared/ImageCropModal";
-import { EditFilled, PlusOutlined } from "@ant-design/icons";
-import { Button, Input, Modal, Tooltip } from "antd";
-import { useRef, useState } from "react";
-import type { AnimeEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
-import type { ContentImageCacheKey } from "../../ContentMain";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
+import { EditFilled, PlusOutlined, UndoOutlined } from "@ant-design/icons";
+import { Button, Input, Modal, Tooltip } from "antd";
+import { useEffect, useRef, useState } from "react";
+import type { AnimeEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
+import type { ContentImageCacheKey } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain";
+import { validateImageFile } from "@/helpers/validateImageFile";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
@@ -33,11 +35,14 @@ type CropData = {
 }
 
 const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, imageCacheVersion}: AnimeEditProps) => {
+    const { showMessageModal, showToast } = useMessageModal();
+
     const [cropData, setCropData] = useState<CropData | null>(null);
 
     const [symbolLoadError, setSymbolLoadError] = useState(false);
 
     const [symbolPreview, setSymbolPreview] = useState<string | null>(null);
+    const [symbolBlob, setSymbolBlob] = useState<Blob | null>(null);
 
     const [pendingRemoveSymbol, setPendingRemoveSymbol] = useState(false);
 
@@ -51,10 +56,33 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
 
     const imageCacheQuery = imageCacheVersion !== null ? `?v=${imageCacheVersion}` : "";
 
-    const symbolUrl = `${BASE_ANIMES_PATH}${anime.id}/symbol.png${imageCacheQuery}`;
+    const symbolUrl = `${BASE_ANIMES_PATH}${anime.id}/symbol.jpg${imageCacheQuery}`;
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const editNameRef = useRef<HTMLDivElement | null>(null);
+    const descriptionRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        setDraftName(anime.name);
+        setIsActive(anime.active);
+    }, [anime])
+
+    useEffect(() => {
+        if(!isEditingName)
+            return;
+
+        const handleOutsideClick = (event: PointerEvent) => {
+            if(editNameRef.current && !editNameRef.current.contains(event.target as Node)) {
+                handleCancelEditName();
+            };
+        };
+
+        document.addEventListener("pointerdown", handleOutsideClick);
+
+        return () => {
+            document.removeEventListener("pointerdown", handleOutsideClick);
+        };
+    }, [isEditingName]);
 
     const isCropOpen = cropData !== null;
 
@@ -62,11 +90,220 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
         fileInputRef.current?.click();
     };
 
+    const handleSymbol = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+
+        if(!file)
+            return;
+
+        if(!ALLOWED_TYPES.includes(file.type))
+            return;
+
+        if(file.size > MAX_FILE_SIZE)
+            return;
+
+        const isValidImg = validateImageFile(file);
+
+        if(!isValidImg)
+            return;
+
+        const imageUrl = URL.createObjectURL(file);
+
+        setCropData({
+            image: imageUrl,
+            options: {
+                width: 66,
+                height: 65
+            }
+        });
+
+        e.target.value = "";
+    };
+
+    const handleRemoveSymbol = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault()
+
+        if(symbolLoadError)
+            return;
+
+        if(pendingRemoveSymbol)
+            return setPendingRemoveSymbol(false);
+
+        if(symbolPreview) {
+            URL.revokeObjectURL(symbolPreview);
+
+            setSymbolPreview(null);
+            setSymbolBlob(null);
+
+            return;
+        };
+
+        setPendingRemoveSymbol(true);
+    };
+
+    const handleCropClose = () => {
+        cropData?.image && URL.revokeObjectURL(cropData.image)
+
+        setCropData(null);
+    };
+
+    const handleCropApply = (blob: Blob) => {
+        if(!cropData)
+            return;
+
+        if(symbolPreview)
+            URL.revokeObjectURL(symbolPreview);
+
+        setSymbolPreview(URL.createObjectURL(blob));
+        setSymbolBlob(blob);
+        setPendingRemoveSymbol(false);
+
+        URL.revokeObjectURL(cropData.image);
+
+        setCropData(null);
+    };
+
+    const handleConfirmEditName = () => {
+        const name = draftName.trim();
+
+        if(!name)
+            return;
+
+        if(name === anime.name) {
+            if(editedName !== null) {
+                setEditedName(null);
+                setIsEditingName(false);
+                return;
+            } else {
+                showToast({text: "O nome que inseriu é igual ao nome já registrado. Tente outro.", type: "error"});
+                return;
+            };
+        };
+
+        if(name === editedName) {
+            showToast({text: "O nome que inseriu é o mesmo que está tentando editar. Tente outro.", type: "error"});
+            return;
+        };
+
+        setEditedName(name);
+        setIsEditingName(false);
+    };
+
+    const handleCancelEditName = () => {
+        setDraftName(editedName !== null ? editedName : anime.name);
+        setIsEditingName(false);
+    };
+
+    const currentDescription = 
+        editedDescription !== null
+            ? editedDescription
+            : anime.description ?? ""
+
+    const displayedDescription = currentDescription.trim() || "Sem descrição";
+
+    const handleStartEditingDescription = () => {
+        if(isEditingDescription)
+            return;
+
+        setIsEditingDescription(true);
+
+        if(descriptionRef.current)
+            descriptionRef.current.innerText =
+                editedDescription !== null 
+                    ? editedDescription
+                    : anime.description ?? "null"
+    };
+
+    const handleResetDescription = () => {
+        if(editedDescription === null)
+            return;
+
+        setEditedDescription(null);
+        setIsEditingDescription(false);
+
+        if(descriptionRef.current)
+            descriptionRef.current.innerText =
+                anime.description ?? ""
+    };
+
+    const handleConfirmEditDescription = () => {
+        const description = descriptionRef.current?.innerText.trim() ?? "";
+
+        setEditedDescription(description);
+        setIsEditingDescription(false);
+    };
+
+    const handleCancelEditDescription = () => {
+        setIsEditingDescription(false);
+    };
+ 
+    const buildEditPayload = () => {
+        const formData = new FormData();
+
+        if(symbolBlob !== null) {
+            formData.append("symbol", symbolBlob);
+        } else if(pendingRemoveSymbol)
+            formData.append("remove_symbol", String(pendingRemoveSymbol));
+
+        if(editedName !== null)
+            formData.append("name", editedName);
+
+        if(isActive !== anime.active)
+            formData.append("active", String(isActive));
+
+        if(editedDescription !== null)
+            formData.append("description", editedDescription);
+
+        if([...formData.entries()].length === 0)
+            return null;
+
+        return formData;
+    };
+
+    const handleConfirmEdit = () => {
+        if(isEditingDescription)
+            return showToast({
+                type: "warning",
+                text: "Há uma edição em andamento na descrição do anime. Confirme ou Cancele antes de aplicar as alterações."
+            });
+
+        const payload = buildEditPayload();
+
+        if(payload === null) 
+            return showToast({
+                text: "Nenhuma alteração foi feita.",
+                type: "error"
+            });
+        
+    }
+
     const handleDismiss = () => {
         onClose();
     };
 
+   const resetStates = () => {
+        if(symbolPreview) {
+            URL.revokeObjectURL(symbolPreview);
+
+            setSymbolPreview(null);
+            setSymbolBlob(null);
+        };
+
+        if(pendingRemoveSymbol)
+            setPendingRemoveSymbol(false);
+
+        setEditedName(null);
+
+        setIsActive(anime.active);
+
+        setEditedDescription(null);
+
+        setIsEditingName(false);
+        setIsEditingDescription(false);
+    };
+
     const handleClose = () => {
+        resetStates();
         onClose();
     };
 
@@ -82,7 +319,7 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                 <div className={`${styles["edit-anime-modal-content"]}`} >
                     <div className={`${styles["edit-anime-top"]}`}>
                         <div className={`${styles["anime-symbol"]}`}>
-                            <div className={`upload-symbol`} onClick={uploadSymbol} >
+                            <div className={`upload-symbol`} onClick={uploadSymbol} onChange={handleSymbol} onContextMenu={handleRemoveSymbol} >
                                 {symbolPreview ? (<img src={symbolPreview} />)
                                 : symbolLoadError ? (                                        
                                         <div className={`${styles["empty-upload"]} ${styles["symbol"]}`} > 
@@ -104,7 +341,15 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                                 {isEditingName 
                                     ? (                                
                                     <div ref={editNameRef}>
-                                        <Input id="anime-name" className={`field-default`} style={{width: `70%`, maxWidth: "200px"}} value={draftName} onChange={(e) => setDraftName(e.target.value) } />
+                                        <Input 
+                                            id="anime-name" 
+                                            className={`field-default`} 
+                                            style={{width: `70%`, maxWidth: "200px"}} 
+                                            value={draftName} 
+                                            onChange={(e) => setDraftName(e.target.value) } 
+                                        />
+                                        <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={handleConfirmEditName}>✓</span>
+                                        <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={handleCancelEditName}>✕</span>
                                     </div>
                                     ) : (editedName !== null
                                         ? (                                            
@@ -141,6 +386,44 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                         <div className={`${styles["anime-description"]}`}>
                             <div className={`${styles["description-wrapper"]}`}>
                                 <label htmlFor="anime-description" className={`input-label-default`}>Descrição do Anime:</label>
+                                <div
+                                    ref={descriptionRef}
+                                    className={`${styles["description-textbox"]}`}
+                                    contentEditable={isEditingDescription}
+                                    suppressContentEditableWarning
+                                    onClick={handleStartEditingDescription}
+                                >
+                                    {isEditingDescription
+                                        ? editedDescription !== null
+                                            ? editedDescription
+                                            : anime.description ?? ""
+                                        : displayedDescription
+                                    }
+                                </div>
+                                <div className={`${styles["description-edit-actions"]}`}>
+                                    <Tooltip 
+                                        title={"Resetar Descrição"}
+                                        destroyOnHidden={true}
+                                    >
+                                        <UndoOutlined style={{fontSize: "18px", fontWeight: "bold", color: "var(--text-color-default)"}} onClick={handleResetDescription}/>
+                                    </Tooltip>
+                                    {isEditingDescription && (
+                                        <div className={`${styles["description-main-actions"]}`}>
+                                            <Tooltip 
+                                                title={`Confirmar Edição`}
+                                                destroyOnHidden={true}
+                                            >
+                                                <span className={`${styles["edit-actions"]}`} style={{color: "#00ff40"}} onClick={handleConfirmEditDescription}>✓</span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                title={`Cancelar Edição`}
+                                                destroyOnHidden={true}
+                                            >
+                                                <span className={`${styles["edit-actions"]}`} style={{color: "#ff5656"}} onClick={handleCancelEditDescription}>✕</span>
+                                            </Tooltip>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,6 +433,13 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                     <Button type="primary" className={`btn-default danger-btn`} onClick={handleClose} >Cancelar</Button>
                 </div>
             </Modal>
+            <ImageCropModal 
+                open={isCropOpen}
+                onClose={handleCropClose}
+                onApply={handleCropApply}
+                image={cropData?.image ?? null}
+                cropOptions={cropData?.options}
+            />
         </>
     )
 }

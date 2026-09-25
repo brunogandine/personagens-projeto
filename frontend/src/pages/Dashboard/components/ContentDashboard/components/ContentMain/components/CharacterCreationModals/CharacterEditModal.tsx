@@ -79,7 +79,6 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         setSelectedAnimeId(character.anime.id);
         setIsActive(character.active);
         setIsLock(character.lock);
-        
     }, [character]);
 
     useEffect(() => {
@@ -420,19 +419,16 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         if(isEditingDescription)
             return showToast({
                 type: "warning",
-                text: "Há uma edição em andamento na descrição de personagem. Confirme ou Cancele antes de aplicar alterações no personagem."
+                text: "Há uma edição em andamento na descrição do personagem. Confirme ou Cancele antes de aplicar as alterações."
             });
 
         const payload = buildEditPayload();
 
-        if(payload === null) {
-            showToast({
+        if(payload === null) 
+            return showToast({
                 type: "error",
-                text: "Nenhuma alteração foi feita no personagem."
+                text: "Nenhuma alteração foi feita."
             });
-
-            return;
-        };
 
         const imageChanged = 
             artworkBlob !== null ||
