@@ -1,14 +1,29 @@
-import { CreateAnimeSchema } from "@/validations/anime.validations"
+import { CreateAnimeSchema, UpdateAnimeSchema } from "@/validations/anime.validations"
 
 export type GetAnimeParams = {
     page: number,
     search: string
-}
+};
 
-export type CreateAnimeData = {
+export type CreateAnimePayload = {
     data: CreateAnimeSchema
     symbol?:  {
         buffer: Buffer,
         ext: string
     }
-}
+};
+
+export type UpdateAnimePayload = {
+    id: number
+    data: UpdateAnimeSchema
+    symbol?: {
+        buffer: Buffer,
+        ext: string
+    }
+};
+
+export type UpdateAnimeData = {
+    name: string | undefined
+    active: boolean | undefined
+    description: string | undefined
+};

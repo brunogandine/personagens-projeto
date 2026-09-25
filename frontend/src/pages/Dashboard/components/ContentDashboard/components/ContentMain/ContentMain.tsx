@@ -349,7 +349,7 @@ const ContentMain = () => {
                         </div>
                         {animes.length > 0 
                             ? animes.map((a) => {
-                                const imageCacheVersion = imageCacheVersions[a.id];
+                                const imageCacheVersion = imageCacheVersions[`anime:${a.id}`];
                                 const imageCacheQuery = imageCacheVersion !== undefined
                                     ? `?v=${imageCacheVersion}`
                                     : "";
@@ -410,7 +410,7 @@ const ContentMain = () => {
                         </NavLink>
                         {characters.length > 0
                             ? characters.map((c) => {
-                                const imageCacheVersion = imageCacheVersions[c.id];
+                                const imageCacheVersion = imageCacheVersions[`character:${c.id}`];
                                 const imageCacheQuery = imageCacheVersion !== undefined
                                     ? `?v=${imageCacheVersion}`
                                     : "";
@@ -451,7 +451,7 @@ const ContentMain = () => {
                             hide={() => setIsEditAnimeModalOpen(false)}
                             reopen={() => setIsEditAnimeModalOpen(true)}
                             anime={editModalAnime}
-                            imageCacheVersion={imageCacheVersions[editModalAnime.id] ?? null}
+                            imageCacheVersion={imageCacheVersions[`anime:${editModalAnime.id}`] ?? null}
                             onChangeImage={handleImagesChanged}
                             onSuccessCallback={() => setAnimesRefreshKey((current) =>  current + 1)}
                         />
@@ -463,7 +463,7 @@ const ContentMain = () => {
                             character={editModalCharacter} 
                             animesList={animesList} 
                             toggleBoolean={toggleBoolean} 
-                            imageCacheVersion={imageCacheVersions[editModalCharacter.id] ?? null} 
+                            imageCacheVersion={imageCacheVersions[`character:${editModalCharacter.id}`] ?? null} 
                             onChangeImage={handleImagesChanged} 
                             onSuccess={() => {setCharactersRefreshKey((current) => current + 1);}} 
                         />

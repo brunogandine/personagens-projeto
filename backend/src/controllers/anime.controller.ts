@@ -12,8 +12,6 @@ class AnimeController {
                 ? await detectImageType(file.buffer)
                 : null;
 
-            console.log(imageExt, file)
-
             const result = await AnimeService.createAnime({
                 data: req.body,
                 ...(file && imageExt 
@@ -39,6 +37,43 @@ class AnimeController {
                 }
             }
 
+            return res.status(500).json({message: "Erro Interno"});
+        }
+    };
+
+    updateAnime: RequestHandler = async (req, res) => {
+        try {
+            const file = req.file;
+
+            const imageExt = file
+                ? await detectImageType(file.buffer)
+                : null
+
+            const result = await AnimeService.updateAnime({
+                id: Number(req.params.id),
+                data: req.body,
+                ...(file && imageExt
+                    ? { 
+                        symbol: {
+                            buffer: file.buffer,
+                            ext: imageExt
+                        }
+                    }
+                    : undefined
+                )
+            });
+
+            return res.status(200).json(result);
+        } catch(err) {
+            if(isAppError(err)) {
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+                if(err.type === "storage") {
+                    return res.status(200).json({errors: err.errors, type: err.type});
+                }
+            };
+            
             return res.status(500).json({message: "Erro Interno"});
         }
     }

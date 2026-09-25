@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AnimeEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 import type { ContentImageCacheKey } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain";
 import { validateImageFile } from "@/helpers/validateImageFile";
+import { Request } from "@/services/apiClient";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
@@ -34,7 +35,7 @@ type CropData = {
     options: CropAspectOptions;
 }
 
-const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, imageCacheVersion}: AnimeEditProps) => {
+const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, onChangeImage, imageCacheVersion}: AnimeEditProps) => {
     const { showMessageModal, showToast } = useMessageModal();
 
     const [cropData, setCropData] = useState<CropData | null>(null);
@@ -234,6 +235,12 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
     };
 
     const handleCancelEditDescription = () => {
+        if(descriptionRef.current)
+            descriptionRef.current.innerText =
+                editedDescription !== null
+                    ? editedDescription
+                    : anime.description ?? "";
+
         setIsEditingDescription(false);
     };
  
@@ -260,7 +267,7 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
         return formData;
     };
 
-    const handleConfirmEdit = () => {
+    const handleConfirmEdit = async () => {
         if(isEditingDescription)
             return showToast({
                 type: "warning",
@@ -275,7 +282,87 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                 type: "error"
             });
         
-    }
+        const imageChanged = 
+            symbolBlob ||
+            pendingRemoveSymbol
+
+        const res = await Request.patch(`/animes/${anime.id}`, payload);
+
+        if(!res.ok) {
+            if(res.status === 400) {
+                showMessageModal({
+                    data: {
+                        type: "error",
+                        description: res.data.message,
+                        list: res.data.errors
+                    },
+                    hidePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+
+                return;
+            };
+
+            if(res.status === 404) {
+                showMessageModal({
+                    data: {
+                        type: "error",
+                        description: res.data.message
+                    },
+                    hidePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+
+                return;
+            };
+
+            if(res.status === 500) {
+                showMessageModal({
+                    data: {
+                        type: "error",
+                        description: res.data.message,
+                        instructions: "Tente Novamente."
+                    },
+                    hidePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+
+                return;
+            };
+        };
+
+        if(res.data.errors) {
+            if(res.data.type === "storage") {
+                showMessageModal({
+                    data: {
+                        type: "warning",
+                        description: "O anime foi atualizado com sucesso, mas ocorreram erros ao salvar uma ou mais imagens:",
+                        list: res.data.errors,
+                        instructions: "Tente novamente."
+                    },
+                    hidePreviousModal: hide,
+                    reopenPreviousModal: reopen
+                });
+            }
+
+            resetStates();
+            onClose();
+
+            return;
+        };
+
+        if(imageChanged)
+            onChangeImage(`anime:${anime.id}`);
+
+        showToast({
+            text: res.data.message,
+            type: "success"
+        });
+
+        resetStates();
+        onSuccessCallback();
+        onClose();
+    };
 
     const handleDismiss = () => {
         onClose();
@@ -429,7 +516,7 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                     </div>
                 </div>
                 <div className={`modal-options`}>
-                    <Button type="primary" className={`btn-default primary-btn`} >Confirmar</Button>
+                    <Button type="primary" className={`btn-default primary-btn`} onClick={handleConfirmEdit} >Confirmar</Button>
                     <Button type="primary" className={`btn-default danger-btn`} onClick={handleClose} >Cancelar</Button>
                 </div>
             </Modal>

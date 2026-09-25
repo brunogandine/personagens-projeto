@@ -2,7 +2,7 @@ import ImageStorageService from "@/services/image-storage.service"
 import path from "path"
 import { animeModel } from "@/models/Anime";
 import { characterModel } from "@/models/Character";
-import { CreateCharacterResponse, CreateCharacterPayload, EditCharacterPayload, GetCharactersParams, EditCharacterResponse, DeleteCharacterPayload, RestoreCharacterPayload } from "@/types/character.types";
+import { CreateCharacterResponse, CreateCharacterPayload, UpdateCharacterPayload, GetCharactersParams, EditCharacterResponse, DeleteCharacterPayload, RestoreCharacterPayload } from "@/types/character.types";
 
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "cards");
@@ -48,7 +48,7 @@ class CharacterService {
         return { message: "Personagem criado com sucesso!" };
     };
 
-    async updateCharacter(payload: EditCharacterPayload) {
+    async updateCharacter(payload: UpdateCharacterPayload) {
         const errors = [];
 
         const existCharacter = await characterModel.findById(payload.id);
@@ -77,17 +77,17 @@ class CharacterService {
 
             const artworkSave = await ImageStorageService.save(payload.artwork.buffer, artworkDir);
 
-            if(!artworkSave.ok) {
+            if(!artworkSave.ok)
                 errors.push({message: `${artworkSave.message} - Artwork`});
-            };
+
         } else if(payload.data.remove_artwork) {
             const artworkDir = path.resolve(characterDir, "artwork", `1`);
 
             const artworkDelete = await ImageStorageService.delete(path.resolve(artworkDir, `1.png`));
 
-            if(!artworkDelete.ok) {
+            if(!artworkDelete.ok)
                 errors.push({message: `${artworkDelete.message} - Artwork`});
-            };
+
         };
 
         if(payload.thumbnail) {
@@ -108,9 +108,8 @@ class CharacterService {
             };
         };
 
-        if(errors.length > 0) {
+        if(errors.length > 0) 
             throw { type: "storage", errors };
-        };
 
         return { message: "Personagem atualizado com sucesso!" };
     };

@@ -1,6 +1,6 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import { GetAnimeParams } from "../types/anime.types";
+import { GetAnimeParams, UpdateAnimeData } from "@/types/anime.types";
 import { CreateAnimeSchema } from "@/validations/anime.validations";
 
 class AnimeModel {
@@ -13,6 +13,18 @@ class AnimeModel {
             }
         })
     }
+
+    update = async (id: number, data: UpdateAnimeData) => {
+        const normalizeData = Object.fromEntries(
+            Object.entries(data).filter(([, value]) => value !== undefined)
+        );
+
+        return prisma.anime.update({
+            where: { id },
+            data: normalizeData
+        });
+    };
+
 
     findById = async (id: number) => {
         return prisma.anime.findUnique({

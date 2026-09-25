@@ -312,6 +312,12 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
     };
 
     const handleCancelEditDescription = () => {
+        if(descriptionRef.current)
+            descriptionRef.current.innerText =
+                editedDescription !== null
+                    ? editedDescription
+                    : character.description ?? "";
+
         setIsEditingDescription(false);
     };
 

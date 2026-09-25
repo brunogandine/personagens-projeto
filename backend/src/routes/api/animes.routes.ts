@@ -4,7 +4,7 @@ import AnimeController from "@/controllers/anime.controller";
 import Authenticate from "@/middlewares/auth";
 import AuthorizeUser from "@/middlewares/authorize";
 import ValidateRequest from "@/middlewares/validate";
-import { createAnimeSchema } from "@/validations/anime.validations";
+import { createAnimeSchema, updateAnimeSchema } from "@/validations/anime.validations";
 import UploadImage from "@/middlewares/upload/uploadImage";
 import { idParamsSchema } from "@/validations/common/common.validations";
 
@@ -15,5 +15,14 @@ router.get("/counts", Authenticate, AnimeController.getCount);
 router.get("/:id", Authenticate, ValidateRequest(idParamsSchema, "params"), AnimeController.getById);
 
 router.post("/", Authenticate, AuthorizeUser("Admin"), UploadImage.single("symbol"), ValidateRequest(createAnimeSchema, "body"), AnimeController.createAnime);
+
+router.patch("/:id", 
+    Authenticate, 
+    AuthorizeUser("Admin"), 
+    UploadImage.single("symbol"), 
+    ValidateRequest(idParamsSchema, "params"), 
+    ValidateRequest(updateAnimeSchema, "body"),
+    AnimeController.updateAnime
+)
 
 export default router;

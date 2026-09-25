@@ -89,7 +89,7 @@ class CharacterController {
                 ),
             });
 
-            res.status(200).json(result);
+            return res.status(200).json(result);
         } catch(err) {
             if(isAppError(err)) {
                 if(err.type === "not_found") {

@@ -69,7 +69,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -82,7 +82,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -95,7 +95,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -109,7 +109,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         description: res.data.message,
                         instructions: "Tente novamente mais tarde."
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 

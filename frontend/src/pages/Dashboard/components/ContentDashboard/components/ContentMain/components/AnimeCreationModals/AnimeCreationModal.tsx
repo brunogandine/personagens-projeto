@@ -163,7 +163,7 @@ const AnimeCreationModal = ({open, onClose, hide, reopen, onSuccessCallback}: An
                         description: res.data.message,
                         list: res.data.errors
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -176,7 +176,7 @@ const AnimeCreationModal = ({open, onClose, hide, reopen, onSuccessCallback}: An
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -189,7 +189,7 @@ const AnimeCreationModal = ({open, onClose, hide, reopen, onSuccessCallback}: An
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -206,7 +206,7 @@ const AnimeCreationModal = ({open, onClose, hide, reopen, onSuccessCallback}: An
                         list: res.data.errors,
                         instructions: "Tente novamente."
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 

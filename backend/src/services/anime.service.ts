@@ -1,12 +1,12 @@
 import path from "path";
 import ImageStorageService from "@/services/image-storage.service";
 import { animeModel } from "@/models/Anime";
-import { CreateAnimeData, GetAnimeParams } from "@/types/anime.types";
+import { CreateAnimePayload, GetAnimeParams, UpdateAnimePayload } from "@/types/anime.types";
 
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "animes");
 class AnimeService {
-    async createAnime(payload: CreateAnimeData) {
+    async createAnime(payload: CreateAnimePayload) {
         const errors = [];
 
         const sameName = await animeModel.findByName(payload.data.name);
@@ -38,10 +38,47 @@ class AnimeService {
         return { message: "Anime criado com sucesso!" };
     };
 
-    async getAnimes ({
-        page = 1,
-        search = ""
-    }: GetAnimeParams){
+    async updateAnime (payload: UpdateAnimePayload) {
+        const errors = [];
+
+        const existAnime = await animeModel.findById(payload.id);
+
+        if(!existAnime) 
+            throw({type: "not_found", message: "Anime não encontrado."});
+
+        const data = {
+            name: payload.data.name,
+            active: payload.data.active,
+            description: payload.data.description
+        };
+
+        await animeModel.update(payload.id, data);
+
+        const animeDir = path.resolve(uploadDir, `${payload.id}`);
+
+        if(payload.symbol) {
+            const symbolDir = path.resolve(animeDir, "symbol.jpg");
+
+            const symbolSave = await ImageStorageService.save(payload.symbol.buffer, symbolDir);
+
+            if(!symbolSave.ok)
+                errors.push({message: `${symbolSave.message} - Symbol`});
+        } else if(payload.data.remove_symbol) {
+            const symbolDir = path.resolve(animeDir, "symbol.jpg");
+
+            const symbolDelete = await ImageStorageService.delete(symbolDir);
+
+            if(!symbolDelete.ok)
+                errors.push({message: `symbolDelete.message - Symbol`});
+        };
+
+        if(errors.length > 0)
+            throw { type: "storage", errors }
+
+        return { message: "Anime atualizado com sucesso!" };
+    }
+
+    async getAnimes ({ page = 1, search = "" }: GetAnimeParams){
         const MAX_PAGES = 100;
 
         const safePages = page > 0
