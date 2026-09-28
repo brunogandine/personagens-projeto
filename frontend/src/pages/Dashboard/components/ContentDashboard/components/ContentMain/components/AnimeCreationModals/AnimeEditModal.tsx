@@ -403,8 +403,8 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                 onCancel={handleDismiss}
                 footer
             >
-                <div className={`${styles["edit-anime-modal-content"]}`} >
-                    <div className={`${styles["edit-anime-top"]}`}>
+                <div className={`${styles["update-anime-modal-content"]}`} >
+                    <div className={`${styles["update-anime-top"]}`}>
                         <div className={`${styles["anime-symbol"]}`}>
                             <div className={`upload-symbol`} onClick={uploadSymbol} onChange={handleSymbol} onContextMenu={handleRemoveSymbol} >
                                 {symbolPreview ? (<img src={symbolPreview} />)
@@ -420,17 +420,17 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                                 }
                                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" style={{display: "none"}} />
                             </div>
-                            <span style={{color: "var(--orange-500)", fontSize: "16px", fontWeight: "bold"}}>Carregar Símbolo</span>
+                            {symbolPreview ? "" : symbolLoadError ? (<span style={{color: "var(--orange-500)", fontSize: "16px", fontWeight: "bold"}}>Carregar Símbolo</span>) : pendingRemoveSymbol ? (<span style={{color: "var(--orange-500)", fontSize: "16px", fontWeight: "bold"}}>Carregar Símbolo</span>) : "" }
                         </div>
-                        <div className={`${styles["anime-info"]}`}>
+                        <div className={`${styles["update-anime-info"]}`}>
                             <div className={`${styles["name-wrapper"]}`} >
                                 <label htmlFor="anime-name" className={`input-label-default`}>Nome do Anime:</label>
                                 {isEditingName 
                                     ? (                                
-                                    <div ref={editNameRef}>
+                                    <div className={`${styles["update-input-wrapper"]}`} ref={editNameRef}>
                                         <Input 
                                             id="anime-name" 
-                                            className={`field-default`} 
+                                            className={`field-default ${styles["edit-input"]}`} 
                                             style={{width: `70%`, maxWidth: "200px"}} 
                                             value={draftName} 
                                             onChange={(e) => setDraftName(e.target.value) } 
@@ -441,23 +441,28 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                                     ) : (editedName !== null
                                         ? (                                            
                                             <>
-                                                <span>{editedName}</span>
-                                                <Tooltip
-                                                    title={"Editar"}
-                                                    destroyOnHidden={true}
-                                                >
-                                                    <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditingName(true)}/>
-                                                </Tooltip>
+                                                <div className={`${styles["span-wrapper"]}`}>
+                                                    <span style={{color: "var(--orange-500)", fontWeight: "bold"}}>{editedName}</span>
+                                                    <Tooltip
+                                                        title={"Editar"}
+                                                        destroyOnHidden={true}
+                                                    >
+                                                        <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditingName(true)}/>
+                                                    </Tooltip>
+                                                    <span style={{color: "var(--red-100)"}}>*</span>
+                                                </div>
                                             </>
                                         ) : (
                                             <>
-                                                <span>{anime.name}</span>
-                                                <Tooltip
-                                                    title={"Editar"}
-                                                    destroyOnHidden={true}
-                                                >
-                                                    <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditingName(true)}/>
-                                                </Tooltip>
+                                                <div className={`${styles["span-wrapper"]}`}>
+                                                    <span>{anime.name}</span>
+                                                    <Tooltip
+                                                        title={"Editar"}
+                                                        destroyOnHidden={true}
+                                                    >
+                                                        <EditFilled style={{cursor: "pointer"}} onClick={() =>  setIsEditingName(true)}/>
+                                                    </Tooltip>
+                                                </div>
                                             </>
                                         )
                                     )
@@ -470,7 +475,7 @@ const AnimeEditModal = ({open, onClose, hide, reopen, anime, onSuccessCallback, 
                         </div>
                     </div>
                     <div className={`${styles["create-anime-bottom"]}`}>
-                        <div className={`${styles["anime-description"]}`}>
+                        <div className={`${styles["update-anime-description"]}`}>
                             <div className={`${styles["description-wrapper"]}`}>
                                 <label htmlFor="anime-description" className={`input-label-default`}>Descrição do Anime:</label>
                                 <div
