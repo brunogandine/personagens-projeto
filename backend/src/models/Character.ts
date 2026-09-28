@@ -22,7 +22,7 @@ class CharacterModel {
         });
     };
 
-    softDeleteCharacter = async (ids: number[]) => {
+    softDelete = async (ids: number[]) => {
         return prisma.character.updateMany({
             where: {
                 id: {
@@ -35,7 +35,7 @@ class CharacterModel {
         });
     };
 
-    restoreCharacter = async (ids: number[]) => {
+    restore = async (ids: number[]) => {
         return prisma.character.updateMany({
             where: {
                 id: {
@@ -94,6 +94,18 @@ class CharacterModel {
             take: PER_PAGE,
             orderBy: {
                 id: "asc"
+            },
+            select: {
+                id: true,
+                anime_id: true,
+                name: true,
+                active: true,
+                deleted_at: true,
+                anime: {
+                    select: {
+                        deleted_at: true
+                    }
+                }
             }
         });
 

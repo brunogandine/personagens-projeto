@@ -25,12 +25,51 @@ class AnimeModel {
         });
     };
 
+    softDelete = async (ids: number[]) => {
+        return prisma.anime.updateMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            data: {
+                deleted_at: new Date()
+            }
+        });
+    };
+
+    restore = async (ids: number[]) => {
+        return prisma.anime.updateMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            data: {
+                deleted_at: null
+            }
+        });
+    };
 
     findById = async (id: number) => {
         return prisma.anime.findUnique({
             where: { id }
         });
-    }
+    };
+
+    findManyByIds = async (ids: number[]) => {
+        return prisma.anime.findMany({
+            where: { 
+                id: {
+                    in: ids
+                }
+            },
+            select: {
+                id: true,
+                deleted_at: true
+            }
+        });
+    };
 
     findByName = async (name: string) => {
         return prisma.anime.findFirst({
@@ -38,7 +77,7 @@ class AnimeModel {
                 name
             }
         })
-    }
+    };
 
     getAnimes = async ({
         page = 1,

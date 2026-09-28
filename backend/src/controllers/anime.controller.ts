@@ -2,9 +2,11 @@ import AnimeService from "../services/anime.service";
 import { RequestHandler } from "express";
 import { detectImageType } from "@/utils/detectImageType";
 import { isAppError } from "@/utils/is-app-error.util";
+import { ZodError } from "zod";
+import { deleteAnimeSchema, restoreAnimeSchema } from "@/validations/anime.validations";
 
 class AnimeController {
-    createAnime: RequestHandler = async (req, res) => {
+    create: RequestHandler = async (req, res) => {
         try {
             const file = req.file;
 
@@ -41,7 +43,7 @@ class AnimeController {
         }
     };
 
-    updateAnime: RequestHandler = async (req, res) => {
+    update: RequestHandler = async (req, res) => {
         try {
             const file = req.file;
 
@@ -76,7 +78,80 @@ class AnimeController {
             
             return res.status(500).json({message: "Erro Interno"});
         }
-    }
+    };
+
+    softDelete: RequestHandler = async (req, res) => {
+        try {
+            const data = deleteAnimeSchema.parse(req.body);
+
+            const result = await AnimeService.softDeleteCharacter({
+                data: {
+                    ids: data.ids
+                }
+            });
+
+            res.status(200).json(result);
+        } catch(err) {
+            if(err instanceof ZodError) {
+                const issues = err.issues[0];
+
+                if(!issues)
+                    return res.status(400).json({
+                        message: "Dados inválidos."
+                });
+
+                return res.status(400).json({message: issues.message});
+            };
+
+            if(isAppError(err)) {
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+            };
+
+            return res.status(500).json({message: "Erro Interno"});
+        };
+    };
+
+    restore: RequestHandler = async (req, res) => {
+        try {
+            const data = restoreAnimeSchema.parse(req.body);
+
+            const result = await AnimeService.restoreCharacter({
+                data: {
+                    ids: data.ids
+                }
+            });
+
+            res.status(200).json(result);
+        } catch(err){
+            if(err instanceof ZodError) {
+                const issues = err.issues[0];
+
+                if(!issues) {
+                    return res.status(400).json({
+                        message: "Dados Inválidos"
+                    });
+                };
+
+                return res.status(400).json({
+                    message: issues.message
+                });
+            };
+
+            if(isAppError(err)) {
+                if(err.type === "not_found") {
+                    return res.status(404).json({message: err.message});
+                };
+
+                if(err.type === "conflict") {
+                    return res.status(409).json({message: err.message});
+                };
+
+                return res.status(500).json({message: "Erro Interno"});
+            };
+        };
+    };
 
     getById: RequestHandler = async (req, res) => {
         try {

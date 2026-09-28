@@ -27,3 +27,15 @@ export type UpdateAnimeData = {
     active: boolean | undefined
     description: string | undefined
 };
+
+export type DeleteAnimePayload = {
+    data: {
+        ids: number[];
+    }
+}
+
+export type RestoreAnimePayload = {
+    data: {
+        ids: number[];
+    }
+}

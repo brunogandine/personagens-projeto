@@ -12,11 +12,11 @@ type CharacterDeleteProps = {
     onClose: () => void;
     hide: () =>  void;
     reopen: () => void;
-    onSuccess: () => void;
+    onSuccessCallback: () => void;
     selectedCharacters: CharacterDelete[] | null;
 }
 
-const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selectedCharacters}: CharacterDeleteProps) => {
+const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccessCallback, selectedCharacters}: CharacterDeleteProps) => {
     const [step, setStep] = useState<"warning" | "confirmation">("warning");
     const [confirmationText, setConfirmationText] = useState("");
 
@@ -122,7 +122,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
             text: res.data.message, 
         });
 
-        onSuccess();
+        onSuccessCallback();
         handleClose();
     };
 

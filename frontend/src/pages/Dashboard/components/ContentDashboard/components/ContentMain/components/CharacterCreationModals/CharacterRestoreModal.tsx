@@ -11,11 +11,11 @@ type RestoreCharacterProps = {
     onClose: () => void;
     hide: () =>  void;
     reopen: () => void;
-    onSuccess: () => void;
+    onSuccessCallback: () => void;
     selectedCharacters: CharacterRestore[] | null;
 }
 
-const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selectedCharacters}: RestoreCharacterProps) => {
+const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccessCallback, selectedCharacters}: RestoreCharacterProps) => {
     const { showToast, showMessageModal } = useMessageModal();
 
     if(!selectedCharacters)
@@ -39,7 +39,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -52,7 +52,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -65,7 +65,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -79,7 +79,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         description: res.data.message,
                         instructions: "Tente novamente mais tarde."
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -92,7 +92,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
             text: res.data.message, 
         });
 
-        onSuccess();
+        onSuccessCallback();
         handleClose();
     };
 

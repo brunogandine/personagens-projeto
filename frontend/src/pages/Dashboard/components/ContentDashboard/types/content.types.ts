@@ -3,7 +3,10 @@ export type CharacterItem = {
     anime_id: number;
     name: string;
     active: boolean;
-    deleted_at: Date;
+    deleted_at: Date | null;
+    anime: {
+        deleted_at: Date | null
+    }
 };
 
 export type AnimeItem = {
@@ -18,14 +21,6 @@ export type AnimeContentItem = {
     name: string;
     active: boolean;
     description?: string;
-    deleted_at: Date;
-};
-
-export type CharacterContentItem = {
-    id: number;
-    anime_id: number;
-    name: string;
-    active: boolean;
     deleted_at: Date;
 };
 

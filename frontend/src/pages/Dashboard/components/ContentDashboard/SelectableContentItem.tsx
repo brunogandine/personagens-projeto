@@ -1,10 +1,10 @@
 import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboard.module.css";
-import type { AnimeContentItem, CharacterContentItem } from "./types/content.types";
+import type { AnimeContentItem, CharacterItem } from "./types/content.types";
 
 type Props = 
     | {
-        item: CharacterContentItem;
+        item: CharacterItem;
         selected: number[];
         onToggle: () => void;
         type: "character"
@@ -20,6 +20,8 @@ type Props =
 
 
 const SelectableContentItem = ({item, selected, onToggle, type, imageVersion}: Props) => {
+    const isAnimeDeleted = type === "character" && item.anime.deleted_at !== null;
+
     const imagePath = {
         "anime": `animes/${item.id}/symbol.jpg`,
         "character": `cards/${item.id}/thumbnail/1/1.png`
@@ -32,7 +34,7 @@ const SelectableContentItem = ({item, selected, onToggle, type, imageVersion}: P
                 data-id={item.id}
                 onClick={onToggle}
             >
-                <img className={`${item.deleted_at ? "unavailable no-hover" : item.active ? "" : "inactive no-hover"}`} src={`/assets/images/${imagePath[type]}${imageVersion}`} />
+                <img className={`${isAnimeDeleted ? "orphaned" : "_"} ${item.deleted_at ? "unavailable no-hover" : item.active ? "_" : "inactive no-hover"}`} src={`/assets/images/${imagePath[type]}${imageVersion}`} />
                 <CheckboxComponent 
                     className={`${styles["content-checkbox-custom"]} ${selected.includes(item.id) ? `${styles["selected"]}` : ""}`} 
                     checked={selected.includes(item.id)} 

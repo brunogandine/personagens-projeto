@@ -129,7 +129,7 @@ class CharacterService {
             throw { type: "conflict", message: "Um ou mais personagens já foram deletados." };
         };
 
-        await characterModel.softDeleteCharacter(data.ids);
+        await characterModel.softDelete(data.ids);
 
         return { message: "Exclusão efetuada com sucesso!" };
     };
@@ -149,7 +149,7 @@ class CharacterService {
             throw { type: "conflict", message: "Um ou mais personagens não precisam ser restaurados."};
         };
 
-        await characterModel.restoreCharacter(data.ids);
+        await characterModel.restore(data.ids);
 
         return { message: "Personagens restaurados com sucesso."};
     };

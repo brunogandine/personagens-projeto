@@ -2,9 +2,12 @@ import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboa
 import SelectableContentItem from "@/pages/Dashboard/components/ContentDashboard/SelectableContentItem";
 import DashboardPagination from "@/pages/Dashboard/shared/DashboardPagination";
 import ContentOptions from "@/pages/Dashboard/components/ContentDashboard/ContentOptions";
+import AnimeCreationModal from "./components/AnimeCreationModals/AnimeCreationModal";
+import AnimeEditModal from "./components/AnimeCreationModals/AnimeEditModal";
 import CharacterEditModal from "./components/CharacterCreationModals/CharacterEditModal";
 import CharacterSoftDeleteModal from "./components/CharacterCreationModals/CharacterSoftDeleteModal";
 import CharacterRestoreModal from "./components/CharacterCreationModals/CharacterRestoreModal";
+import AnimeSoftDeleteModal from "./components/AnimeCreationModals/AnimeSoftDeleteModal";
 import { toggleId, toggleBoolean } from "@/utils/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
@@ -12,9 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
-import type { AnimeEdit, AnimeItem, CharacterDelete, CharacterEdit, CharacterItem, CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
-import AnimeCreationModal from "./components/AnimeCreationModals/AnimeCreationModal";
-import AnimeEditModal from "./components/AnimeCreationModals/AnimeEditModal";
+import type { AnimeRestore, AnimeDelete, AnimeEdit, AnimeItem, CharacterDelete, CharacterEdit, CharacterItem, CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
@@ -50,9 +51,13 @@ const ContentMain = () => {
     const [isEditCharacterModalOpen, setIsEditCharacterModalOpen] = useState(false);
     const [editModalCharacter, setEditModalCharacter] = useState<CharacterEdit | null>(null);
 
+    const [isDeleteAnimeModalOpen, setIsDeleteAnimeModalOpen] = useState(false);
+    const [deleteModalAnimes, setDeleteModalAnimes] = useState<AnimeDelete[] | null>(null);
     const [isDeleteCharacterModalOpen, setIsDeleteCharacterModalOpen] = useState(false);
     const [deleteModalCharacters, setDeleteModalCharacters] = useState<CharacterDelete[] | null>(null);
 
+    const [isRestoreAnimeModalOpen, setIsRestoreAnimeModalOpen] = useState(false);
+    const [restoreModalAnimes, setRestoreModalAnimes] = useState<AnimeRestore[] | null>(null);    
     const [isRestoreCharacterModalOpen, setIsRestoreCharacterModalOpen] = useState(false);
     const [restoreModalCharacters, setRestoreModalCharacters] = useState<CharacterRestore[] | null>(null);
 
@@ -126,6 +131,7 @@ const ContentMain = () => {
 
     useEffect(() => {
         getAnimes();
+        getCharacters();
 
     }, [animesPage, animesDebounceSearch, animesRefreshKey]);
 
@@ -192,6 +198,74 @@ const ContentMain = () => {
 
         setEditModalAnime(anime);
         setIsEditAnimeModalOpen(true);
+    };
+
+    const openDeleteAnimeModal = async () => {
+        if(selectedAnimes.length <= 0) {
+            showMessageModal({
+                data: {
+                    type: "warning",
+                    description: "É preciso selecionar pelo menos um personagem para executar está ação.",
+                }
+            });
+            
+            return;
+        };
+
+        if(selectedAnimes.length > 5) {
+            showMessageModal({
+                data: {
+                    type: "warning",
+                    description: "Não é possível excluir mais do que 5 personagens ao mesmo tempo."
+                }
+            });
+
+            return;
+        };
+
+        const selected = animes
+            .filter((a) => selectedAnimes.includes(a.id))
+            .map((a) => ({
+                id: a.id,
+                name: a.name    
+            }));
+
+        setDeleteModalAnimes(selected);
+        setIsDeleteAnimeModalOpen(true);
+    };
+
+    const openRestoreAnimeModal = async () => {
+        if(selectedCharacters.length <= 0) {
+            showMessageModal({
+                data: {
+                    type: "warning",
+                    description: "É preciso selecionar pelo menos um personagem para executar está ação.",
+                }
+            });
+            
+            return;
+        };
+
+        if(selectedCharacters.length > 5) {
+            showMessageModal({
+                data: {
+                    type: "warning",
+                    description: "Não é possível excluir mais do que 5 personagens ao mesmo tempo."
+                }
+            });
+
+            return;
+        };
+
+        const selected = animes
+            .filter((a) => selectedAnimes.includes(a.id))
+            .map((a) => ({
+                id: a.id,
+                name: a.name    
+            }));
+
+        setRestoreModalAnimes(selected);
+        setIsRestoreAnimeModalOpen(true);
     };
 
     const openEditCharacterModal = async () => {
@@ -299,6 +373,16 @@ const ContentMain = () => {
         setIsEditAnimeModalOpen(false);
     };
 
+    const closeDeleteAnimeModal = () => {
+        setDeleteModalAnimes(null);
+        setIsDeleteAnimeModalOpen(false);
+    };
+
+    const closeRestoreAnimeModal = () => {
+        setRestoreModalAnimes(null);
+        setIsRestoreAnimeModalOpen(false);
+    };
+
     const closeEditCharacterModal = () => {
         setIsEditCharacterModalOpen(false);
     };
@@ -340,7 +424,7 @@ const ContentMain = () => {
                     </div>
                 </div>
                 <div className={`${styles["content-list-container"]}`}>
-                    <ContentOptions openEdit={openEditAnimeModal} openDelete={openDeleteCharacterModal} openRestore={openRestoreCharacterModal}/>
+                    <ContentOptions openEdit={openEditAnimeModal} openDelete={openDeleteAnimeModal} openRestore={openRestoreAnimeModal}/>
                     <div className={`container-default ${styles["list-content"]} ${animes.length > 0 ? styles["anime"] : styles["no-results"]}`}>
                         <div className={`${styles["content-list-item"]}`} >
                             <div className={`${styles["content-option-item"]} ${styles["anime"]}`} onClick={() => setIsCreateAnimeModalOpen(true)}>
@@ -456,6 +540,14 @@ const ContentMain = () => {
                             onSuccessCallback={() => setAnimesRefreshKey((current) =>  current + 1)}
                         />
                     )}
+                    <AnimeSoftDeleteModal 
+                        open={isDeleteAnimeModalOpen}
+                        onClose={closeDeleteAnimeModal}
+                        hide={() => setIsDeleteAnimeModalOpen(false)}
+                        reopen={() => setIsDeleteAnimeModalOpen(true)}
+                        onSuccessCallback={() => setAnimesRefreshKey((current) => current + 1)}
+                        selectedAnimes={deleteModalAnimes}
+                    />
                     {editModalCharacter && (
                         <CharacterEditModal 
                             open={isEditCharacterModalOpen} 
@@ -465,7 +557,7 @@ const ContentMain = () => {
                             toggleBoolean={toggleBoolean} 
                             imageCacheVersion={imageCacheVersions[`character:${editModalCharacter.id}`] ?? null} 
                             onChangeImage={handleImagesChanged} 
-                            onSuccess={() => {setCharactersRefreshKey((current) => current + 1);}} 
+                            onSuccessCallback={() => {setCharactersRefreshKey((current) => current + 1);}} 
                         />
                     )}
                     <CharacterSoftDeleteModal 
@@ -473,7 +565,7 @@ const ContentMain = () => {
                         onClose={closeDeleteCharacterModal} 
                         hide={() => setIsDeleteCharacterModalOpen(false)} 
                         reopen={() => setIsDeleteCharacterModalOpen(true)} 
-                        onSuccess={() => {setCharactersRefreshKey((current) => current + 1);}}
+                        onSuccessCallback={() => {setCharactersRefreshKey((current) => current + 1);}}
                         selectedCharacters={deleteModalCharacters} 
                     />
                     <CharacterRestoreModal 
@@ -481,7 +573,7 @@ const ContentMain = () => {
                         onClose={closeRestoreCharacterModal} 
                         hide={() => setIsRestoreCharacterModalOpen(false)} 
                         reopen={() => setIsRestoreCharacterModalOpen(true)} 
-                        onSuccess={() => {setCharactersRefreshKey((current) => current + 1);}} 
+                        onSuccessCallback={() => {setCharactersRefreshKey((current) => current + 1);}} 
                         selectedCharacters={restoreModalCharacters}  
                     />
                 </div>

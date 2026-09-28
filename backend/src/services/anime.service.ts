@@ -1,7 +1,7 @@
 import path from "path";
 import ImageStorageService from "@/services/image-storage.service";
 import { animeModel } from "@/models/Anime";
-import { CreateAnimePayload, GetAnimeParams, UpdateAnimePayload } from "@/types/anime.types";
+import { CreateAnimePayload, DeleteAnimePayload, RestoreAnimePayload, GetAnimeParams, UpdateAnimePayload } from "@/types/anime.types";
 
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "animes");
@@ -76,7 +76,47 @@ class AnimeService {
             throw { type: "storage", errors }
 
         return { message: "Anime atualizado com sucesso!" };
-    }
+    };
+
+    async softDeleteCharacter({data}: DeleteAnimePayload) {
+        const existCharacters = await animeModel.findManyByIds(data.ids);
+
+        if(existCharacters.length !== data.ids.length) {
+            throw { type: "not_found", message: "Um ou mais animes não foram encontrados."};
+        };
+
+        const alreadyDeleted = existCharacters.some(
+            (c) => c.deleted_at !== null
+        );
+
+        if(alreadyDeleted) {
+            throw { type: "conflict", message: "Um ou mais animes já foram deletados." };
+        };
+
+        await animeModel.softDelete(data.ids);
+
+        return { message: "Exclusão efetuada com sucesso!" };
+    };
+
+    async restoreCharacter({data}: RestoreAnimePayload) {
+        const existAnimes = await animeModel.findManyByIds(data.ids);
+
+        if(existAnimes.length !== data.ids.length) {
+            throw { type: "not_found", message: "Um ou mais animes não foram encontrados."};
+        };
+
+        const notDeleted = existAnimes.some(
+            (a) => a.deleted_at === null
+        );
+
+        if(notDeleted) {
+            throw { type: "conflict", message: "Um ou mais animes não precisam ser restaurados."};
+        };
+
+        await animeModel.restore(data.ids);
+
+        return { message: "Animes restaurados com sucesso."};
+    };
 
     async getAnimes ({ page = 1, search = "" }: GetAnimeParams){
         const MAX_PAGES = 100;

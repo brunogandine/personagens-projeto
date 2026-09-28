@@ -189,6 +189,10 @@ img {
     filter: sepia(1) hue-rotate(310deg) saturate(6) brightness(0.5);
 }
 
+.orphaned {
+    filter: sepia(1) hue-rotate(195deg) saturate(6) brightness(0.5);
+}
+
 .modal-default.ant-modal-wrap {
     overflow-y: hidden;
 

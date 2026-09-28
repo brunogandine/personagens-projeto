@@ -26,7 +26,7 @@ type CharacterEditModalProps = {
     toggleBoolean: (setState: React.Dispatch<React.SetStateAction<boolean>>) => void;
     imageCacheVersion: number | null;
     onChangeImage: (key: ContentImageCacheKey) => void;
-    onSuccess: () => void;
+    onSuccessCallback: () => void;
 };
 
 type CropAspectOptions = {
@@ -40,7 +40,7 @@ type CropTarget = {
     options: CropAspectOptions;
 }
 
-const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean, imageCacheVersion, onChangeImage, onSuccess }:  CharacterEditModalProps) => {
+const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean, imageCacheVersion, onChangeImage, onSuccessCallback }:  CharacterEditModalProps) => {
     const { showToast, showMessageModal } = useMessageModal();
 
     const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
@@ -493,7 +493,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         showToast({type: "success", text: res.data.message, });
 
         resetStates();
-        onSuccess();
+        onSuccessCallback();
         onClose();
     };
 
