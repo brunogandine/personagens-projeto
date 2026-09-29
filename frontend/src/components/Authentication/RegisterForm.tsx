@@ -2,9 +2,9 @@ import { useState } from "react";
 import styles from "../ui/forms/Form.module.css";
 import { Button } from "antd";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL
+const BASE_API_URL = import.meta.env.VITE_BASE_API_URL
 
-function RegisterForm() {
+const RegisterForm = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState<string>("");
 
@@ -22,7 +22,7 @@ function RegisterForm() {
         }
 
         try {
-            const res = await fetch(`${BASE_URL}/api/auth/register`, {
+            const res = await fetch(`${BASE_API_URL}/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

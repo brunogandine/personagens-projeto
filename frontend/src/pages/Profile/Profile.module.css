@@ -18,9 +18,10 @@
 .user-basic,
 .user-stats {
     display: flex;
+    flex: 1;
     flex-direction: column;
     background-color: #18162D;
-    color: #C1C1C1;
+    color: var(--text-color-primary);
     border-radius: 15px;
     border: 1px solid rgba(93, 93, 93, 0.17);
     width: 20%;
@@ -84,34 +85,6 @@
     color: #919191;
 }
 
-.avatar-modal :global(.ant-modal-container),
-.crop-modal :global(.ant-modal-container), 
-.changePass-modal :global(.ant-modal-container) {
-    background-color: #18162D;
-    border: 1px solid rgba(93, 93, 93, 0.17);
-}
-
-.avatar-modal :global(.ant-modal-title),
-.crop-modal :global(.ant-modal-title), 
-.changePass-modal :global(.ant-modal-title) {
-    color: #C1C1C1;
-    font-size: 20px
-}
-
-.avatar-modal :global(.ant-modal-close),
-.crop-modal :global(.ant-modal-close), 
-.changePass-modal :global(.ant-modal-close) {
-    color: #C1C1C1;
-    
-    &:global(.ant-modal-close) svg {
-        font-size: 22px;
-    }
-
-    &:global(.ant-modal-close:hover) {
-        color: #818181
-    }
-}
-
 .options-modal-content {
     display: flex;
     gap: 10px;
@@ -140,12 +113,12 @@
 }
 
 .upload-icon {
-    color: #818181;
+    color: var(--text-color-primary-hover);
     transition: color 0.3s ease;
 }
 
 .upload-image-txt {
-    color: #818181;
+    color: var(--text-color-primary-hover);
     font-weight: bold;
     transition: color 0.3s ease;
 }
@@ -157,7 +130,7 @@
 }
 
 .last-uploads-title {
-    color: #C1C1C1;
+    color: var(--text-color-primary);
     font-size: 15px;
     font-weight: bold;
 }
@@ -255,7 +228,7 @@
 }
 
 .input-pass-container :global(.ant-input-outlined) {
-    color: #C1C1C1;
+    color: var(--text-color-primary);
     background-color: #0B0A16;
     border-color: #433E62
 }
@@ -310,65 +283,20 @@
     gap: 10px;
 }
 
-.cancel-btn {
-    background-color: #36325E;
-    color: #C1C1C1;
-    height: 40px;
+.avatar-btn {
     width: 100%;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
 }
 
-.apply-btn {
-    width: 100%;
-    background-color: #4F6DBE;
-    color: #C1C1C1;
-    height: 40px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-}
-
-.simple-btn {
-    background-color: #4F6DBE;
-    color: #C1C1C1;
+.password-btn {
     height: 30px;
-    width: 100%;
     font-size: 13px;
-    font-weight: bold;
-    border: none;
     border-radius: 7px;
     padding: 0 6px 0 6px;
 }
 
-.cancel-btn:global(.ant-btn:not(:disabled):not(.ant-btn-disabled)):hover {
-    background-color: #443f74;
-    color: #C1C1C1;
-    height: 40px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-}
-
-.apply-btn:global(.ant-btn:not(:disabled):not(.ant-btn-disabled)):hover {
+.password-btn:global(.ant-btn:not(:disabled):not(.ant-btn-disabled)):hover {
     background-color: #4660A8;
-    color: #C1C1C1;
-    height: 40px;
-    font-size: 16px;
-    font-weight: bold;
     border: none;
-}
-
-.simple-btn:global(.ant-btn:not(:disabled):not(.ant-btn-disabled)):hover {
-    background-color: #4660A8;
-    color: #C1C1C1;
-    height: 30px;
-    font-size: 13px;
-    font-weight: bold;
-    border: none;
-    border-radius: 7px;
-    padding: 0 6px 0 6px
 }
 
 .p-username h2 {

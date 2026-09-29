@@ -7,7 +7,7 @@ export const Header = () => {
 
     return (
         <>
-            {user && !loading ? <HeaderLogged user={user} loading={loading}/> : <HeaderPublic />}
+            {user && !loading ? <HeaderLogged /> : <HeaderPublic />}
         </>
     )
 }
