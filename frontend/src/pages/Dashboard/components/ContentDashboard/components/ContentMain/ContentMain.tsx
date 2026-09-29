@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import type { AnimeRestore, AnimeDelete, AnimeEdit, AnimeItem, CharacterDelete, CharacterEdit, CharacterItem, CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
+import AnimeRestoreModal from "./components/AnimeCreationModals/AnimeRestoreModal";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
@@ -235,7 +236,7 @@ const ContentMain = () => {
     };
 
     const openRestoreAnimeModal = async () => {
-        if(selectedCharacters.length <= 0) {
+        if(selectedAnimes.length <= 0) {
             showMessageModal({
                 data: {
                     type: "warning",
@@ -246,7 +247,7 @@ const ContentMain = () => {
             return;
         };
 
-        if(selectedCharacters.length > 5) {
+        if(selectedAnimes.length > 5) {
             showMessageModal({
                 data: {
                     type: "warning",
@@ -547,6 +548,14 @@ const ContentMain = () => {
                         reopen={() => setIsDeleteAnimeModalOpen(true)}
                         onSuccessCallback={() => setAnimesRefreshKey((current) => current + 1)}
                         selectedAnimes={deleteModalAnimes}
+                    />
+                    <AnimeRestoreModal 
+                        open={isRestoreAnimeModalOpen}
+                        onClose={closeRestoreAnimeModal}
+                        hide={() => setIsRestoreAnimeModalOpen(false)}
+                        reopen={() => setIsEditAnimeModalOpen(true)}
+                        onSuccessCallback={() => setAnimesRefreshKey((current) => current + 1)}
+                        selectedAnimes={restoreModalAnimes}
                     />
                     {editModalCharacter && (
                         <CharacterEditModal 

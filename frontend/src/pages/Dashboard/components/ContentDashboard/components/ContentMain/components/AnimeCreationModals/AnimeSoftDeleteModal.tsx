@@ -20,8 +20,6 @@ const AnimeSoftDeleteModal = ({open, onClose, hide, reopen, onSuccessCallback, s
     const [step, setStep] = useState<"warning" | "confirmation">("warning");
     const [confirmationText, setConfirmationText] = useState("");
 
-    console.log(selectedAnimes)
-
     const { showToast, showMessageModal } = useMessageModal();
 
     if(selectedAnimes === null) 

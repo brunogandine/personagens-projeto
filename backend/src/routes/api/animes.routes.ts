@@ -18,8 +18,7 @@ router.get("/:id", Authenticate, ValidateRequest(idParamsSchema, "params"), Anim
 router.post("/", Authenticate, AuthorizeUser("Admin"), UploadImage.single("symbol"), ValidateRequest(createAnimeSchema, "body"), AnimeController.create);
 
 router.patch("/delete", Authenticate, AuthorizeUser("Admin"), ValidateRequest(deleteAnimeSchema, "body"), AnimeController.softDelete);
-router.patch("restore", Authenticate, AuthorizeUser("Admin"), ValidateRequest(restoreAnimeSchema, "body"), AnimeController.restore);
-
+router.patch("/restore", Authenticate, AuthorizeUser("Admin"), ValidateRequest(restoreAnimeSchema, "body"), AnimeController.restore);
 router.patch("/:id", 
     Authenticate, 
     AuthorizeUser("Admin"), 
