@@ -136,6 +136,15 @@ O projeto é dividido em duas aplicações principais:
     └── Express + TypeScript + Prisma
 ```
 
+## Known Issues
+
+O projeto possui algumas limitações conhecidas que não impedem o funcionamento dos fluxos principais.
+
+* **Formato das imagens de Anime:** as imagens processadas pelo backend são armazenadas como `.png`, enquanto o `ContentItem` atualmente espera uma imagem `.jpg`. Para testes, a imagem gerada pode ser renomeada de `.png` para `.jpg` após o upload.
+* **Seleção de Anime na edição de Character:** o dropdown de Anime utiliza a mesma lista paginada da página de Animes e, atualmente, fica limitado aos Animes carregados na página atual.
+
+Essas limitações estão registradas nas [Issues](../../issues) do repositório e serão corrigidas posteriormente.
+
 ## Estado atual
 
 Atualmente, as principais áreas do Dashboard já possuem funcionalidades implementadas, incluindo o gerenciamento de usuários, animes e personagens.
