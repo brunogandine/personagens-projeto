@@ -1,60 +1,56 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-model Anime {
-  id            Int                @id @default(autoincrement()) @db.UnsignedInt
-  active        Boolean            @default(false)
-  name          String             @db.VarChar(255)
-  description   String?            @db.Text
-  deleted_at    DateTime?
 
-  characters    Character[]
+model Anime {
+  id          Int                @id @default(autoincrement()) @db.UnsignedInt
+  active      Boolean            @default(false)
+  description AnimeDescription[]
 
   @@map("animes")
 }
+
+model AnimeDescription {
+  id       Int     @id @default(autoincrement()) @db.UnsignedInt
+  anime_id Int     @default(1) @db.UnsignedInt
+  name     String? @default("Naruto") @db.VarChar(255)
+  anime    Anime   @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+
+  @@index([anime_id], map: "anime_descriptions_anime_id_fkey")
+  @@map("anime_descriptions")
+}
+
 model Character {
   id            Int                    @id @default(autoincrement()) @db.UnsignedInt
-  anime_id      Int                    @db.UnsignedInt
-  name          String                 @db.VarChar(255)
-  description   String?                @db.Text
-  currency_lock Boolean                @default(false)
+  anime_id      Int                    @default(1) @db.UnsignedInt
+  currency_lock Int?                   @default(0)
   active        Boolean                @default(false)
-  attr_hp       Int                    @default(0)
-  attr_atk      Int                    @default(0)
-  attr_def      Int                    @default(0)
-  deleted_at    DateTime?
-
-  anime         Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
+  attr_hp       Int?                   @default(0)
+  attr_atk      Int?                   @default(0)
+  attr_def      Int?                   @default(0)
+  description   CharacterDescription[]
 
   @@index([anime_id], map: "idx_anime")
   @@map("characters")
 }
-model CharacterNames {
-  id                  Int              @id @default(autoincrement()) @db.UnsignedInt
-  character_name      String           @db.VarChar(255)
 
-  @@map("characters_names")
+model CharacterDescription {
+  id           Int       @id @default(autoincrement()) @db.UnsignedInt
+  character_id Int       @db.UnsignedInt
+  name         String?   @db.VarChar(255)
+  description  String?   @db.Text
+  character    Character @relation(fields: [character_id], references: [id])
+
+  @@index([character_id], map: "idx_character_id")
+  @@index([name], map: "idx_character_name")
+  @@map("character_descriptions")
 }
-model UserRestriction {
-  id                Int @id @default(autoincrement()) @db.UnsignedInt
-  user_id           Int @db.UnsignedInt
-  moderator_id      Int @db.UnsignedInt
-  restriction_type  RestrictionTypes
-  reason            String @db.Text
-  created_at        DateTime @default(now())
-  expires_at        DateTime?
-  revoked_at        DateTime?
-  active            Boolean @default(true)
 
-  user              User @relation("RestrictedUser", fields: [user_id], references: [id])
-  moderator         User @relation("ModeratorUser", fields: [moderator_id], references: [id])
-
-  @@map("user_restrictions")
-}
 model UserSession {
   id            Int      @id @default(autoincrement()) @db.UnsignedInt
   user_id       Int      @db.UnsignedInt
@@ -67,6 +63,7 @@ model UserSession {
 
   @@map("user_sessions")
 }
+
 model UserUnlocks {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
   characters  UserCharacters[]
@@ -80,6 +77,7 @@ model UserUnlocks {
   @@index([user_id], map: "user_unlocks_user_id_fkey")
   @@map("user_unlocks")
 }
+
 model UserCharacters {
   id           Int          @id @default(autoincrement()) @db.UnsignedInt
   user_id      Int          @db.UnsignedInt
@@ -93,26 +91,25 @@ model UserCharacters {
 
   @@map("user_characters")
 }
-model User {
-  id                      Int           @id @default(autoincrement()) @db.UnsignedInt
-  username                String        @unique
-  email                   String        @unique
-  user_key                String        @db.VarChar(255)
-  activation_key          String?       @db.VarChar(255)
-  reset_password_key      String?       @db.VarChar(255)
-  active                  Boolean       @default(false)
-  currency                Int           @default(100)
-  level                   Int           @default(1)
-  created_at              DateTime      @db.DateTime
-  activated_at            DateTime?     @db.DateTime
-  avatar_url              String?       @db.VarChar(255)
 
-  characters              UserCharacters[]
-  user_power              UserPower     @default(Regular)
-  session                 UserSession[]
-  unlocks                 UserUnlocks[]
-  restrictions            UserRestriction[] @relation("RestrictedUser")
-  moderated_restrictions  UserRestriction[] @relation("ModeratorUser")
+model User {
+  id                  Int           @id @default(autoincrement()) @db.UnsignedInt
+  username            String        @unique
+  email               String        @unique
+  user_key            String        @db.VarChar(255)
+  activation_key      String?       @db.VarChar(255)
+  reset_password_key  String?       @db.VarChar(255)
+  active              Boolean       @default(false)
+  currency            Int           @default(100)
+  level               Int           @default(1)
+  created_at          DateTime      @db.DateTime
+  activated_at        DateTime?     @db.DateTime
+  avatar_url          String?       @db.VarChar(255)
+
+  characters         UserCharacters[]
+  user_power         UserPower     @default(Regular)
+  session            UserSession[]
+  unlocks            UserUnlocks[]
 
   @@index([email], map: "email")
   @@index([activation_key], map: "idx_activation")
@@ -133,9 +130,4 @@ enum UnlockTypes {
   Equipment
   Skill
   Story
-}
-
-enum RestrictionTypes {
-  BAN
-  SUSPENSION
 }

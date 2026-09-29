@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { userSessionModel } from "../models/UserSession";
 
-const auth: RequestHandler = async (req, res, next) => {
+export const auth: RequestHandler = async (req, res, next) => {
     try {
         const token = req.cookies.session_token;
     
@@ -20,7 +20,5 @@ const auth: RequestHandler = async (req, res, next) => {
         next();
     } catch(err) {
         return res.status(500).json({message: "Erro no servidor."});
-    };
-};
-
-export default auth;
+    }
+}

@@ -32,10 +32,10 @@ class AuthController {
             return res.status(200).json({user: result.user, message: "Login realizado com sucesso!"});
         } catch(err: any) {
             if(err.type === "validation") {
-                return res.status(400).json({message: "Erros de validação", errors: err.errors});
+                return res.status(400).json({errors: err.errors});
             } 
             
-            return res.status(400).json({message: "Erro desconhecido."});
+            return res.status(400).json({errors: "Erro desconhecido."});
         }
     }
 

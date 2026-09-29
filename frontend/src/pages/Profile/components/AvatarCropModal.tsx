@@ -1,7 +1,7 @@
 import { Button, Modal, Slider } from "antd";
 import { useEffect, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
-import { getCroppedImg } from "@/utils/cropImage";
+import { getCroppedImg } from "../utils/cropImage";
 import { PictureFilled } from "@ant-design/icons";
 import styles from "../Profile.module.css";
 
@@ -55,7 +55,7 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
 
     return (
         <Modal 
-            wrapClassName={`modal-default`}
+            className={`${styles["crop-modal"]}`} 
             title="Editar imagem" 
             open={open} 
             onCancel={handleCancel} 
@@ -93,8 +93,8 @@ const AvatarCropModal = ({ open, onClose, onApply, image }: AvatarCropModalProps
                     <PictureFilled style={{color: "#C1C1C1", fontSize: "25px"}} />
                 </div>
                 <div className={`${styles['bottom-crop-modal']}`}>
-                    <Button type="primary" className={`btn-default cancel-btn`} onClick={handleCancel}>Cancelar</Button>
-                    <Button type="primary" className={`btn-default primary-btn`} onClick={handleConfirm}>Aplicar</Button>
+                    <Button className={`${styles["cancel-btn"]}`} onClick={handleCancel}>Cancelar</Button>
+                    <Button className={`${styles["apply-btn"]}`} onClick={handleConfirm}>Aplicar</Button>
                 </div>
             </>
         </Modal>

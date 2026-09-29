@@ -1,5 +1,5 @@
 # Logs
-logs/
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,20 +7,15 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependências
-node_modules/
-
-# Build
-dist/
-dist-ssr/
-
-# Arquivos locais
+node_modules
+dist
+dist-ssr
 *.local
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea/
+.idea
 .DS_Store
 *.suo
 *.ntvs*
@@ -30,14 +25,7 @@ dist-ssr/
 
 # Variáveis de ambiente
 .env
-.env.*
-!.env.example
-
-# Assets gerados/localmente
-public/assets/images/cards/*
-public/assets/images/animes/*
-
-!public/assets/images/cards/
-!public/assets/images/cards/background/
-!public/assets/images/cards/background/**
-!public/assets/images/animes/.gitkeep
+.env.local
+.env.development
+.env.production
+.env.test

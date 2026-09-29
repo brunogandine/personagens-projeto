@@ -4,9 +4,9 @@ import styles from './Header.module.css'
 
 function HeaderPublic() {
     return (
-        <header id="nav-header" className={`${styles["nav-header"]}`}>
-            <div id="nav-container" className={`${styles["nav-container"]}`}>
-                <div className={`${styles["no-auth-container"]}`}>
+        <header id={styles["header-nav"]}>
+            <div id={styles["header-container"]}>
+                <div id={styles["main-header"]}>
                     <Avatar className={styles["user-pic"]} icon={<UserOutlined />}/>
                     <div className={styles["user-name"]}>
                             <p>Entre ou Cadastre-se</p>

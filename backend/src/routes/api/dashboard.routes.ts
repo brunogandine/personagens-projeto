@@ -1,10 +1,9 @@
 import { Router } from "express";
-import Authenticate from "@/middlewares/auth";
-import DashboardController from "@/controllers/dashboard.controller";
-import AuthorizeUser from "@/middlewares/authorize";
+import { auth } from "../../middlewares/auth";
+import DashboardController from "../../controllers/dashboard.controller";
 
 const router = Router();
 
-router.get("/stats", Authenticate, AuthorizeUser("Admin"), DashboardController.getStats);
+router.get("/stats", auth, DashboardController.getStats);
 
 export default router;
