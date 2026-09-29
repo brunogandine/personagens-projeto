@@ -1,7 +1,7 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import type { EditCharacterData, GetCharactersParams } from "../types/character.types";
-import type { CreateCharacterSchema, UpdateCharacterSchema } from "@/validations/character.validations";
+import type { UpdateCharacterData, GetCharactersParams } from "../types/character.types";
+import type { CreateCharacterSchema } from "@/validations/character.validations";
 
 
 class CharacterModel {
@@ -11,7 +11,7 @@ class CharacterModel {
         });
     }
 
-    update = async (id: number, data: EditCharacterData) => {
+    update = async (id: number, data: UpdateCharacterData) => {
         const normalizeData = Object.fromEntries(
             Object.entries(data).filter(([, value]) => value !== undefined)
         );
@@ -22,7 +22,7 @@ class CharacterModel {
         });
     };
 
-    softDeleteCharacter = async (ids: number[]) => {
+    softDelete = async (ids: number[]) => {
         return prisma.character.updateMany({
             where: {
                 id: {
@@ -35,7 +35,7 @@ class CharacterModel {
         });
     };
 
-    restoreCharacter = async (ids: number[]) => {
+    restore = async (ids: number[]) => {
         return prisma.character.updateMany({
             where: {
                 id: {
@@ -94,6 +94,18 @@ class CharacterModel {
             take: PER_PAGE,
             orderBy: {
                 id: "asc"
+            },
+            select: {
+                id: true,
+                anime_id: true,
+                name: true,
+                active: true,
+                deleted_at: true,
+                anime: {
+                    select: {
+                        deleted_at: true
+                    }
+                }
             }
         });
 

@@ -53,7 +53,7 @@ export type CreateCharacterPayload = {
     }
 };
 
-export type EditCharacterPayload = {
+export type UpdateCharacterPayload = {
     id: number;
     data: UpdateCharacterSchema
     artwork?: {
@@ -66,7 +66,7 @@ export type EditCharacterPayload = {
     }
 };
 
-export type EditCharacterData = {
+export type UpdateCharacterData = {
     anime_id?: number | undefined;
     name?: string | undefined;
     description?: string | undefined;

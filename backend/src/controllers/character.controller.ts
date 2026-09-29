@@ -1,8 +1,7 @@
-import { RequestHandler } from "express";
 import CharacterService from "../services/character.service";
+import { RequestHandler } from "express";
 import { isAppError } from "@/utils/is-app-error.util";
 import { detectImageType } from "@/utils/detectImageType";
-import characterService from "../services/character.service";
 import { ZodError } from "zod";
 import { deleteCharacterSchema, restoreCharacterSchema } from "@/validations/character.validations";
 class CharacterController {
@@ -90,7 +89,7 @@ class CharacterController {
                 ),
             });
 
-            res.status(200).json(result);
+            return res.status(200).json(result);
         } catch(err) {
             if(isAppError(err)) {
                 if(err.type === "not_found") {
@@ -109,7 +108,7 @@ class CharacterController {
         try {
             const data = deleteCharacterSchema.parse(req.body);
 
-            const result = await characterService.softDeleteCharacter({
+            const result = await CharacterService.softDeleteCharacter({
                 data: {
                     ids: data.ids
                 }
@@ -142,7 +141,7 @@ class CharacterController {
         try {
             const data = restoreCharacterSchema.parse(req.body);
 
-            const result = await characterService.restoreCharacter({
+            const result = await CharacterService.restoreCharacter({
                 data: {
                     ids: data.ids
                 }
@@ -190,7 +189,7 @@ class CharacterController {
 
     getById: RequestHandler = async (req, res) => {
         try {
-          const result = await characterService.getCharacterById(Number(req.params.id));
+          const result = await CharacterService.getCharacterById(Number(req.params.id));
 
           return res.status(200).json(result);
         } catch(err) {

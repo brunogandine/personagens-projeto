@@ -3,7 +3,7 @@ import ContentItem from "@/pages/Dashboard/components/ContentDashboard/ContentIt
 import { Button, Input, Modal } from "antd";
 import { WarningFilled } from "@ant-design/icons";
 import { useState } from "react";
-import type { CharacterDelete } from "../../../types/content.types";
+import type { CharacterDelete } from "../../../../types/content.types";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import { Request } from "@/services/apiClient";
 
@@ -12,11 +12,11 @@ type CharacterDeleteProps = {
     onClose: () => void;
     hide: () =>  void;
     reopen: () => void;
-    onSuccess: () => void;
+    onSuccessCallback: () => void;
     selectedCharacters: CharacterDelete[] | null;
 }
 
-const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selectedCharacters}: CharacterDeleteProps) => {
+const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccessCallback, selectedCharacters}: CharacterDeleteProps) => {
     const [step, setStep] = useState<"warning" | "confirmation">("warning");
     const [confirmationText, setConfirmationText] = useState("");
 
@@ -69,7 +69,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -82,7 +82,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -95,7 +95,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -109,7 +109,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
                         description: res.data.message,
                         instructions: "Tente novamente mais tarde."
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -122,7 +122,7 @@ const CharacterSoftDeleteModal = ({open, onClose, hide, reopen, onSuccess, selec
             text: res.data.message, 
         });
 
-        onSuccess();
+        onSuccessCallback();
         handleClose();
     };
 

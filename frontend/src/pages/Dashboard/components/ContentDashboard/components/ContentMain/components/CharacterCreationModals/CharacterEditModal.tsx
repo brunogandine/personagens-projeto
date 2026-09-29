@@ -9,6 +9,7 @@ import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import { validateImageFile } from "@/helpers/validateImageFile";
 import { Request } from "@/services/apiClient";
 import type { CharacterEdit } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
+import type { ContentImageCacheKey } from "@/pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
@@ -24,8 +25,8 @@ type CharacterEditModalProps = {
     }[]
     toggleBoolean: (setState: React.Dispatch<React.SetStateAction<boolean>>) => void;
     imageCacheVersion: number | null;
-    onChangeImage: (characterId: number) => void;
-    onSuccess: () => void;
+    onChangeImage: (key: ContentImageCacheKey) => void;
+    onSuccessCallback: () => void;
 };
 
 type CropAspectOptions = {
@@ -39,7 +40,7 @@ type CropTarget = {
     options: CropAspectOptions;
 }
 
-const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean, imageCacheVersion, onChangeImage, onSuccess }:  CharacterEditModalProps) => {
+const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean, imageCacheVersion, onChangeImage, onSuccessCallback }:  CharacterEditModalProps) => {
     const { showToast, showMessageModal } = useMessageModal();
 
     const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
@@ -68,8 +69,8 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
     const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingDescription, setIsEditingDescription] = useState(false);
 
-    const editNameRef = useRef<HTMLDivElement>(null);
-    const descriptionRef = useRef<HTMLDivElement>(null);
+    const editNameRef = useRef<HTMLDivElement | null>(null);
+    const descriptionRef = useRef<HTMLDivElement | null>(null);
     const fileInputRefArtwork = useRef<HTMLInputElement | null>(null);
     const fileInputRefThumbnail = useRef<HTMLInputElement | null>(null);
 
@@ -78,7 +79,6 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         setSelectedAnimeId(character.anime.id);
         setIsActive(character.active);
         setIsLock(character.lock);
-        
     }, [character]);
 
     useEffect(() => {
@@ -119,8 +119,9 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         if(!file)
             return;
 
-        if(!ALLOWED_TYPES.includes(file.type))
+        if(!ALLOWED_TYPES.includes(file.type)) {
             return;
+        }
 
         if(file.size > MAX_FILE_SIZE)
             return;
@@ -311,6 +312,12 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
     };
 
     const handleCancelEditDescription = () => {
+        if(descriptionRef.current)
+            descriptionRef.current.innerText =
+                editedDescription !== null
+                    ? editedDescription
+                    : character.description ?? "";
+
         setIsEditingDescription(false);
     };
 
@@ -418,19 +425,16 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         if(isEditingDescription)
             return showToast({
                 type: "warning",
-                text: "Há uma edição em andamento na descrição de personagem. Confirme ou Cancele antes de aplicar alterações no personagem."
+                text: "Há uma edição em andamento na descrição do personagem. Confirme ou Cancele antes de aplicar as alterações."
             });
 
         const payload = buildEditPayload();
 
-        if(payload === null) {
-            showToast({
+        if(payload === null) 
+            return showToast({
                 type: "error",
-                text: "Nenhuma alteração foi feita no personagem."
+                text: "Nenhuma alteração foi feita."
             });
-
-            return;
-        };
 
         const imageChanged = 
             artworkBlob !== null ||
@@ -484,12 +488,12 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
         };
 
         if(imageChanged)
-            onChangeImage(character.id);
+            onChangeImage(`character:${character.id}`);
 
         showToast({type: "success", text: res.data.message, });
 
         resetStates();
-        onSuccess();
+        onSuccessCallback();
         onClose();
     };
 

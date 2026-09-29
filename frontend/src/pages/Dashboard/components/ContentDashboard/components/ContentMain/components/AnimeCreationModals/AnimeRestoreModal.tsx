@@ -2,23 +2,23 @@ import styles from "@/pages/Dashboard/components/ContentDashboard/ContentDashboa
 import ContentItem from "@/pages/Dashboard/components/ContentDashboard/ContentItem";
 import { Button, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import type { CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import { Request } from "@/services/apiClient";
+import type { AnimeRestore } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 
-type RestoreCharacterProps = {
+type RestoreAnimeProps = {
     open: boolean;
     onClose: () => void;
     hide: () =>  void;
     reopen: () => void;
-    onSuccess: () => void;
-    selectedCharacters: CharacterRestore[] | null;
+    onSuccessCallback: () => void;
+    selectedAnimes: AnimeRestore[] | null;
 }
 
-const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selectedCharacters}: RestoreCharacterProps) => {
+const AnimeRestoreModal = ({open, onClose, hide, reopen, onSuccessCallback, selectedAnimes}: RestoreAnimeProps) => {
     const { showToast, showMessageModal } = useMessageModal();
 
-    if(!selectedCharacters)
+    if(!selectedAnimes)
         return;
 
     const handleClose = () => {
@@ -26,9 +26,9 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
     };
 
     const handleConfirm = async () => {
-        const ids = selectedCharacters.map((c) => c.id);
+        const ids = selectedAnimes.map((a) => a.id);
 
-        const res = await Request.patch("/characters/restore", {
+        const res = await Request.patch("/animes/restore", {
             ids
         });
 
@@ -39,7 +39,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -52,7 +52,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -65,7 +65,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         type: "error",
                         description: res.data.message
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -79,7 +79,7 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
                         description: res.data.message,
                         instructions: "Tente novamente mais tarde."
                     },
-                    closePreviousModal: hide,
+                    hidePreviousModal: hide,
                     reopenPreviousModal: reopen
                 });
 
@@ -92,28 +92,28 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
             text: res.data.message, 
         });
 
-        onSuccess();
+        onSuccessCallback();
         handleClose();
     };
 
     return (
         <Modal
             wrapClassName={`modal-default`}
-            title={"Restaurar Personagem"}
+            title={"Restaurar Anime"}
             width={"850px"}
             open={open}
             onCancel={handleClose}
             footer
         >
-            <div className={`${styles["restore-character-modal-content"]}`}>
-                <div className={`${styles["restore-character-warning"]}`} >
+            <div className={`${styles["restore-anime-modal-content"]}`}>
+                <div className={`${styles["restore-anime-warning"]}`} >
                     <span style={{color: "var(--yellow-300)"}}>
                         <ExclamationCircleFilled /> Você está tentando deletar os seguintes personagens:
                     </span>
                 </div>
                 <div className={`${styles["restore-character-selected"]}`} >
-                    {selectedCharacters.map((character) => (
-                        <ContentItem key={character.id} item={character} type={"character"} hoverable={false} />
+                    {selectedAnimes.map((a) => (
+                        <ContentItem key={a.id} item={a} type={"anime"} hoverable={false} />
                     ))}
                 </div>
                 <div className={`modal-options`} >
@@ -125,4 +125,4 @@ const CharacterRestoreModal = ({open, onClose, hide, reopen, onSuccess, selected
     )
 };
 
-export default CharacterRestoreModal;
+export default AnimeRestoreModal;

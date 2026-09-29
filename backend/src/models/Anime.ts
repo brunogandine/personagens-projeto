@@ -1,23 +1,75 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import { CreateAnimeData, GetAnimeParams } from "../types/anime.types";
+import { GetAnimeParams, UpdateAnimeData } from "@/types/anime.types";
+import { CreateAnimeSchema } from "@/validations/anime.validations";
 
 class AnimeModel {
-    create = async (data: CreateAnimeData) => {
+    create = async (data: CreateAnimeSchema) => {
         return prisma.anime.create({
             data: {
                 active: data.active,
                 name: data.name,
-                description: data.description
+                description: data.description ?? null
             }
         })
     }
+
+    update = async (id: number, data: UpdateAnimeData) => {
+        const normalizeData = Object.fromEntries(
+            Object.entries(data).filter(([, value]) => value !== undefined)
+        );
+
+        return prisma.anime.update({
+            where: { id },
+            data: normalizeData
+        });
+    };
+
+    softDelete = async (ids: number[]) => {
+        return prisma.anime.updateMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            data: {
+                deleted_at: new Date()
+            }
+        });
+    };
+
+    restore = async (ids: number[]) => {
+        return prisma.anime.updateMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            data: {
+                deleted_at: null
+            }
+        });
+    };
 
     findById = async (id: number) => {
         return prisma.anime.findUnique({
             where: { id }
         });
-    }
+    };
+
+    findManyByIds = async (ids: number[]) => {
+        return prisma.anime.findMany({
+            where: { 
+                id: {
+                    in: ids
+                }
+            },
+            select: {
+                id: true,
+                deleted_at: true
+            }
+        });
+    };
 
     findByName = async (name: string) => {
         return prisma.anime.findFirst({
@@ -25,7 +77,7 @@ class AnimeModel {
                 name
             }
         })
-    }
+    };
 
     getAnimes = async ({
         page = 1,

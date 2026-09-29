@@ -18,13 +18,13 @@ type ToastData = {
 
 type MessageModalContextType = {
     showToast: (data: ToastData) => void;
-    showMessageModal: ({data, closePreviousModal, reopenPreviousModal}: showMessageModalProps) => void;
+    showMessageModal: ({data, hidePreviousModal, reopenPreviousModal}: showMessageModalProps) => void;
     closeMessageModal: () => void;
 };
 
 type showMessageModalProps = {
     data: MessageModalData
-    closePreviousModal?: () => void;
+    hidePreviousModal?: () => void;
     reopenPreviousModal?: () => void; 
 }
 
@@ -39,9 +39,9 @@ export const MessageModalContextProvider = ({ children }: { children: React.Reac
         message[data.type](data.text, 5);
     }
 
-    const showMessageModal = ({data, closePreviousModal, reopenPreviousModal}: showMessageModalProps) => {
-        if(closePreviousModal) {
-            closePreviousModal();
+    const showMessageModal = ({data, hidePreviousModal, reopenPreviousModal}: showMessageModalProps) => {
+        if(hidePreviousModal) {
+            hidePreviousModal();
         };
 
         if(reopenPreviousModal) {

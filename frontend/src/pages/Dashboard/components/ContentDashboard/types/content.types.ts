@@ -3,7 +3,10 @@ export type CharacterItem = {
     anime_id: number;
     name: string;
     active: boolean;
-    deleted_at: Date;
+    deleted_at: Date | null;
+    anime: {
+        deleted_at: Date | null
+    }
 };
 
 export type AnimeItem = {
@@ -21,12 +24,21 @@ export type AnimeContentItem = {
     deleted_at: Date;
 };
 
-export type CharacterContentItem = {
+export type AnimeEdit = {
     id: number;
-    anime_id: number;
     name: string;
+    description?: string;
     active: boolean;
-    deleted_at: Date;
+};
+
+export type AnimeDelete = {
+    id: number;
+    name: string;
+};
+
+export type AnimeRestore = {
+    id: number;
+    name: string;
 };
 
 export type CharacterPreview = {
@@ -58,8 +70,6 @@ export type CharacterEdit = {
     };
     active: boolean;
     lock: boolean;
-    artwork: string;
-    thumbnail: string;
 };
 
 export type CharacterDelete = {
