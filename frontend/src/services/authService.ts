@@ -1,12 +1,19 @@
-export const getMe = async () => {
-  const res = await fetch("http://localhost:3000/api/auth/me", {
-    credentials: "include"
-  })
+import type { AuthUser } from "@/types/AuthUser";
+import { Request } from "./apiClient";
 
-  if(!res.ok)
-    return { success: false }
+type GetMeResponse = 
+  | { success: true, user: AuthUser }
+  | { success: false }
 
-  const data = await res.json();
-  
-  return { success: true, user: data.user };
+export const getMe = async (): Promise<GetMeResponse> => {
+  try {
+    const res = await Request.get<{user: AuthUser}>(`/auth/me`);
+
+    if(!res?.ok)
+      return { success: false };
+    
+    return { success: true, user: res.data.user };
+  }catch(err) {
+    return { success: false };
+  }
 }

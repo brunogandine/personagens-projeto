@@ -11,7 +11,7 @@ class DashboardService {
             userModel.getRecentUsers(5)
         ]);
 
-        return { 
+        return {        
             totals: { 
                 usersCount, 
                 charactersCount, 

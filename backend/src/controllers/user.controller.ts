@@ -1,10 +1,29 @@
 import { RequestHandler } from "express";
 import UserService from "../services/user.service";
 import { fileTypeFromBuffer } from "file-type";
-import { validMimeTypes } from "../middlewares/upload-avatar";
+import { ALLOWED_PROFILE_IMAGES_TYPES } from "@/middlewares/upload/uploadTypes";
 import userService from "../services/user.service";
+import { detectImageType } from "@/utils/detectImageType";
 
 class UserController {
+    getUsers: RequestHandler = async (req, res) => {
+        try {
+            const { page, limit, search, sortBy, order } = req.query;
+
+            const result = await userService.getUsers({
+                page: Number(page),
+                limit: Number(limit),
+                search: search as string,
+                sortBy: sortBy as string,
+                order: order as "asc" | "desc"
+            });
+
+            return res.json(result);
+        } catch(err) {
+            return res.status(500).json({message: "Erro Interno."})
+        }
+    }
+
     getCounts: RequestHandler = async (req, res) => {
         try {
             const count = await UserService.getUsersCount();
@@ -35,9 +54,9 @@ class UserController {
                     message: `Nenhuma imagem enviada.`
                 });
 
-            const detectType = await fileTypeFromBuffer(req.file.buffer);
+            const detectType = await detectImageType(req.file.buffer);
 
-            if(!detectType || !validMimeTypes.includes(detectType.mime))
+            if(!detectType)
                 return res.status(400).json({
                     message: `Tipo do Arquivo inválido.`
                 });
@@ -45,7 +64,7 @@ class UserController {
             const updatedUser = await UserService.updateAvatar({
                 userId,
                 buffer: req.file.buffer,
-                extension: detectType.ext,
+                extension: detectType,
                 source: req.body.source,
             });
 
