@@ -1,19 +1,23 @@
-import { Request } from "./apiClient"
-
 export const getUsersCount = async () => {
-    const res = await Request.get(`/users/counts`);
+    const res = await fetch("http://localhost:3000/api/users/counts", {
+        credentials: "include",
+    })
 
-    if(!res || !res.ok)
-        return { success: false };
+    if(!res.ok) return null
 
-    return res.data.count
+    const data = await res.json()
+
+    return data.count
 }
 
 export const getCharactersCount = async () => {
-    const res = await Request.get(`/characters/counts`);
+    const res = await fetch("http://localhost:3000/api/characters/counts", {
+        credentials: "include",
+    })
 
-    if(!res || !res.ok)
-        return { success: false };
+    if(!res.ok) return null;
 
-    return res.data.count;
+    const data = await res.json();
+
+    return data.count;
 }

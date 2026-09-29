@@ -1,36 +1,51 @@
-import Authenticate from '@/middlewares/auth';
-import AuthorizeUser from '@/middlewares/authorize';
-import ValidateRequest from '@/middlewares/validate';
-import CharacterController from '@/controllers/character.controller';
-import UploadImage from '@/middlewares/upload/uploadImage';
 import { Router } from 'express';
-import { createCharacterSchema, deleteCharacterSchema, restoreCharacterSchema, updateCharacterSchema } from '@/validations/character.validations';
-import { idParamsSchema } from "@/validations/common/common.validations";
+import { prisma } from '../../libs/prisma';
+import { auth } from '../../middlewares/auth';
+import { authorize } from '../../middlewares/authorize';
+import { validate } from '../../middlewares/validate';
+import CharacterController from '../../controllers/character.controller';
 
 const router = Router();
 
-router.get("/", Authenticate, CharacterController.getAll);
-router.get("/counts", Authenticate, CharacterController.getCounts);
-router.get("/:id", Authenticate, ValidateRequest(idParamsSchema, "params"), CharacterController.getById);
+router.get("/counts", auth, CharacterController.getCounts)
 
-router.post(
-    "/", 
-    Authenticate, 
-    AuthorizeUser("Admin"), 
-    UploadImage.fields([{name: "thumbnail", maxCount: 1}, {name: "artwork", maxCount: 1}]),
-    ValidateRequest(createCharacterSchema, "body"), 
-    CharacterController.createCharacter
-);
+// router.get("/", auth, CharacterController.getter, async (req, res) => {
+//     try {
+//         const list = await prisma.character.findMany();
 
-router.patch("/delete", Authenticate, AuthorizeUser("Admin"), ValidateRequest(deleteCharacterSchema, "body"), CharacterController.softDelete);
-router.patch("/restore", Authenticate, AuthorizeUser("Admin"), ValidateRequest(restoreCharacterSchema, "body"), CharacterController.restoreCharacter)
-router.patch(
-    "/:id", 
-    Authenticate, AuthorizeUser("Admin"), 
-    UploadImage.fields([{name: "thumbnail", maxCount: 1}, {name: "artwork", maxCount: 1}]), 
-    ValidateRequest(idParamsSchema, "params"), 
-    ValidateRequest(updateCharacterSchema, "body"), 
-    CharacterController.updateCharacter
-);
+//         return res.json(list);
+//     } catch (err) {
+//         return res.status(500).json({message: "Erro Interno."});
+//     }
+// })
+
+// router.post("/", auth, authorize("Admin"), validate(characterSchema), CharacterController.addNew, async (req, res) => {
+//     try{
+//         const data = req.body;
+
+//         const character = await prisma.character.create({
+//             data: {
+//                 anime_id: data.anime_id ?? 1,
+//                 active: data.active ?? 0,
+//                 attr_hp: data.attr_hp ?? 0,
+//                 attr_atk: data.attr_atk ?? 0,
+//                 attr_def: data.attr_def ?? 0,
+//                 description: {
+//                     create: {
+//                         name: data.name
+//                     }
+//                 }
+//             },
+//             include: {
+//                 description: true
+//             }
+//         })
+
+//         return res.status(201).json({success: "Personagem Criado com Sucesso", character})
+//     } catch(err) {
+//         console.error(err)
+//         return res.status(500).json({error: "Erro ao criar personagem."})
+//     }
+// })
 
 export default router;

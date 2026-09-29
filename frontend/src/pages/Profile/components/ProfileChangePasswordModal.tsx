@@ -2,12 +2,13 @@ import { Button, Input, Modal } from "antd";
 import styles from "../Profile.module.css"
 import { useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Request } from "@/services/apiClient";
 
 type ProfileChangePasswordProps = {
     open: boolean;
     onClose: () => void;
-};
+}
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProps) => {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -28,19 +29,27 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
         };
 
         try {
-            const res = await Request.patch(
-                `/users/me/password`,
-                payload
-            );
-
-            if(!res)
-                throw new Error(`Falha ao atualizar a senha.`)
+            const res = await fetch(`${BASE_URL}/api/users/me/password`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(payload)
+            });
 
             if(!res.ok) {
-                if (res.data.errors) {
+                if(res.status === 401) {
+                    alert("Sua sessão expirou. Faça login novamente.");
+                    window.location.href = "/";
+                }
+
+                const errorData = await res.json();
+
+                if (errorData.errors) {
                     const formattedErrors: Record<string, string> = {};
 
-                    res.data.errors.forEach((err: { field: string, message: string}) => {
+                    errorData.errors.forEach((err: { field: string, message: string}) => {
                         formattedErrors[err.field] = err.message;
                         
                         setErrors(formattedErrors);
@@ -50,8 +59,26 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
                 throw new Error("Erro ao atualizar a senha.")
             };
 
+            if(!res.ok) {
+                const errorData = await res.json();
+
+                if (errorData.errors) {
+                    const formattedErrors: Record<string, string> = {};
+
+                    errorData.errors.forEach((err: { field: string, message: string}) => {
+                        formattedErrors[err.field] = err.message;
+                        
+                        setErrors(formattedErrors);
+                    });
+                };
+
+                return;
+            };
+
+            const data = await res.json();
+
             setErrors({});
-            setSuccess(res.data);
+            setSuccess(data);
 
             setTimeout(() => {
                 setSuccess("");
@@ -82,7 +109,7 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
     return (
         <>
             <Modal 
-                wrapClassName={`modal-default`}
+                className={`${styles['changePass-modal']}`}
                 title="Atualize sua senha" 
                 open={open} 
                 closable 
@@ -114,8 +141,8 @@ const ProfileChangePasswordModal = ({ open, onClose }: ProfileChangePasswordProp
                         )}
                     </div>
                     <div className={`${styles["btn-wrapper"]}`}>
-                        <Button type="primary" className={`btn-default cancel-btn ${styles["avatar-btn"]}`} onClick={handleFormCancel}>Cancelar</Button>
-                        <Button type="primary" className={`btn-default primary-btn ${styles["avatar-btn"]}`} htmlType="submit" form={`change-password`}>Pronto</Button>
+                        <Button className={`${styles["cancel-btn"]}`} onClick={handleFormCancel}>Cancelar</Button>
+                        <Button className={`${styles["apply-btn"]}`} htmlType="submit" form={`change-password`}>Pronto</Button>
                     </div>
                 </div>
             </Modal>

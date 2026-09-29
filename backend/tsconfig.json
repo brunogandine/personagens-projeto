@@ -1,16 +1,9 @@
 {
-   // Visit https://aka.ms/tsconfig to read more about this file
+  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
     "rootDir": "./src",
-    // "outDir": "./dist",
-
-    // Path Aliases
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "ignoreDeprecations": "6.0",
+    // "outDir": "./public",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module

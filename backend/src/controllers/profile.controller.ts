@@ -4,7 +4,10 @@ import ProfileService from "../services/profile.service";
 class ProfileController {
     getStats: RequestHandler = async (req, res) => {
         try {
-            const userId = req.user!.id;
+            const userId = req.user?.id;
+
+            if(!userId)
+                return res.status(401).json({message: "Usuário não encontrado."})
 
             const stats = await ProfileService.getProfileStats(userId);
 
