@@ -1,7 +1,7 @@
+import styles from "./Home.module.css";
+import VerticalRuler from "@/components/Utils/VerticalRuler";
 import { useEffect, useState } from "react";
-import styles from "./Home.module.css"
 import { getCharactersCount, getUsersCount } from "../../services/statisticsService";
-import VerticalRuler from "../../components/Utils/VerticalRuler";
 
 const HomeLogged = () => {
     const [loading, setLoading] = useState(true);
@@ -10,9 +10,11 @@ const HomeLogged = () => {
 
     useEffect(() => {  
         const loadData = async () => {
-            try { const [users, characters] = await Promise.all([ 
-                getUsersCount(), 
-                getCharactersCount() ]) 
+            try { 
+                const [users, characters] = await Promise.all([ 
+                    getUsersCount(), 
+                    getCharactersCount() 
+                ]);
 
                 if(users !== null) setUsersValue(users); 
                 if(characters !== null) setCharactersValue(characters);
@@ -21,7 +23,7 @@ const HomeLogged = () => {
             }} 
 
             loadData(); 
-        }, [])
+        }, []);
 
     return (
         <div id={styles["home-content"]}>

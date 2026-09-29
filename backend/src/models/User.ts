@@ -1,6 +1,6 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-
+import { GetParams } from "../types/user.types";
 class UserModel {
     create = async (data: Prisma.UserCreateInput) => {
         return prisma.user.create({ data })
@@ -61,7 +61,7 @@ class UserModel {
                 user_power: "Admin"
             }
         });
-    }
+    };
 
     getRecentUsers = async (limit: number = 5) => {
         return prisma.user.findMany({
@@ -76,6 +76,45 @@ class UserModel {
                 },
                 take: limit
             })
+    };
+
+    getUsers = async ({ page = 1, limit = 50, search = "", sortBy = "created_at", order = "asc" }: GetParams) => {
+        const where: Prisma.UserWhereInput = search
+            ? {
+                OR: [{
+                    username: { contains: search },
+                    email: { contains: search }
+                }]
+            }
+            : {};
+
+        const users = await prisma.user.findMany({
+            where,
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                avatar_url: true,
+                active: true,
+                currency: true,
+                level: true,
+            },
+            orderBy: {
+                [sortBy]: order
+            },
+            skip: (page - 1) * limit,
+            take: limit,
+        });
+
+        const total = await prisma.user.count({where});
+        const totalPages = Math.ceil(total / limit);
+    
+        return {
+            data: users,
+            meta: {
+                totalPages
+            },
+        };
     }
 }
 
