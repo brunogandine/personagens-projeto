@@ -1,24 +1,26 @@
 # Dependências
 node_modules/
 
+# Build
+dist/
+
 # Variáveis de ambiente
 .env
-.env.local
-.env.development
-.env.production
-.env.test
+.env.*
+!.env.example
 
-# Prisma Client
-/src/generated/prisma/
+# Prisma Client gerado
+src/generated/prisma/
 
-# Logs do backend
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # Cache
-
 .cache/
+
+# Uploads
+uploads/

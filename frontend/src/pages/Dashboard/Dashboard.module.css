@@ -1,0 +1,132 @@
+.dashboard-variables {
+    --character-item-width: 275px;
+    --character-item-height: 325px;
+    --character-thumbnail-item-width: 160px;
+    --character-thumbnail-item-height: 145px;
+    --character-item-outline-width: 235px;
+    --character-item-outline-height: 287px;
+    --character-thumbnail-item-outline-width: 110px;
+    --character-thumbnail-item-outline-height: 110px;
+    --anime--item-width: 66px;
+    --anime--item-height: 65px;
+}
+
+.dashboard {
+    display: flex;
+    align-self: center;
+    background-color: #32323b;
+    width: 80vw;
+    height: 90vh;
+    border-radius: 10px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Dashboard Header CSS */
+
+.dashboard-header {
+    position: relative;
+    height: 45px;
+    border-bottom: 1px solid rgba(93, 93, 93, 0.17);
+}
+
+.dashboard-section-title {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 45px;
+    opacity: 0.5;
+    padding: 0 0 0 15px;
+}
+
+.avatar-pic {
+    background-color: #28282d;
+    width: 28px;
+    height: 28px;
+}
+
+.checkbox.all::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 30px;
+    width: 25px;
+    top: -10px;
+    left: -7px;
+    opacity: 0;
+    border-radius: 5px;
+    box-shadow: none;
+    transform: scale(0);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+    z-index: 3;
+}
+
+.checkbox.single::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    top: -7px;
+    left: -7px;
+    opacity: 0;
+    border-radius: 15px;
+    box-shadow: none;
+    transform: scale(0);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+    z-index: 3;
+}
+
+.checkbox.all:hover::before,
+.checkbox.single:hover::before {
+    background-color: #858585;
+    transform: scale(1);
+    opacity: 0.3;
+}
+
+.checkbox.all:focus::before {
+    background-color: rgba(133, 133, 133, 0.3);
+    box-shadow: 0 0 0 1px rgba(108, 108, 108);
+    opacity: 1;
+    transform: scale(1)
+}
+
+.checkbox.checked, .checkbox.mixed {
+    background-color: #8b8b8b;
+}
+
+/* Dashboard Pagination Generic */
+
+.users-pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: auto;
+}
+
+.btn-page {
+    background-color: #28282b;
+    appearance: none;
+    border: 1px solid #9191911f;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.btn-page-selected {
+    background-color: #1b1b1d;
+    font-weight: bold;
+    border: 1px solid #91919141;
+}
