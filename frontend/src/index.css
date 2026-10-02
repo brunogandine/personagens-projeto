@@ -2,6 +2,10 @@
     --bg-default: #28282D;
     --bg-secondary: #2c2c33;
     --bg-success: #113311;
+    --bg-toggle-active: #0066ff;
+    --bg-toggle-inactive: #48465D;
+
+    --outline-color-default: #53535f;
 
     --bg-modal: #25242E;
     --bg-modal-secondary: #E6E6E6;

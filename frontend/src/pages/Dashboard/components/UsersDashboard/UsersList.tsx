@@ -3,6 +3,7 @@ import { Avatar, Tooltip } from "antd";
 import { EditOutlined, StopFilled, UserOutlined } from "@ant-design/icons";
 import type { UserAdmin } from "@/types/user";
 import type { UserAction } from "@/types/userActions";
+import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -108,6 +109,7 @@ const UsersList = ({users, selectedUsers, setSelectedUsers, onAction}: Props) =>
                                 {users.length > 0 ? (users.map((user) => (
                                     <tr key={user.id}>
                                         <td>
+                                            <CheckboxComponent checked={selectedUsers.includes(user.id)} />
                                             <div
                                                 className={`${styles["checkbox"]} ${styles["single"]} ${selectedUsers.includes(user.id) ? styles["checked"] : ""}`}
                                                 role="checkbox"

@@ -1,10 +1,14 @@
 import path from "path";
 import ImageStorageService from "@/services/image-storage.service";
 import { animeModel } from "@/models/Anime";
-import { CreateAnimePayload, DeleteAnimePayload, RestoreAnimePayload, GetAnimeParams, UpdateAnimePayload } from "@/types/anime.types";
+import { CreateAnimePayload, DeleteAnimePayload, RestoreAnimePayload, UpdateAnimePayload, AnimeListFilters } from "@/types/anime.types";
+import type { GetAnimesQuerySchema } from "@/validations/anime.validations";
 
 const assetsDir = path.resolve(process.cwd(), process.env.FRONTEND_ASSETS_PATH!);
 const uploadDir =  path.resolve(process.cwd(), assetsDir, "images", "animes");
+
+const MAX_PER_PAGE = 50;
+const DEFAULT_PER_PAGE = 6;
 class AnimeService {
     async createAnime(payload: CreateAnimePayload) {
         const errors = [];
@@ -118,23 +122,49 @@ class AnimeService {
         return { message: "Animes restaurados com sucesso."};
     };
 
-    async getAnimes ({ page = 1, search = "" }: GetAnimeParams){
-        const MAX_PAGES = 100;
+    async getAnimes ({ status, deleted,search, page, perPage }: GetAnimesQuerySchema) {
+        const filters: AnimeListFilters = {
+            ...(status !== undefined && { status }),
+            ...(deleted !== undefined && { deleted }),
+            ...(search !== undefined && { search }),
+        };
 
-        const safePages = page > 0
-            ? Math.min(page, MAX_PAGES)
-            : 1;
+        const pagination = page !== undefined
+            ? {
+                page: Math.max(page, 1),
+                perPage: Math.min(
+                    Math.max(perPage ?? DEFAULT_PER_PAGE, 1),
+                    MAX_PER_PAGE
+                )
+            }
+            : undefined;
 
-        const result = await animeModel.getAnimes({
-            page: safePages,
-            search
+        const result = await animeModel.findMany({
+            filters,
+            orderBy: {
+                id: "asc"
+            },
+            ...(pagination !== undefined && { pagination })
         });
 
-        return result;
+        if(!pagination) {
+            return {
+                data: result
+            };
+        };
+
+        const total = await animeModel.count();
+
+        return {
+            data: result,
+            meta: {
+                totalPages: Math.ceil(total / pagination.perPage),
+            }
+        };
     };
 
     async getCounts() {
-        const totalAnimes = await animeModel.getCount();
+        const totalAnimes = await animeModel.count();
 
         return totalAnimes;
     };
