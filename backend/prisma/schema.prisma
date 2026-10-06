@@ -93,6 +93,7 @@ model UserCharacters {
 
   @@map("user_characters")
 }
+
 model User {
   id                      Int           @id @default(autoincrement()) @db.UnsignedInt
   username                String        @unique
@@ -122,6 +123,17 @@ model User {
   @@map("users")
 }
 
+model SystemSettings {
+    id          Int      @id @default(autoincrement())
+    setting_key String   @unique
+    data_type   SystemSettingsTypes
+    value       String?   @db.Text
+    description String?  @db.Text
+    updated_at  DateTime @updatedAt
+
+    @@map("system_settings")
+}
+
 enum UserPower {
   Regular
   Moderator
@@ -138,4 +150,10 @@ enum UnlockTypes {
 enum RestrictionTypes {
   BAN
   SUSPENSION
+}
+
+enum SystemSettingsTypes {
+  STRING
+  BOOLEAN
+  NUMBER
 }

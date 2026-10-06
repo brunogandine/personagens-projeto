@@ -65,6 +65,7 @@
 
 * {
     box-sizing: border-box;
+    scrollbar-gutter: stable;
 
     &::-webkit-scrollbar {
         opacity: 0;
