@@ -1,8 +1,60 @@
 import styles from "@/pages/Dashboard/components/SettingsDashboard/SettingsContainer.module.css";
-import { HddFilled, SettingFilled } from "@ant-design/icons";
 import MaintenanceSettings from "./MaintenanceSettings";
+import UnsavedChangesBar from "@/shared/components/UnsavedChangesBar/UnsavedChangesBar";
+import { HddFilled, SettingFilled } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
+import { Request } from "@/services/apiClient";
+import type { MaintenanceSettingsState } from "@/pages/Dashboard/components/SettingsDashboard/types/settings.types";
 
 const SettingsContent = () => {
+    const [originalSettings, setOriginalSettings] = useState<MaintenanceSettingsState>({enabled: false, message: ""});
+    const [maintenance, setMaintenance] = useState<MaintenanceSettingsState>({enabled: false, message: ""});
+    const [loading, setLoading] = useState(true);
+
+    const { showToast } = useMessageModal();
+
+    useEffect(() => {
+        const loadSettings = async () => {
+            const res = await Request.get("/settings/maintenance");
+
+            if(!res.ok) {
+                if(res.status === 500) {
+                    showToast({
+                        type: "error",
+                        text: "Erro ao carregar configurações de manutenção."
+                    });
+
+                    return;
+                };
+            };
+
+            const settings = {
+                enabled: res.data.enabled,
+                message: res.data.message
+            };
+
+            setOriginalSettings(settings);
+            setMaintenance(settings);
+            
+            setLoading(false);
+        };
+
+        loadSettings();
+    }, []);
+
+    const handleReset = () => {
+        setMaintenance(originalSettings);
+    };
+
+    const handleConfirm = () => {
+        console.log("oi");
+    };
+
+    const hasChanges = 
+        maintenance.enabled !== originalSettings.enabled ||
+        maintenance.message !== originalSettings.message
+
     return (
         <>
             <section className={`${styles["settings-header"]}`}>
@@ -23,11 +75,20 @@ const SettingsContent = () => {
                             </div>
                         </div>
                         <div className={`${styles["settings-section-items"]}`}>
-                            <MaintenanceSettings />
+                            <MaintenanceSettings 
+                                settings={maintenance}
+                                loading={loading}
+                                onChange={setMaintenance}
+                            />
                         </div>          
                     </section>
                 </section>
             </section>
+            <UnsavedChangesBar 
+                redefine={handleReset}
+                confirm={handleConfirm}
+                visible={hasChanges}
+            />
         </>
     );
 };

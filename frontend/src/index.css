@@ -34,22 +34,23 @@
     --red-800: #CA2222;
     --orange-100: #FFB380;
     --orange-300: #FF8C4D;
-    --orange-500: #FF6600;
+    --orange-500: #FF5F03;
     --orange-800: #CC5200;
     --blue-100: #6860ff;
     --blue-300: #3838ff;
     --blue-500: #0000FF;
     --blue-800: #000081;
-    --yellow-100: #fff7b0;
-    --yellow-300: #fff171;
-    --yellow-500: #ffe600;
-    --yellow-800: #d8b800;
+    --yellow-100: #FFF7b0;
+    --yellow-300: #FFF171;
+    --yellow-500: #FFE600;
+    --yellow-800: #D8B800;
+    --gold-500: #E4AF00;
     --gray-50: #C1C1C1;
     --gray-100: #888888;
     --gray-300: #818181;
     --gray-500: #4d4d4d;
-    --green-100: #9ef59e;
-    --green-300: #54c454;
+    --green-100: #9EF59E;
+    --green-300: #54C454;
 
     --character-item-width: 275px;
     --character-item-height: 325px;
@@ -119,24 +120,6 @@ img {
     max-width: 1280px;
     min-height: 0;
     margin: auto;
-}
-
-/*Some colors*/
-
-.green {
-    color: #009400;
-}
-
-.lightGreen {
-    color: #77EB77
-}
-
-.orange {
-    color: #FF5F03;
-}
-
-.gold {
-    color: #E4AF00;
 }
 
 .vertical-ruler {
