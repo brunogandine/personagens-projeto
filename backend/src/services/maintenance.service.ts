@@ -12,7 +12,7 @@ class MaintenanceService {
     ) {}
 
     getSettings = async () => {
-        const settings = await this.systemSettings.findByPrefix("maintenances.");
+        const settings = await this.systemSettings.findByPrefix("maintenance.");
 
         console.log(settings)
 
