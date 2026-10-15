@@ -127,7 +127,7 @@ model SystemSettings {
     id          Int      @id @default(autoincrement())
     setting_key String   @unique
     data_type   SystemSettingsTypes
-    value       String?   @db.Text
+    value       String   @db.Text
     description String?  @db.Text
     updated_at  DateTime @updatedAt
 

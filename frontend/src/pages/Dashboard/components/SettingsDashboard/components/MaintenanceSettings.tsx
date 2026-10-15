@@ -12,9 +12,10 @@ type MaintenanceSettingsProps = {
     settings: MaintenanceSettingsState;
     onOriginalChange: (settings: MaintenanceSettingsState) => void;
     onChange: (settings: MaintenanceSettingsState) => void;
+    onFail: (message: string) => void;
 }
 
-const MaintenanceSettings = ({settings, onOriginalChange, onChange}: MaintenanceSettingsProps) => {
+const MaintenanceSettings = ({settings, onOriginalChange, onChange, onFail}: MaintenanceSettingsProps) => {
     const [loading, setLoading] = useState(true);
 
     const messageMaxLength = 200;
@@ -23,6 +24,24 @@ const MaintenanceSettings = ({settings, onOriginalChange, onChange}: Maintenance
     useEffect(() => {
         const loadSettings = async () => {
             const res = await Request.get("/settings/maintenance");
+
+            if(!res.ok) {
+                if(res.status === 404) {
+                    onFail("Não foram encontradas configurações no banco relacionadas a Manutenção.");
+
+                    setLoading(false);
+
+                    return;
+                };
+
+                if(res.status === 500) {
+                    onFail("Não foi possível obter as configurações. Provavelmente foi um erro interno.");
+
+                    setLoading(false);
+
+                    return;
+                };
+            };
 
             const settings = {
                 enabled: res.data.enabled ?? null,

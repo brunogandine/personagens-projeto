@@ -12,9 +12,11 @@ class MaintenanceService {
     ) {}
 
     getSettings = async () => {
-        const settings = await this.systemSettings.findByPrefix("maintenance.");
+        const settings = await this.systemSettings.findByPrefix("maintenances.");
 
-        if(!settings) {
+        console.log(settings)
+
+        if(settings.length === 0) {
             throw { type: "not_found", message: "Uma ou mais configurações não existem na base de dados."}
         };
 

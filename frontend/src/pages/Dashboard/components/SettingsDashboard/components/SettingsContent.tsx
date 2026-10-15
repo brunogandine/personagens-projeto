@@ -187,6 +187,13 @@ const SettingsContent = () => {
         })
     };
 
+    const handleOnGetFailure = (message: string) => {
+        showToast({
+            type: "error",
+            text: message
+        });
+    };
+
     const hasChanges = 
         maintenance.enabled !== originalMaintenance.enabled ||
         maintenance.message !== originalMaintenance.message
@@ -215,6 +222,7 @@ const SettingsContent = () => {
                                 settings={maintenance}
                                 onOriginalChange={setOriginalMaintenance}
                                 onChange={setMaintenance}
+                                onFail={handleOnGetFailure}
                             />
                         </div>          
                     </section>
