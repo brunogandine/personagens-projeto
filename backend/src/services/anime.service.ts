@@ -22,8 +22,6 @@ class AnimeService {
 
         const animeDir = path.resolve(uploadDir, `${anime.id}`);
 
-        console.log(payload);
-
         if(payload.symbol) {
             const symbolDir = path.resolve(animeDir, `symbol.${payload.symbol.ext}`);
 

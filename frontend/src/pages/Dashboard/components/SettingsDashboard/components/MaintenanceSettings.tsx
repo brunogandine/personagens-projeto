@@ -5,16 +5,38 @@ import SettingsItemInfo from "./SettingsItemInfo";
 import { InfoCircleFilled, NotificationFilled, ToolFilled } from "@ant-design/icons";
 import { Switch } from "antd";
 import type { MaintenanceSettingsState } from "@/pages/Dashboard/components/SettingsDashboard/types/settings.types";
+import { Request } from "@/services/apiClient";
+import { useEffect, useState } from "react";
 
 type MaintenanceSettingsProps = {
     settings: MaintenanceSettingsState;
-    loading: boolean;
+    onOriginalChange: (settings: MaintenanceSettingsState) => void;
     onChange: (settings: MaintenanceSettingsState) => void;
 }
 
-const MaintenanceSettings = ({settings, loading, onChange}: MaintenanceSettingsProps) => {
+const MaintenanceSettings = ({settings, onOriginalChange, onChange}: MaintenanceSettingsProps) => {
+    const [loading, setLoading] = useState(true);
+
     const messageMaxLength = 200;
-    const messageLength = settings.message.length;
+    const messageLength = settings.message?.length;
+
+    useEffect(() => {
+        const loadSettings = async () => {
+            const res = await Request.get("/settings/maintenance");
+
+            const settings = {
+                enabled: res.data.enabled ?? null,
+                message: res.data.message ?? null
+            };
+
+            onOriginalChange(settings);
+            onChange(settings);
+
+            setLoading(false);
+        };
+
+        loadSettings();
+    }, []);
 
     return (
         <>
@@ -33,18 +55,25 @@ const MaintenanceSettings = ({settings, loading, onChange}: MaintenanceSettingsP
             >
                 <SettingsItem 
                     icon={<ToolFilled />}
+                    className={settings.enabled !== null ? "" : loading ? "" : `${styles["disabled-overlay"]}`}
                     title={`Modo de Manutenção`}
                     description={`Impede o acesso ao sistema enquanto estiver ativado.`}
 
                 >
                     <Switch 
-                        checked={settings.enabled} 
+                        checked={settings.enabled ?? false} 
                         loading={loading} 
-                        onChange={(enabled) => { onChange({
+                        onChange={(enabled) => { 
+                                if(settings.enabled === null) {
+                                    return;
+                                }
+
+                                onChange({
                                     ...settings, 
                                     enabled 
-                                })}
-                            } 
+                                })
+                            }
+                        } 
                         />
                     <span className={`${styles["settings-item-toggle-info"]}`} style={{backgroundColor: `${settings.enabled ? 'var(--bg-toggle-active)' : 'var(--bg-toggle-inactive)'}`}}>
                         {settings.enabled ? "Ativado" : "Desativado"}
@@ -54,21 +83,27 @@ const MaintenanceSettings = ({settings, loading, onChange}: MaintenanceSettingsP
                     icon={<NotificationFilled />}
                     title={`Mensagem de Manutenção`}
                     description={`Mensagem exibida aos usuários durante a manutenção.`}
-                    className={styles["flex-column"]}
+                    className={`${styles["flex-column"]} ${settings.message !== null ? "" : loading ? "" : `${styles["disabled-overlay"]}`}`}
                 >
                     <textarea 
                         name="maintenance-message" 
                         className={`input-text-default`} 
                         placeholder="Digite a mensagem de manutenção..." 
-                        value={settings.message} 
-                        onChange={(e) => {onChange({
-                            ...settings,
-                            message: e.target.value
-                        })}} 
+                        value={settings.message ?? ""} 
+                        onChange={(e) => {
+                            if(settings.message === null)
+                                return;
+
+                            onChange({
+                                ...settings,
+                                message: e.target.value
+                            })
+                        }
+                    } 
                     />
                     <span 
                         style={{alignSelf: "flex-end", fontSize: "12px", opacity: "0",  transition: "opacity 0.2s ease, color 0.2s ease"}} 
-                        className={`${messageLength > 75 ? "visible" : ""} ${messageLength >= messageMaxLength ? "error-color" : messageLength >= 150 ? "warning-color" : ""}`} >
+                        className={`${messageLength !== undefined ? messageLength > 75 ? "visible" : "" : ""} ${messageLength !== undefined ? messageLength >= messageMaxLength ? "error-color" : messageLength >= 150 ? "warning-color" : "" : ""}`} >
                         {messageLength}/{messageMaxLength}
                     </span>
                 </SettingsItem>
