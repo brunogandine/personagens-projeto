@@ -32,7 +32,7 @@ const getSettingValue = (state: SettingsState, key: string): SettingValue | unde
         | Record<string, SettingValue>
         | undefined;
 
-    if(!groupState || Object.prototype.hasOwnProperty.call(groupState, cfg))
+    if(!groupState || !Object.prototype.hasOwnProperty.call(groupState, cfg))
         return undefined;
 
     return groupState[cfg];
@@ -48,7 +48,7 @@ const setSettingValue = (state: SettingsState, key: string, value: SettingValue)
         | Record<string, SettingValue>
         | undefined;
 
-    if(!groupState || Object.prototype.hasOwnProperty.call(groupState, cfg))
+    if(!groupState || !Object.prototype.hasOwnProperty.call(groupState, cfg))
         return state;
 
     return {
