@@ -1,14 +1,15 @@
 import styles from "@/shared/components/UnsavedChangesBar/UnsavedChangesBar.module.css";
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import { useEffect, useState } from "react";
 
 type Props = {
     redefine: () => void;
     confirm: () => void;
     visible: boolean;
+    isSaving: boolean
 };
 
-const UnsavedChangesBar = ({redefine, confirm, visible}: Props) => {
+const UnsavedChangesBar = ({redefine, confirm, visible, isSaving}: Props) => {
     const [mounted, setMounted] = useState(visible);
     const [shown, setShown] = useState(visible);
 
@@ -48,7 +49,10 @@ const UnsavedChangesBar = ({redefine, confirm, visible}: Props) => {
             </div>
             <div className={`${styles["bar-options"]}`}>
                 <Button type={`primary`} className={`btn-default cancel-btn`} onClick={redefine} >Redefinir</Button>
-                <Button type={`primary`} className={`btn-default primary-btn`} onClick={confirm} >Salvar</Button>
+                {isSaving
+                    ? (<Button type={`primary`} disabled={true} className={`btn-default primary-btn`}><Spin spinning={isSaving} /> Salvando...</Button>) 
+                    : (<Button type={`primary`} className={`btn-default primary-btn`} onClick={confirm} >Salvar</Button>)
+                }
             </div>
         </div>
     );

@@ -299,7 +299,7 @@ A implementação não precisa seguir toda a lista imediatamente.
 
 ### Próximo trabalho
 
-* [ ] Finalizar visualmente a categoria Sistema
+* [x] Finalizar visualmente a categoria Sistema
 * [ ] Avaliar/implementar **Avisos do Sistema**
 * [ ] Criar categoria **Sessões e Segurança**
 * [ ] Implementar sliding session

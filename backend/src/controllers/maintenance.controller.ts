@@ -31,17 +31,13 @@ class MaintenancenController {
                 };
             };
 
-            if(typeof err === "object" &&
-                err !== null &&
-                "successes" in err &&
-                "errors" in err
-            ) {
-            return res.status(500).json({
-                message: "Ocorreu um erro interno ao atualizar as configurações de manutenção.",
-                successes: err.successes,
-                errors: err.errors
-            });
-        };
+            if(typeof err === "object" && err !== null && "successes" in err && "errors" in err) {
+                return res.status(500).json({
+                    message: "Ocorreu um erro interno ao atualizar as configurações de manutenção.",
+                    successes: err.successes,
+                    errors: err.errors
+                });
+            };
 
             return res.status(500).json({message: `Erro Interno`});
         };

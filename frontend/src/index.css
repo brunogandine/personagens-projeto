@@ -25,8 +25,12 @@
     --field-text-color-disabled: rgba(0, 0, 0, 0.25);;
     
     --color-primary: #4F6DBE;
-    --color-danger: #ff3232;
+    --color-primary-hover: #4660A8;
+    --color-danger: #FF3232;
+    --color-danger-hover: #CA2222;
     --color-cancel: #36325E;
+    --color-cancel-hover: #443F74;
+    --color-disabled: #A3A3A3;
 
     --red-100: #FF8080;
     --red-300: #FF3232;
@@ -274,33 +278,38 @@ img {
 }
 
 .primary-btn {
-    background-color: #4F6DBE;
+    background-color: var(--color-primary);
 
     &.ant-btn:disabled:not(.ant-btn-disabled) {
-        background-color: #a3a3a3;
+        background-color: var(--color-disabled);
         color: var(--ant-color-text-disabled);
     }
 
     &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
-        background-color: #4660A8;
+        background-color: var(--color-primary-hover);
     }
 }
 
 .danger-btn {
-    background-color: #ff3232;
+    background-color: var(--color-danger);
 
     &.ant-btn:disabled:not(.ant-btn-disabled) {
-        background-color: #a3a3a3;
+        background-color: var(--color-disabled);
         color: var(--ant-color-text-disabled);
     }
 
     &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
-        background-color: #ca2222;
+        background-color: var(--color-danger-hover);
     }
 }
 
 .cancel-btn {
-    background-color: #36325E;
+    background-color: var(--color-cancel);
+
+    &.ant-btn:disabled:not(.ant-btn-disabled) {
+        background-color: var(--color-disabled);
+        color: var(--ant-color-text-disabled);
+    }
 
     &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
         background-color: #443f74;
