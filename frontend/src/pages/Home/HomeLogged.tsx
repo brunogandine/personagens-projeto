@@ -37,7 +37,7 @@ const HomeLogged = () => {
                     </div>
                     <div className={styles["counts-value"]}>
                         {loading ? "" : (
-                            <span className={(usersValue ?? 0) <= 20 ? "" : (usersValue ?? 0) <= 50 ? "gold" : "orange" }>{usersValue}</span>) }
+                            <span style={(usersValue ?? 0) <= 20 ? undefined : (usersValue ?? 0) <= 50 ? {color: "var(--gold-500)"} : {color: "var(--orange-500)"} } >{usersValue}</span>) }
                     </div>
                 </div>
                 <VerticalRuler color="#FFFFFF"/>
