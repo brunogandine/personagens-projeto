@@ -78,11 +78,11 @@ const HeaderLogged = () => {
                     </div>
                     <div className={`${styles["user-section-basic"]}`}>
                         <div className={styles["user-level"]}>
-                            <p>LEVEL <span className={
-                                user.level <= 10 ? "" 
-                                : user.level <= 20 ? "green" 
-                                : user.level <= 40 ? "gold" 
-                                : "orange"
+                            <p>LEVEL <span style={
+                                user.level <= 10 ? undefined 
+                                : user.level <= 20 ? {color: "var(--green-500)"} 
+                                : user.level <= 40 ? {color: "var(--gold-500)"}
+                                : {color: "var(--orange-500)"}
                                 }>
                                     {user.level}
                             </span>
@@ -92,7 +92,7 @@ const HeaderLogged = () => {
                             <div className="currency-icon">
                                 <img src={"/assets/images/icons/currency.png"}></img>
                             </div>
-                            <div className={`${styles["currency-value"]} gold`}>{user.currency}</div>
+                            <div style={{color: "var(--gold-500)"}} className={`${styles["currency-value"]}`}>{user.currency}</div>
                         </div>
                     </div>
                 </div>  

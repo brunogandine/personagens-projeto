@@ -9,6 +9,7 @@ export type AppError =
     | {
         type: "not_found";
         message: string;
+        keys?: string;
     }
     | {
         type: "storage";

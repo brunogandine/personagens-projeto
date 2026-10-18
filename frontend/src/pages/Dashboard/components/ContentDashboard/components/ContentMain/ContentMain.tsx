@@ -39,6 +39,8 @@ const ContentMain = () => {
     const [characters, setCharacters] = useState<CharacterItem[]>([]);
     const [animes, setAnimes] = useState<AnimeItem[]>([]);
 
+    const [animesList, setAnimesList] = useState<AnimeItem[]>([]);
+
     const [charactersDebounceSearch, setCharactersDebounceSearch] = useState("");
     const [animesDebounceSearch, setAnimeDebounceSearch] = useState("");
 
@@ -70,6 +72,38 @@ const ContentMain = () => {
 
     if(!user)
         return null;
+
+    useEffect(() => {
+        getAllAnimes();
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setCharactersDebounceSearch(charactersSearch);
+
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [charactersSearch]);
+
+    useEffect(() => {
+        getCharacters();
+
+    }, [charactersPage, charactersDebounceSearch, charactersRefreshKey]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setAnimeDebounceSearch(animesSearch);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [animesSearch]);
+
+    useEffect(() => {
+        getAnimes();
+        getCharacters();
+
+    }, [animesPage, animesDebounceSearch, animesRefreshKey]);
 
     const getCharacters = async () => {
         try{
@@ -108,35 +142,19 @@ const ContentMain = () => {
         }
     }
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setCharactersDebounceSearch(charactersSearch);
+    const getAllAnimes = async () => {
+        const res = await Request.get("/animes", {
+            query: {
+                deleted: "not_deleted"
+            }
+        });
 
-        }, 500);
+        if(!res.ok) {
+            return;
+        };
 
-        return () => clearTimeout(timer);
-    }, [charactersSearch]);
-
-    useEffect(() => {
-        getCharacters();
-
-    }, [charactersPage, charactersDebounceSearch, charactersRefreshKey]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setAnimeDebounceSearch(animesSearch);
-        }, 500);
-
-        return () => clearTimeout(timer);
-    }, [animesSearch]);
-
-    useEffect(() => {
-        getAnimes();
-        getCharacters();
-
-    }, [animesPage, animesDebounceSearch, animesRefreshKey]);
-
-    const animesList = animes.map((a) => ({value: a.id, label: a.name}))
+        setAnimesList(res.data.data);
+    };
 
     const getAnime = async (id: number) => {
         const res = await Request.get(`/animes/${id}`);
@@ -562,7 +580,7 @@ const ContentMain = () => {
                             open={isEditCharacterModalOpen} 
                             onClose={closeEditCharacterModal} 
                             character={editModalCharacter} 
-                            animesList={animesList} 
+                            animesList={animesList.map((a) => ({value: a.id, label: a.name}))} 
                             toggleBoolean={toggleBoolean} 
                             imageCacheVersion={imageCacheVersions[`character:${editModalCharacter.id}`] ?? null} 
                             onChangeImage={handleImagesChanged} 

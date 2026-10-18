@@ -3,8 +3,7 @@ import { RequestHandler } from "express";
 import { detectImageType } from "@/utils/detectImageType";
 import { isAppError } from "@/utils/is-app-error.util";
 import { ZodError } from "zod";
-import { deleteAnimeSchema, restoreAnimeSchema } from "@/validations/anime.validations";
-
+import { deleteAnimeSchema, GetAnimesQuerySchema, restoreAnimeSchema } from "@/validations/anime.validations";
 class AnimeController {
     create: RequestHandler = async (req, res) => {
         try {
@@ -171,18 +170,21 @@ class AnimeController {
 
     getAll: RequestHandler = async (req, res) => {
         try {
-            const { page, search } = req.query;
+            const { status, deleted, search, page, perPage }: GetAnimesQuerySchema = req.query;
 
             const result = await AnimeService.getAnimes({
-                page: Number(page ?? 1),
-                search: search as string
-            })
+                ...(status !== undefined && { status }),
+                ...(deleted !== undefined && { deleted }),
+                ...(search !== undefined && { search }),
+                ...(page !== undefined && { page }),
+                ...(perPage !== undefined && { perPage })
+            });
 
             return res.status(200).json(result);
         } catch(err) {
             return res.status(500).json({message: "Erro Interno"});
         }
-    }
+    };
 
     getCount: RequestHandler = async (req, res) => {
         try{

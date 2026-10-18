@@ -1,8 +1,16 @@
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
-import { GetAnimeParams, UpdateAnimeData } from "@/types/anime.types";
+import { AnimeListFilters, UpdateAnimeData } from "@/types/anime.types";
 import { CreateAnimeSchema } from "@/validations/anime.validations";
 
+type FindManyAnimeParams = {
+    filters?: AnimeListFilters;
+    orderBy: Prisma.AnimeOrderByWithRelationInput;
+    pagination?: {
+        page: number;
+        perPage: number;
+    }
+}
 class AnimeModel {
     create = async (data: CreateAnimeSchema) => {
         return prisma.anime.create({
@@ -76,48 +84,58 @@ class AnimeModel {
             where: {
                 name
             }
-        })
+        });
     };
 
-    getAnimes = async ({
-        page = 1,
-        search = ""
-    }: GetAnimeParams) => {
-        const PER_PAGE = 6;
+    findMany = async ({filters, orderBy, pagination}: FindManyAnimeParams) => {
+        const where = this.buildWhere(filters);
 
-        const where: Prisma.AnimeWhereInput = search
-            ? {
-                name: {
-                    contains: search
-                }
-            }
-            : {}
-
-        const animes = await prisma.anime.findMany({
+        return prisma.anime.findMany({
             where,
-            skip: (page - 1) * PER_PAGE,
-            take: PER_PAGE,
-            orderBy: {
-                id: "asc"
-            }
-        })
-
-        const total = await prisma.anime.count({
-            where
+            orderBy,
+            ...(pagination && {
+                skip: (pagination.page - 1) * pagination.perPage,
+                take: pagination.perPage
+            })
         });
-        const totalPages = Math.ceil(total / PER_PAGE);
-        
-        return {
-            data: animes,
-            meta: {
-                totalPages
-            }
-        }
-    }
+    };
 
-    getCount = async () => {
+    count = async () => {
         return prisma.anime.count();
-    }
+    };
+
+    private buildWhere(filters?: AnimeListFilters): Prisma.AnimeWhereInput {
+
+        const where: Prisma.AnimeWhereInput = {};
+
+        if(filters?.search) {
+            where.name = {
+                contains: filters.search
+            };
+        };
+
+        if(filters?.status === "active") {
+            where.active = true;
+            where.deleted_at = null;
+        };
+
+        if(filters?.status === "inactive") {
+            where.active = false;
+            where.deleted_at = null;
+        };
+
+        if(filters?.deleted === "deleted") {
+            where.deleted_at = {
+                not: null
+            };
+        };
+
+        if(filters?.deleted === "not_deleted") {
+            where.deleted_at = null;
+        }
+
+        return where;
+    };
 }
 
 export const animeModel = new AnimeModel();

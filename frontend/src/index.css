@@ -2,6 +2,10 @@
     --bg-default: #28282D;
     --bg-secondary: #2c2c33;
     --bg-success: #113311;
+    --bg-toggle-active: #0066ff;
+    --bg-toggle-inactive: #48465D;
+
+    --outline-color-default: #53535f;
 
     --bg-modal: #25242E;
     --bg-modal-secondary: #E6E6E6;
@@ -21,8 +25,12 @@
     --field-text-color-disabled: rgba(0, 0, 0, 0.25);;
     
     --color-primary: #4F6DBE;
-    --color-danger: #ff3232;
+    --color-primary-hover: #4660A8;
+    --color-danger: #FF3232;
+    --color-danger-hover: #CA2222;
     --color-cancel: #36325E;
+    --color-cancel-hover: #443F74;
+    --color-disabled: #A3A3A3;
 
     --red-100: #FF8080;
     --red-300: #FF3232;
@@ -30,22 +38,23 @@
     --red-800: #CA2222;
     --orange-100: #FFB380;
     --orange-300: #FF8C4D;
-    --orange-500: #FF6600;
+    --orange-500: #FF5F03;
     --orange-800: #CC5200;
     --blue-100: #6860ff;
     --blue-300: #3838ff;
     --blue-500: #0000FF;
     --blue-800: #000081;
-    --yellow-100: #fff7b0;
-    --yellow-300: #fff171;
-    --yellow-500: #ffe600;
-    --yellow-800: #d8b800;
+    --yellow-100: #FFF7b0;
+    --yellow-300: #FFF171;
+    --yellow-500: #FFE600;
+    --yellow-800: #D8B800;
+    --gold-500: #E4AF00;
     --gray-50: #C1C1C1;
     --gray-100: #888888;
     --gray-300: #818181;
     --gray-500: #4d4d4d;
-    --green-100: #9ef59e;
-    --green-300: #54c454;
+    --green-100: #9EF59E;
+    --green-300: #54C454;
 
     --character-item-width: 275px;
     --character-item-height: 325px;
@@ -114,24 +123,6 @@ img {
     max-width: 1280px;
     min-height: 0;
     margin: auto;
-}
-
-/*Some colors*/
-
-.green {
-    color: #009400;
-}
-
-.lightGreen {
-    color: #77EB77
-}
-
-.orange {
-    color: #FF5F03;
-}
-
-.gold {
-    color: #E4AF00;
 }
 
 .vertical-ruler {
@@ -287,33 +278,38 @@ img {
 }
 
 .primary-btn {
-    background-color: #4F6DBE;
+    background-color: var(--color-primary);
 
     &.ant-btn:disabled:not(.ant-btn-disabled) {
-        background-color: #a3a3a3;
+        background-color: var(--color-disabled);
         color: var(--ant-color-text-disabled);
     }
 
     &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
-        background-color: #4660A8;
+        background-color: var(--color-primary-hover);
     }
 }
 
 .danger-btn {
-    background-color: #ff3232;
+    background-color: var(--color-danger);
 
     &.ant-btn:disabled:not(.ant-btn-disabled) {
-        background-color: #a3a3a3;
+        background-color: var(--color-disabled);
         color: var(--ant-color-text-disabled);
     }
 
     &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
-        background-color: #ca2222;
+        background-color: var(--color-danger-hover);
     }
 }
 
 .cancel-btn {
-    background-color: #36325E;
+    background-color: var(--color-cancel);
+
+    &.ant-btn:disabled:not(.ant-btn-disabled) {
+        background-color: var(--color-disabled);
+        color: var(--ant-color-text-disabled);
+    }
 
     &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {
         background-color: #443f74;

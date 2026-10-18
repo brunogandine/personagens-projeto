@@ -1,9 +1,10 @@
 import { CreateAnimeSchema, UpdateAnimeSchema } from "@/validations/anime.validations"
 
-export type GetAnimeParams = {
-    page: number,
-    search: string
-};
+export type AnimeListFilters = {
+    search?: string,
+    status?: "active" | "inactive",
+    deleted?: "deleted" | "not_deleted",
+}
 
 export type CreateAnimePayload = {
     data: CreateAnimeSchema

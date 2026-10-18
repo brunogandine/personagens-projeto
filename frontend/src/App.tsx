@@ -1,5 +1,3 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Layout from "./components/layout/Layout";
 import { Home } from "./pages/Home";
 import Profile from "./pages/Profile/Profile";
@@ -9,10 +7,14 @@ import UsersDashboard from "./pages/Dashboard/components/UsersDashboard/UsersDas
 import ContentDashboard from "./pages/Dashboard/components/ContentDashboard/ContentDashboard";
 import CharacterCreation from "./pages/Dashboard/components/ContentDashboard/components/CharacterCreation/CharacterCreation";
 import ContentMain from "./pages/Dashboard/components/ContentDashboard/components/ContentMain/ContentMain";
+import SettingsDashboard from "./pages/Dashboard/components/SettingsDashboard/SettingsMain";
+import SettingsContent from "./pages/Dashboard/components/SettingsDashboard/components/SettingsContent";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import { AuthRoute } from "./routes/guards/AuthRoute";
 import { RoleRoute } from "./routes/guards/RoleRoute";
 import { MessageModalContextProvider } from "./contexts/UIFeedbackContext";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 function App() {
   return (
@@ -35,7 +37,9 @@ function App() {
                     <Route index element={<ContentMain />} />
                     <Route path="characters/create" element={<CharacterCreation />} />
                   </Route>
-                  <Route path="settings" />
+                  <Route path="settings" element={<SettingsDashboard />} >
+                    <Route index element={<SettingsContent />} />
+                  </Route>
                 </Route>
               </Route>
             </Routes>

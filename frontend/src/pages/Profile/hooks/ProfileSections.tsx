@@ -13,12 +13,12 @@ export const ProfileSections = (user: AuthUser, stats: ProfileStats) => {
                     type: "user-power",
                     label: "Tipo de Usuário: ",
                     value: (
-                    <span className={
+                    <span style={
                         user.user_power === "Moderator" 
-                        ? "green" 
+                        ? {color: "var(--green-500)"}
                         : user.user_power === "Admin" 
-                        ? "orange" 
-                        : ""
+                        ? {color: "var(--orange-500)"} 
+                        : undefined
                     }>
                         {user.user_power}
                     </span>)

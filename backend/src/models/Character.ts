@@ -3,7 +3,6 @@ import { Prisma } from "@prisma/client";
 import type { UpdateCharacterData, GetCharactersParams } from "../types/character.types";
 import type { CreateCharacterSchema } from "@/validations/character.validations";
 
-
 class CharacterModel {
     create = async (data: CreateCharacterSchema) => {
         return prisma.character.create({
