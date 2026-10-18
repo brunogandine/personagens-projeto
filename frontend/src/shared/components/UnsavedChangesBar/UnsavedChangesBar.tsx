@@ -25,17 +25,22 @@ const UnsavedChangesBar = ({redefine, confirm, visible, isSaving}: Props) => {
 
     useEffect(() => {
 
-        if(!mounted)
+        if(!mounted || !visible)
             return;
 
-        requestAnimationFrame(() => {
+        const frameId = requestAnimationFrame(() => {
             setShown(true);
         });
 
-    }, [mounted]);
+        return () => cancelAnimationFrame(frameId);
 
-    const handleTransitionEnd = () => {
-        if(!shown)
+    }, [mounted, visible]);
+
+    const handleTransitionEnd = (event: React.TransitionEvent<HTMLDivElement>) => {
+        if(event.target !== event.currentTarget)
+            return;
+
+        if(!shown && !visible)
             setMounted(false);
     };
 

@@ -259,12 +259,12 @@ const useSettings = () => {
                 if(settingsErrors.length > 0) 
                     handleCfgFailure(settingsErrors.map((error) => ({ key: error.key })), submittedSettings, submittedOriginal);
 
-                const normalizedErrors = {
+                const normalizedErrors = [
                     ...generalErrors,
                     ...settingsErrors.map((error) => ({
                         message: error.message
                     }))
-                };
+                ];
 
                 if(normalizedErrors.length > 0) {
                     showMessageModal({
