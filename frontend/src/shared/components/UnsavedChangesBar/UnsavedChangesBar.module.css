@@ -1,0 +1,29 @@
+.unsaved-changes-bar {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    background-color: var(--bg-default);
+    left: 50%;
+    bottom: 24px;
+    border-radius: 8px;
+    transform: translate(-50%, calc(100% + 24px));
+    box-shadow: 0px 0px 7px 0px #000000;
+    padding: 10px;
+    transition: transform 300ms ease-in-out;
+    z-index: 1000;
+}
+
+.visible {
+    transform: translate(-50%, 0);
+}
+
+.bar-message {
+    color: var(--text-color-default);
+    font-size: 14px;
+}
+
+.bar-options {
+    display: flex;
+    gap: 8px;
+}

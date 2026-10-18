@@ -6,6 +6,7 @@ import userRoutes from "./user.routes";
 import profileRoutes from "./profile.routes";
 import dashboardRoutes from "./dashboard.routes";
 import animesRoutes from "./animes.routes";
+import settingsRoutes from "./settings.routes";
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.use("/characters", charactersRoutes);
 router.use("/animes", animesRoutes)
 router.use("/profile", profileRoutes);
 router.use("/admin", dashboardRoutes);
+router.use("/settings", settingsRoutes)
 
 export default router

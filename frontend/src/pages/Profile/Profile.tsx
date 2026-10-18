@@ -241,7 +241,7 @@ const Profile = () => {
                     </div>
                     <div className={`${styles["p-user"]} ${styles["pad-15"]}`}>
                         <div className={styles["p-username"]}>
-                            <h2 className={user?.user_power === "Moderator" ? "green" : user?.user_power === "Admin" ? "orange" : ""}>{user?.username}</h2>
+                            <h2 style={user?.user_power === "Moderator" ? {color: "var(--green-500)"} : user?.user_power === "Admin" ? {color: "var(--orange-500)"} : undefined}>{user?.username}</h2>
                         </div>
                         <div className={styles["p-email"]}>
                             <div className={styles["p-email-title"]}>E-mail</div>

@@ -66,7 +66,7 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
 
     if(res.status === 400) {
         return {
-            ok: false,
+            ok: res.ok,
             status: res.status,
             data: json
         };
@@ -74,7 +74,7 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
 
     if(res.status === 404 || res.status === 500) {
         return {
-            ok: false,
+            ok: res.ok,
             status: res.status,
             data: json
         };
@@ -82,15 +82,11 @@ const call = async <T = any>(route: string, options: RequestOptions): Promise<Ap
 
     if(res.status === 409 || res.status === 500) {
         return { 
-            ok: false,
+            ok: res.ok,
             status: res.status,
             data: json
         }
     }
-
-    if(!res.ok) {
-        throw new Error(`Erro HTTP: ${res.status}`);
-    };
 
     return {
         ok: res.ok,
