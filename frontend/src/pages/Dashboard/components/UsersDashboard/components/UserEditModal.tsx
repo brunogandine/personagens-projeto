@@ -20,14 +20,7 @@ const UserEditModal = ({open, onClose, selectedUsers}: Props) => {
     const isMultiple = selectedUsers.length > 1;
 
     return (
-        <Modal
-            title="Editar Usuário"
-            className={`modal-default`}
-            closable
-            open={open}
-            onCancel={handleClose}
-            footer={null}
-        >
+        <Modal title="Editar Usuário" wrapClassName={`modal-default`} closable open={open} onCancel={handleClose} footer={null} >
             <div className={`${styles["edit-modal-content"]}`}>
                 {isMultiple ? (
                     <>

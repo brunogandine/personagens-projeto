@@ -55,7 +55,7 @@ const CustomDurationModal = ({open, onClose, onConfirm}: Props) => {
     }
 
     return (
-        <Modal title="Duração Personalizada" className="modal-default" closable open={open} onCancel={onClose} footer={null}>
+        <Modal title="Duração Personalizada" wrapClassName="modal-default" closable open={open} onCancel={onClose} footer={null}>
             <div className={`${styles["options-modal-content"]}`}>
                 <div className={`${styles["options-modal-action"]}`}>
                     <input type="radio" id="relative" name="mode" value="relative" onChange={() => setMode("relative")} checked={mode === "relative"} />

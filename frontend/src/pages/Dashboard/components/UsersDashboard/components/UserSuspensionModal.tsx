@@ -85,7 +85,7 @@ const UserSuspensionModal = ({open, onClose, selectedUsers}: Props) => {
 
     if(step === "default")
         return (
-            <Modal title="Banir/Suspender Usuários" className={`modal-default`} closable open={open} onCancel={handleClose} destroyOnHidden footer={null}>
+            <Modal title="Banir/Suspender Usuários" wrapClassName={`modal-default`} closable open={open} onCancel={handleClose} destroyOnHidden footer={null}>
                 <div className={`${styles["options-modal-content"]}`} >
                     <div className={`${styles["options-modal-action"]}`}>
                         <input type="radio" id="suspend" name="action" value="suspend" onChange={() => setAction("suspend")} checked={action === "suspend"} />

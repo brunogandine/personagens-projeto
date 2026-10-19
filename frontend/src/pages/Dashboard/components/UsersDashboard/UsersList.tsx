@@ -23,6 +23,14 @@ const UsersList = ({users, selectedUsers, setSelectedUsers, onAction}: Props) =>
             )
     };
 
+    const toggleAll = () => {
+        if(isAllSelect) {
+            setSelectedUsers([]);
+        } else {
+            setSelectedUsers(users.map((user) =>  user.id));
+        };
+    };
+
     const isAllSelect = selectedUsers.length === users.length && users.length > 0;
     const isSomeSelected = selectedUsers.length > 0 && selectedUsers.length < users.length;
     const hasSelection = selectedUsers.length > 0;
@@ -33,54 +41,15 @@ const UsersList = ({users, selectedUsers, setSelectedUsers, onAction}: Props) =>
                     <div className={`${styles["users-list-section-title"]}`}>
                         <span>Lista de Usuários</span>
                         <div className={`${styles["users-list-options"]}`}>
-                            <div
-                                className={`${styles["checkbox"]} ${styles["all"]} ${isAllSelect ? styles["checked"] : ""} ${isSomeSelected ? styles["mixed"] : ""}`}
-                                role="checkbox"
-                                aria-checked={
-                                    isAllSelect ? "true" : isSomeSelected ? "mixed" : "false"}
-                                tabIndex={0}
-                                onClick={() => {
-                                    if(isAllSelect) {
-                                        setSelectedUsers([]);
-                                    } else {
-                                        setSelectedUsers(users.map(user => user.id));
-                                    };
-                                }}
-                                onKeyDown={(e) => {
-                                    if(e.key === "Enter" || e.key === " ") {
-                                        e.preventDefault();
-
-                                        if(isAllSelect) {
-                                            setSelectedUsers([]);
-                                        } else {
-                                            setSelectedUsers(users.map(user => user.id));
-                                        };
-                                    }
-                                }}
-                            >
+                            <CheckboxComponent checked={isAllSelect} mixed={isSomeSelected} onToggle={toggleAll} />
+                            <div className={`${styles["extended-options"]} ${(hasSelection) ? styles["open"] : ""}`}>
+                                <Tooltip title={ hasSelection ? "Banir/Suspender Usuário(s)" : null } destroyOnHidden={true} >
+                                    <StopFilled style={{fontSize: "15px", cursor: hasSelection ? "pointer" : "auto"}} onClick={() => onAction("suspend")}/>
+                                </Tooltip>
+                                <Tooltip title={ hasSelection ? "Editar Usuário(s)" : null } destroyOnHidden={true} >
+                                    <EditOutlined style={{fontSize: "15px", cursor: hasSelection ? "pointer" : "auto"}} onClick={() => onAction("edit")}/>
+                                </Tooltip>
                             </div>
-                                <div className={`${styles["extended-options"]} ${(hasSelection) ? styles["open"] : ""}`}>
-                                    <Tooltip 
-                                        title={
-                                            hasSelection 
-                                            ? "Banir/Suspender Usuário(s)" 
-                                            : null
-                                        }        
-                                        destroyOnHidden={true} 
-                                    >
-                                        <StopFilled style={{fontSize: "15px", cursor: hasSelection ? "pointer" : "auto"}} onClick={() => onAction("suspend")}/>
-                                    </Tooltip>
-                                    <Tooltip 
-                                        title={
-                                            hasSelection 
-                                            ? "Editar Usuário(s)"
-                                            : null
-                                        } 
-                                        destroyOnHidden={true} 
-                                    >
-                                        <EditOutlined style={{fontSize: "15px", cursor: hasSelection ? "pointer" : "auto"}} onClick={() => onAction("edit")}/>
-                                    </Tooltip>
-                                </div>
                         </div>
                     </div>
                     <div className="users-list-section-content" style={{overflow: "hidden, auto"}}>
@@ -109,22 +78,7 @@ const UsersList = ({users, selectedUsers, setSelectedUsers, onAction}: Props) =>
                                 {users.length > 0 ? (users.map((user) => (
                                     <tr key={user.id}>
                                         <td>
-                                            <CheckboxComponent checked={selectedUsers.includes(user.id)} />
-                                            <div
-                                                className={`${styles["checkbox"]} ${styles["single"]} ${selectedUsers.includes(user.id) ? styles["checked"] : ""}`}
-                                                role="checkbox"
-                                                aria-checked={selectedUsers.includes(user.id)}
-                                                tabIndex={0}
-                                                onClick={() => toggleUser(user.id)}
-                                                onKeyDown={(e) => {
-                                                    if(e.key === "Enter" || e.key === " ") {
-                                                        e.preventDefault();
-
-                                                        toggleUser(user.id);
-                                                    };
-                                                }}
-                                            >
-                                            </div>
+                                            <CheckboxComponent checked={selectedUsers.includes(user.id)} onToggle={() =>  toggleUser(user.id)} />
                                         </td>
                                         <td>
                                             <Avatar
