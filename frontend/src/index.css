@@ -5,7 +5,7 @@
     --bg-toggle-active: #0066ff;
     --bg-toggle-inactive: #48465D;
 
-    --outline-color-default: #53535f;
+    --outline-color-default: #53535F;
 
     --bg-modal: #25242E;
     --bg-modal-secondary: #E6E6E6;
@@ -184,6 +184,25 @@ img {
     filter: sepia(1) hue-rotate(195deg) saturate(6) brightness(0.5);
 }
 
+.radio-default .ant-radio-wrapper {
+    color: var(--text-color-default);
+    margin-inline-end: 0;
+
+    & span.ant-radio+* {
+        padding-inline-start: 5px;
+        padding-inline-end: 5px;
+    }
+    
+    & .ant-radio-inner {
+        background-color: var(--bg-toggle-inactive);
+        border-color: var(--bg-toggle-inactive);
+
+        &:after {
+            background-color: var(--text-color-primary);
+        }
+    }
+}
+
 .modal-default.ant-modal-wrap {
     overflow-y: hidden;
 
@@ -349,9 +368,29 @@ img {
         outline: none;
     }
 
+    &.ant-picker-focused {
+        color: var(--text-color-primary);
+    }
+
+    & .ant-picker-input-placeholder > input {
+        color: var(--text-color-primary);
+    }
+
     & .ant-picker-input > input::placeholder {
         color: var(--text-color-primary);
         font-weight: bold;
+    }
+
+    &.ant-picker:not(.ant-picker-disabled) .ant-picker-suffix {
+        color: var(--text-color-primary);
+    }
+
+    &.ant-picker:not(.ant-picker-disabled) .ant-picker-clear {
+        color: var(--text-color-primary);
+
+        &:hover {
+            color: var(--text-color-default);
+        }
     }
 }
 
@@ -535,6 +574,27 @@ img {
     padding: 1px 2px;
     transition: opacity 0.3s ease;
     cursor: pointer;
+
+    &.ant-radio-button-wrapper {
+        color: var(--text-color-default);
+        border-radius: 3px;
+        line-height: 1.18rem;
+        height: 100%;
+
+        &:first-child {
+            border-inline-start: 1px solid #afafaf1f;
+        }
+    }
+
+    &.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+        background-color: var(--item-bg-default);
+        border-color: #afafaf1f;
+
+        &:hover {
+            color: var(--text-color-default);
+            border-color: #afafaf1f;
+        }
+    }
 }
 
 .item-select {
@@ -583,6 +643,67 @@ img {
     & .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
         background-color: #635e7a;
         color: var(--text-color-default)
+    }
+}
+
+.picker-default-popup.ant-picker-dropdown {
+    & .ant-picker-panel-container {
+        background-color: #54506b;  
+    }
+
+    & .ant-picker-header {
+        color: var(--text-color-primary);
+    }
+
+    & .ant-picker-header button {
+        color: var(--text-color-primary);
+    }
+
+    & .ant-picker-content th {
+        color: var(--text-color-primary)
+    }
+
+    & .ant-picker-cell {
+        color: #C1C1C128;
+    }
+
+    & .ant-picker-cell-in-view {
+        color: var(--text-color-default);
+    }
+
+    & .ant-picker-cell-disabled {
+        color: #c1c1c146
+    }
+
+    & .ant-picker-cell-today .ant-picker-cell-inner:before {
+        border-color: var(--color-primary);
+    }
+
+    & .ant-picker-cell-selected:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
+        background-color: var(--color-primary);
+    }
+
+    & .ant-picker-time-panel-column > li.ant-picker-time-panel-cell .ant-picker-time-panel-cell-inner {
+        color: var(--text-color-default);
+    }
+
+    & .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+        background-color: var(--color-primary);
+    }
+
+    & a {
+        color: var(--text-color-default);
+    }
+
+    & .ant-btn {
+        background-color: var(--color-primary);
+        color: var(--text-color-default);
+
+        &:disabled {
+            background-color: var(--color-cancel);
+            color: #C1C1C135;
+            border: none;
+        }
     }
 }
 

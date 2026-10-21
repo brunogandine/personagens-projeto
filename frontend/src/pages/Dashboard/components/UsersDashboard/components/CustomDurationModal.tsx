@@ -1,6 +1,6 @@
 import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import dayjs from "dayjs";
-import { Button, DatePicker, InputNumber, Modal, Select } from "antd";
+import { Button, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
 import { useState, useEffect } from "react";
 import type { Dayjs } from "dayjs";
 import type { CustomDuration, DurationUnit } from "../types/punishment.types";
@@ -10,6 +10,19 @@ type Props = {
     onClose: () => void;
     onConfirm: (duration: CustomDuration) => void;
 }
+
+const radioOptions = [
+    { label: "Duração Relativa", value: "relative" },
+    { label: "Data Específica", value: "specific"}
+];
+
+const selectOptions = [
+    { value: "hours", label: "Horas" }, 
+    { value: "days", label: "Dias" }, 
+    { value: "weeks", label: "Semanas" },
+    { value: "months", label: "Meses" },
+    { value: "years", label: "Anos" }
+]
 
 const CustomDurationModal = ({open, onClose, onConfirm}: Props) => {
     const [mode, setMode] = useState<"relative" | "specific">("relative");
@@ -57,14 +70,14 @@ const CustomDurationModal = ({open, onClose, onConfirm}: Props) => {
     return (
         <Modal title="Duração Personalizada" wrapClassName="modal-default" closable open={open} onCancel={onClose} footer={null}>
             <div className={`${styles["options-modal-content"]}`}>
-                <div className={`${styles["options-modal-action"]}`}>
-                    <input type="radio" id="relative" name="mode" value="relative" onChange={() => setMode("relative")} checked={mode === "relative"} />
-                    <label htmlFor="relative">Duração Relativa</label>
-                    <input type="radio" id="specific" name="mode" value="specific" onChange={() => setMode("specific")} checked={mode === "specific"} />
-                    <label htmlFor="specific">Data Específica</label>
-                </div>
+                <Radio.Group 
+                    options={radioOptions}
+                    value={mode}
+                    onChange={(e) =>  setMode(e.target.value)}
+                    className={"radio-default"}
+                />
                 <div className={`${styles["options-modal-custom-duration"]}`}>
-                    <div className={`${styles["relative-duration"]}`}>
+                    <div className={`${styles["input-options"]}`}>
                         <InputNumber 
                             className={`field-default input-default ${mode !== "relative" ? "field-default-disabled" : ""}`} 
                             value={durationValue} 
@@ -77,20 +90,12 @@ const CustomDurationModal = ({open, onClose, onConfirm}: Props) => {
                             classNames={{popup: { root: "select-default-popup"} }} 
                             value={durationUnit} 
                             onChange={(value) => setDurationUnit(value ?? "days")} 
-                            options={[
-                                { value: "hours", label: "Horas" }, 
-                                { value: "days", label: "Dias" }, 
-                                { value: "weeks", label: "Semanas" },
-                                { value: "months", label: "Meses" },
-                                { value: "years", label: "Anos" }
-                            ]}
+                            options={selectOptions}
                             disabled={mode !== "relative"} 
                         />
-                    </div>
-                    <div className={`${styles["specific-duration"]}`}>
                         <DatePicker
                             className={`field-default ${mode !== "specific" ? "field-default-disabled" : ""}`} 
-                            classNames={{ root: ``}}
+                            classNames={{popup: { root: "picker-default-popup"} }}
                             showTime 
                             disabled={mode !== "specific"} 
                             disabledDate={(current) => current && current < dayjs().startOf("day")}

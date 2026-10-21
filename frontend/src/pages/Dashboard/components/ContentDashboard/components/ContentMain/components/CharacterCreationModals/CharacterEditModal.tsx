@@ -570,7 +570,7 @@ const CharacterEditModal = ({open, onClose, character, animesList, toggleBoolean
                                 <dd>
                                     <Select 
                                         className={`field-default select-default ${styles["edit-input"]}`}
-                                        classNames={{popup: { root: "select-default-popup"} }} 
+                                        classNames={{popup: { root: "select-default-popup"} }}
                                         value={selectedAnimeId}
                                         options={animesList}
                                         onChange={(value) => setSelectedAnimeId(value)}
