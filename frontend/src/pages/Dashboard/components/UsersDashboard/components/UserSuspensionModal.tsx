@@ -5,8 +5,7 @@ import SelectedUsersPreview from "./SelectedUsersPreview";
 import { Button, Modal, Radio } from "antd";
 import { useState } from "react";
 import { WarningFilled } from "@ant-design/icons";
-import type { CustomDuration } from "../types/punishment.types";
-import type { SelectedUserPreview } from "../types/userPreview.types";
+import type { SelectedUserPreview, CustomDuration } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 import type { CheckboxGroupProps } from "antd/es/checkbox";
 
 type Props = {

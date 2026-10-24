@@ -231,6 +231,30 @@ img {
             color: var(--text-color-primary-hover);         
         }
     }
+
+    & .modal-header {
+        display: flex;
+        gap: 10px;
+
+        & > .modal-return {
+            background-color: transparent;
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: color 0.3s ease, background-color 0.3s ease;
+
+            &:hover {
+                color: var(--text-color-primary-hover);
+                background-color: var(--ant-color-bg-text-hover);
+            }
+
+            &:active {
+                background-color: var(--ant-color-bg-text-active);
+            }
+        }
+    }
 }
 
 .modal-error.ant-modal-wrap, 

@@ -1,13 +1,13 @@
 import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import UsersList from "./UsersList"
 import UsersPagination from "../../shared/DashboardPagination";
+import UserSuspensionModal from "./components/UserSuspensionModal";
+import UserEditModal from "./components/UserEditModal/UserEditModal";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Request } from "@/services/apiClient";
 import type { UserAdmin } from "@/types/user";
-import type { UserAction } from "@/types/userActions";
-import UserSuspensionModal from "./components/UserSuspensionModal";
-import UserEditModal from "./components/UserEditModal";
+import type { UserAction } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 
 const UsersDashboard = () => {
     const { user } = useAuth();

@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Button, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
 import { useState, useEffect } from "react";
 import type { Dayjs } from "dayjs";
-import type { CustomDuration, DurationUnit } from "../types/punishment.types";
+import type { CustomDuration, DurationUnit } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 
 type Props = {
     open: boolean;

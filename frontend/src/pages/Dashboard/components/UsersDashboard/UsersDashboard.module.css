@@ -176,9 +176,11 @@
 .edit-single-user-info-container {
     display: flex;
     gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gray-500);
 }
 
-.edit-single-user-info {
+.edit-single-user-info-items {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -194,6 +196,129 @@
 
     &.id {
         font-weight: bold;
+    }
+}
+
+.edit-single-account-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-single-section-title {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-single-basic-info,
+.edit-single-characters-info,
+.edit-single-admin-activity-log {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 10px;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid var(--gray-500);
+    }
+}
+
+.edit-single-basic-info-items {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.edit-single-basic-info-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: var(--bg-default);
+    outline: 1px solid var(--outline-color-default);
+    border-radius: 4px;
+    padding: 10px 10px;;
+    width: 40%;
+
+    & > .info-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+.edit-single-characters-info-items {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 0fr 0fr;
+}
+
+.edit-single-characters-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    & > button {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        background-color: #1a1e32;
+        color: #7385ff;
+        font-size: 10px;
+        border-radius: 5px;
+        border: none;
+        outline: 1px solid #7385ff;
+        padding: 7px 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: #1d2452;
+        }
+
+        &:active {
+            background-color: #303553;
+            transition: background-color 0s ease;
+        }
+    }
+
+    & .most-used {
+        display: flex;
+        justify-content: center;
+        background-color: var(--bg-secondary);
+        width: 100%;
+        border-radius: 8px;
+        outline: 1px solid var(--outline-color-default);
+        padding: 10px;
+
+        & > .no-items {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.edit-single-admin-activity-log-items {
+    display: flex;
+    flex-direction: column;
+
+    & .activity-log {
+        display: flex;
+        justify-content: center;
+        background-color: var(--bg-secondary);
+        width: 100%;
+        border-radius: 8px;
+        outline: 1px solid var(--outline-color-default);
+        padding: 10px;
+
+        & > .no-items {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
     }
 }
 

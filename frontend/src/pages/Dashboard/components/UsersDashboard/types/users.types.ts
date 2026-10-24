@@ -1,3 +1,20 @@
+export type UserAction = 
+    | "suspend"
+    | "edit";
+
+export type EditActions = 
+    | "edit"
+    | "character_manager"
+
+export type SelectedUserPreview = {
+    id: number;
+    username: string;
+    avatar_url: string | null;
+    level: number;
+    currency: number;
+    active: boolean;
+}
+
 export type DurationUnit =
     | "hours"
     | "days"

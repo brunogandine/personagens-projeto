@@ -1,9 +1,9 @@
 import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
+import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import { Avatar, Tooltip } from "antd";
 import { EditOutlined, StopFilled, UserOutlined } from "@ant-design/icons";
 import type { UserAdmin } from "@/types/user";
-import type { UserAction } from "@/types/userActions";
-import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
+import type { UserAction } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
