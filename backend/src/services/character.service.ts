@@ -64,7 +64,6 @@ class CharacterService {
             attr_hp: payload.data.attr_hp,
             attr_atk: payload.data.attr_atk,
             attr_def: payload.data.attr_def,
-            currency_lock: payload.data.currency_lock,
             active: payload.data.active
         };
 
@@ -193,7 +192,6 @@ class CharacterService {
                 def: character.attr_def
             },
             active: character.active,
-            lock: character.currency_lock
         };
     };
 }

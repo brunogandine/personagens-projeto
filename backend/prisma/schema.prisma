@@ -17,28 +17,23 @@ model Anime {
   @@map("animes")
 }
 model Character {
-  id            Int                    @id @default(autoincrement()) @db.UnsignedInt
-  anime_id      Int                    @db.UnsignedInt
-  name          String                 @db.VarChar(255)
-  description   String?                @db.Text
-  currency_lock Boolean                @default(false)
-  active        Boolean                @default(false)
-  attr_hp       Int                    @default(0)
-  attr_atk      Int                    @default(0)
-  attr_def      Int                    @default(0)
-  deleted_at    DateTime?
+  id              Int                    @id @default(autoincrement()) @db.UnsignedInt
+  anime_id        Int                    @db.UnsignedInt
+  name            String                 @db.VarChar(255)
+  description     String?                @db.Text
+  active          Boolean                @default(false)
+  attr_hp         Int                    @default(0)
+  attr_atk        Int                    @default(0)
+  attr_def        Int                    @default(0)
+  deleted_at      DateTime?
 
-  anime         Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
+  anime           Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
+  user_character  UserCharacters[]
 
   @@index([anime_id], map: "idx_anime")
   @@map("characters")
 }
-model CharacterNames {
-  id                  Int              @id @default(autoincrement()) @db.UnsignedInt
-  character_name      String           @db.VarChar(255)
 
-  @@map("characters_names")
-}
 model UserRestriction {
   id                Int @id @default(autoincrement()) @db.UnsignedInt
   user_id           Int @db.UnsignedInt
@@ -69,7 +64,6 @@ model UserSession {
 }
 model UserUnlocks {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
-  characters  UserCharacters[]
   user_id     Int         @db.UnsignedInt
   unlock_type UnlockTypes
   unlock_key  String?     @db.VarChar(255)
@@ -84,12 +78,20 @@ model UserCharacters {
   id           Int          @id @default(autoincrement()) @db.UnsignedInt
   user_id      Int          @db.UnsignedInt
   character_id Int          @db.UnsignedInt
-  was_default  Boolean
-  unlocked_on  DateTime     @default(now())
-  unlock_id    Int?         @db.UnsignedInt
+  for_hp       Int          @default(100)
+  for_atk      Int          @default(10)
+  for_def      Int          @default(10)
+  level        Int          @default(1)
+  exp          Int          @default(0)
+  wins_pvp     Int          @default(0)
+  wins_npc     Int          @default(0)
+  loses_pvp    Int          @default(0)
+  loses_npc    Int          @default(0)
+  draws_pvp    Int          @default(0)
+  draws_npc    Int          @default(0)
 
   user         User         @relation(fields: [user_id], references: [id])
-  unlock       UserUnlocks? @relation(fields: [unlock_id], references: [id])
+  character    Character    @relation(fields: [character_id], references: [id])
 
   @@map("user_characters")
 }

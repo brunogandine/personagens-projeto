@@ -51,7 +51,6 @@ export type CharacterPreview = {
         def: number;
     };
     active: boolean;
-    lock: boolean;
     artworkBlob: Blob;
     artworkPreview: string;
     thumbnailBlob: Blob;

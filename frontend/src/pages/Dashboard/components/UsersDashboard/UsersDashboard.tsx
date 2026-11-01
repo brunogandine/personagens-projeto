@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Request } from "@/services/apiClient";
 import type { UserAdmin } from "@/types/user";
 import type { UserAction } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
+import UserCharacterConfigModal from "./components/UserCharacterConfigModal/UserCharacterConfigModal";
 
 const UsersDashboard = () => {
     const { user } = useAuth();
@@ -16,6 +17,7 @@ const UsersDashboard = () => {
     const [users, setUsers] = useState<UserAdmin[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [activeAction, setActiveAction] = useState<UserAction | null>(null);
+    const [isUserCharacterConfigModalOpen, setIsUserCharacterConfigModalOpen] = useState(false);
 
     if(!user)
         return null;
@@ -47,7 +49,17 @@ const UsersDashboard = () => {
 
     const handleActionClose = () => {
         setActiveAction(null);
-    }
+    };
+
+    const handleCharacterConfigOpen = () => {
+        setActiveAction(null);
+        setIsUserCharacterConfigModalOpen(true);
+    };
+
+    const handleCharacterConfigClose = () => {
+        setIsUserCharacterConfigModalOpen(false);
+        setActiveAction("edit");
+    };
 
     const selectedUserObjects = users.filter((user) => selectedUsers.includes(user.id)).map((user) => ({    
             id: user.id,
@@ -55,9 +67,10 @@ const UsersDashboard = () => {
             avatar_url: user.avatar_url,
             level: user.level,
             currency: user.currency,
-            active: user.active
+            active: user.active,
+            characters_count: user.characters_count,
         }
-    ))
+    ));
 
     return (
         <>
@@ -69,11 +82,20 @@ const UsersDashboard = () => {
                     onClose={handleActionClose}
                     selectedUsers={selectedUserObjects}
                 />
-                <UserEditModal 
-                    open={activeAction === "edit"} 
-                    onClose={handleActionClose}
-                    selectedUsers={selectedUserObjects}
-                />
+                {selectedUserObjects.length !== 0 && (
+                    <UserEditModal 
+                        open={activeAction === "edit"} 
+                        onClose={handleActionClose}
+                        selectedUsers={selectedUserObjects}
+                        onOpenCharacterConfig={handleCharacterConfigOpen}
+                    />
+                )}
+                {selectedUserObjects.length === 1 && (
+                    <UserCharacterConfigModal 
+                        open={isUserCharacterConfigModalOpen}
+                        onClose={handleCharacterConfigClose}
+                    />
+                )}
             </div>
         </>
     )

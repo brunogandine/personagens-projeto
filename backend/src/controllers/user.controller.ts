@@ -1,8 +1,5 @@
+import UserService from "@/services/user.service";
 import { RequestHandler } from "express";
-import UserService from "../services/user.service";
-import { fileTypeFromBuffer } from "file-type";
-import { ALLOWED_PROFILE_IMAGES_TYPES } from "@/middlewares/upload/uploadTypes";
-import userService from "../services/user.service";
 import { detectImageType } from "@/utils/detectImageType";
 
 class UserController {
@@ -10,7 +7,7 @@ class UserController {
         try {
             const { page, limit, search, sortBy, order } = req.query;
 
-            const result = await userService.getUsers({
+            const result = await UserService.getUsers({
                 page: Number(page),
                 limit: Number(limit),
                 search: search as string,
@@ -20,9 +17,19 @@ class UserController {
 
             return res.json(result);
         } catch(err) {
-            return res.status(500).json({message: "Erro Interno."})
-        }
-    }
+            return res.status(500).json({message: "Erro Interno."});
+        };
+    };
+
+    getUserCharacters: RequestHandler = async (req, res) => {
+        try {
+            const result = await UserService.getUserCharacters({id: Number(req.params.id)});
+
+            return res.json(result);
+        } catch(err) {
+            return res.status(500).json({message: "Erro Interno"});
+        };
+    };
 
     getCounts: RequestHandler = async (req, res) => {
         try {
@@ -91,7 +98,7 @@ class UserController {
                     message: `Usuário não autenticado.`
                 });
 
-            const recents = await userService.getRecentAvatars(userId);
+            const recents = await UserService.getRecentAvatars(userId);
 
             return res.json(recents);
         } catch(err) {

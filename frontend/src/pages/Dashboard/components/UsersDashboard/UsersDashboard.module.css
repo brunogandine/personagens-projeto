@@ -176,7 +176,8 @@
 .edit-single-user-info-container {
     display: flex;
     gap: 10px;
-    padding-bottom: 10px;
+    padding: 10px 0 10px 0;
+    border-top: 1px solid var(--gray-500);
     border-bottom: 1px solid var(--gray-500);
 }
 
@@ -318,6 +319,271 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+    }
+}
+
+.edit-single-character-manager {
+    display: flex;
+    flex-direction: column;
+}
+
+.character-manager-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    & .search-wrapper {  
+        display: flex;
+        align-items: center;  
+        flex: 1;
+        gap: 8px;
+        background-color: var(--bg-modal-dark-secondary);
+        height: 35px;
+        border-radius: 6px;
+        border: 1px solid #2f2d37;
+        padding-left: 8px;
+
+        & > input {
+            flex: 1;
+            background-color: transparent;
+        }
+    }
+
+    & .character-search-filter {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        background-color: var(--bg-modal-dark-secondary);
+        color: #7385ff;
+        width: 90px;
+        font-weight: bold;
+        border: 1px solid #7385ff;
+        border-radius: 6px;
+        padding: 5px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--bg-modal-dark-tertiary)
+        }
+    }
+}
+
+.edit-single-character-manager-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+
+    & .no-items {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--bg-secondary);
+        border-radius: 8px;
+        outline: 1px solid var(--outline-color-default);
+        padding: 10px;
+        margin: auto;
+    }
+}
+
+.edit-single-character-manager-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin: auto;
+}
+
+.edit-single-character-manager-item {
+    display: grid;
+    position: relative;
+    background-color: var(--bg-modal-dark-secondary);
+    width: 250px;
+    border: 1px solid #2c2c33;
+    border-radius: 7px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 20px;
+    cursor: pointer;
+
+    & .thumbnail {
+        position: absolute;
+        background-image: url(/assets/images/cards/background/thumbnail/normal.png);
+        top: -25%;
+        left: -8%;
+        
+        & img {
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+    }
+
+    & .info {
+        display: flex;
+        flex-direction: column;
+        padding: 10% 0 8% 55%;
+
+        & .options {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-self: end;
+            border-radius: 5px;
+            outline: 1px solid #43486149;
+            margin: 10px 10px 0 0;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--bg-modal-dark-tertiary);
+                box-shadow: 0 0 5px 1px #000000;
+            }
+        }
+
+        & .info-container {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0.4;
+            border-radius: 5px;
+            padding: 5px;
+            transition: opacity 0.3s ease;
+            z-index: 99;
+        }
+    }
+
+    & .exp {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0.4;
+        padding-top: 3%;
+        transition: opacity 0.3s ease;
+
+        & .exp-bar {
+            background-color: #242431;
+            width: 80%;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 auto;
+            transition: background-color 0.3s ease;
+
+            & .fill-bar {
+                background-color: #008cff;
+                height: 10px;
+            }
+        }
+    }
+
+    &:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 3px 3px 7px 0px #00000070;
+
+        & .info-container {
+            opacity: 1;
+        }
+
+        & img {
+            opacity: 1;
+        }
+
+        & .exp {
+            opacity: 1;
+        }
+    }
+}
+
+.character-details-content {
+    display: flex;
+    justify-content: center;
+    min-width: 400px;
+    border-top: 1px solid var(--gray-500);
+}
+
+.details-artwork {
+    display: flex;
+
+    & > .artwork {
+        background-image: url(/assets/images/cards/background/artwork/normal.png)
+    }
+}
+
+.details-general {
+    display: flex;
+    min-width: 600px;
+    margin-top: 10px;
+}
+
+.general-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    & .name {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    & .level {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+
+        & span {
+            color: var(--text-color-primary);
+        }
+
+        & .exp-bar {
+            grid-column: 1 / 3;
+            background-color: var(--bg-modal-dark-secondary);
+            width: 90%;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 auto;
+            transition: background-color 0.3s ease;
+
+            & .fill-bar {
+                background-color: #008cff;
+                height: 10px;
+            }
+        }
+    }
+
+    & .info-container {
+        display: flex;
+        gap: 5px;
+        margin-top: 20px;
+
+        & .general, .battle-statistics {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-modal-dark-secondary);
+            width: 40%;
+            border-radius: 5px;
+
+            & .title {
+                display: flex;
+                border: 2px solid var(--outline-color-secondary);
+                border-bottom: none;
+                border-top-right-radius: 5px;
+                border-top-left-radius: 5px;
+                padding: 5px 10px 0 10px;
+            }
+
+            & .info {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                border: 2px solid var(--outline-color-secondary);
+                border-bottom-right-radius: 5px;
+                border-bottom-left-radius: 5px;
+                padding: 5px 10px 10px 10px;
+
+                & .info-item {
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
         }
     }
 }

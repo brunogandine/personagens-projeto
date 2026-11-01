@@ -98,6 +98,11 @@ class UserModel {
                 active: true,
                 currency: true,
                 level: true,
+                _count: {
+                    select: {
+                        characters: true,
+                    },
+                },
             },
             orderBy: {
                 [sortBy]: order
@@ -108,9 +113,14 @@ class UserModel {
 
         const total = await prisma.user.count({where});
         const totalPages = Math.ceil(total / limit);
+
+        const data = users.map(({_count, ...user    }) => ({
+            ...user,
+            characters_count: _count.characters
+        }));
     
         return {
-            data: users,
+            data,
             meta: {
                 totalPages
             },

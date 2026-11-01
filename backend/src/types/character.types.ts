@@ -37,7 +37,6 @@ export type EditCharacterResponse =
             def: number;
         };
         active: boolean;
-        lock: boolean;
     }
 
 

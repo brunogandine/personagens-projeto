@@ -1,7 +1,7 @@
 import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import { Avatar, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import type { SelectedUserPreview } from "../types/userPreview.types";
+import type { SelectedUserPreview } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

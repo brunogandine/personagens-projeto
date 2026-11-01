@@ -8,7 +8,6 @@ export const createCharacterSchema = z.object({
     attr_hp: z.coerce.number().int().min(50),
     attr_atk: z.coerce.number().int().min(5),
     attr_def: z.coerce.number().int().min(5),
-    currency_lock: formBoolean,
     active: formBoolean
 });
 
@@ -19,7 +18,6 @@ export const updateCharacterSchema = z.object({
     attr_hp: z.coerce.number().int().min(50).optional(),
     attr_atk: z.coerce.number().int().min(5).optional(),
     attr_def: z.coerce.number().int().min(5).optional(),
-    currency_lock: formBoolean.optional(),
     active: formBoolean.optional(),
     remove_artwork: formBoolean.optional(),
     remove_thumbnail: formBoolean.optional()

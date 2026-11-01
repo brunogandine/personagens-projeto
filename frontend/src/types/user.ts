@@ -9,6 +9,7 @@ export type UserAdmin = User & {
     active: boolean;
     currency: number;
     level: number;
+    characters_count: number;
 }
 
 export type UserRanking = User & {

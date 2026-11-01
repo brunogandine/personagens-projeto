@@ -1,4 +1,3 @@
-import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import type { EditActions } from "../../types/users.types";
 
@@ -10,18 +9,16 @@ type Props = {
 
 const UserEditHeader = ({title, step, goBack}: Props) => {
     return (
-        <>
-            <div className={`modal-header`}>
-                {step === "character_manager" && (                
-                    <button className={`modal-return`} onClick={goBack} >
-                        <ArrowLeftOutlined />
-                    </button>
-                )}
-                <div className={`modal-title`}>
-                    {title}
-                </div>
+        <div className={`modal-header`}>
+            {step === "character_manager" && (                
+                <button type="button" className={`modal-return`} onClick={goBack} aria-label="Voltar para edição do usuário" >
+                    <ArrowLeftOutlined />
+                </button>
+            )}
+            <div className={`modal-title`}>
+                {title}
             </div>
-        </>
+        </div>
     )
 };
 

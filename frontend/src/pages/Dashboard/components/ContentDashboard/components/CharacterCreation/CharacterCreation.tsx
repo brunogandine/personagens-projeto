@@ -375,7 +375,6 @@ const CharacterCreation = () => {
                 def: characterDefense
             },
             active: activeCharacter,
-            lock: currencyLockCharacter,
             artworkBlob: artworkBlob,
             artworkPreview: artworkPreview,
             thumbnailBlob: thumbnailBlob,
@@ -406,7 +405,6 @@ const CharacterCreation = () => {
         formData.append("attr_atk", characterPreview.stats.atk.toString());
         formData.append("attr_def", characterPreview.stats.def.toString());
         formData.append("active", characterPreview.active.toString());
-        formData.append("currency_lock", characterPreview.lock.toString());
 
         formData.append("artwork", characterPreview.artworkBlob);
         formData.append("thumbnail", characterPreview.thumbnailBlob);
