@@ -5,6 +5,7 @@
     --bg-tertiary: #2a283b;
     --bg-success: #113311;
     --bg-toggle-active: #0066ff;
+    --bg-toggle-active-hover: #274f97;
     --bg-toggle-inactive: #48465D;
 
     --outline-color-default: #53535F;
@@ -204,6 +205,35 @@ img {
 
         &:after {
             background-color: var(--text-color-primary);
+        }
+    }
+}
+
+.radio-button-default .ant-radio-button-wrapper {
+    background-color: var(--bg-toggle-inactive);
+    color: var(--text-color-default);
+    font-weight: bold;
+    border-color: var(--bg-toggle-inactive);
+
+    &:first-child {
+        border-inline-start: none;
+    }
+
+    &:hover {
+        color: var(--text-color-default);
+        background-color: var(--bg-toggle-active-hover);
+        border-color: var(--bg-toggle-active);
+    }
+
+    &.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+        color: var(--text-color-default);
+        background-color: var(--bg-toggle-active);
+        border-color: var(--bg-toggle-active);
+
+        &:hover {
+            color: var(--text-color-default);
+            background-color: var(--bg-toggle-active);
+            border-color: var(--bg-toggle-active);
         }
     }
 }

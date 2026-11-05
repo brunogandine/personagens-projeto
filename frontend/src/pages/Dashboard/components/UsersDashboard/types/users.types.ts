@@ -57,3 +57,14 @@ export type UserCharactersFilters = {
     order?: "asc" | "desc",
     filterBy?: "anime" | "rarity"
 };
+
+type SortOption = NonNullable<UserCharactersFilters["sortBy"]>;
+
+export type SortGroup = {
+    key: string;
+    label: string;
+    options: {
+        label: string;
+        value: SortOption;
+    }[];
+};

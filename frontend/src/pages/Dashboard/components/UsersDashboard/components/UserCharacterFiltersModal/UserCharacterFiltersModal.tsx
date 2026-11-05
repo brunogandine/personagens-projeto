@@ -1,6 +1,8 @@
+import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
 import { Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 import type { UserCharactersFilters } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
+import { sortGroups } from "@/pages/Dashboard/components/UsersDashboard/config/userSortOptions";
 
 type Props = {
     open: boolean;
@@ -16,6 +18,8 @@ const radioOptions = [
 
 const UserCharacterFiltersModal = ({open, onClose, filters, setFilters}: Props) => {
     const [mode, setMode] = useState<"sort" | "filters">("sort");
+    const [sortBy, setSortBy] = useState<UserCharactersFilters["sortBy"]>(filters.sortBy);
+    const [filterBy, setFilterBy] = useState<UserCharactersFilters["filterBy"]>(filters.filterBy);
 
     // useEffect(() => {
     //     if(mode !== "sort") {
@@ -41,14 +45,38 @@ const UserCharacterFiltersModal = ({open, onClose, filters, setFilters}: Props) 
             width={`fit-content`}
             footer={null}
         >
-            <Radio.Group 
-                block
-                options={radioOptions}
-                value={mode}
-                onChange={(e) =>  setMode(e.target.value)}
-                className={"radio-default"}
-                optionType="button"
-            />
+            <div className={`${styles["filters-content"]}`}>
+                <div className={`${styles["filter-group"]}`}>
+                    <Radio.Group 
+                        block
+                        options={radioOptions}
+                        value={mode}
+                        onChange={(e) =>  setMode(e.target.value)}
+                        className={"radio-button-default"}
+                        optionType="button"
+                    />
+                </div>
+                {mode === "sort" && (
+                    sortGroups.map((group) => (
+                        <div key={group.key} className={`${styles["filter-group"]}`}>
+                            <div className={`${styles["filter-group-title"]}`}>
+                                <span>{group.label}</span>
+                            </div>
+                            <Radio.Group
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className={"radio-default"}
+                            >
+                                {group.options.map((option) => (
+                                    <Radio key={option.value} value={option.value}>
+                                        {option.label}
+                                    </Radio>
+                                ))}
+                            </Radio.Group>
+                        </div>
+                    ))
+                )}
+            </div>
         </Modal>    
     );
 };

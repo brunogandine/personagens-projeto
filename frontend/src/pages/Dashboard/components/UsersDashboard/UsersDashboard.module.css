@@ -620,6 +620,13 @@
     }
 }
 
+.filters-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    
+    gap: 10px;
+}
+
 /* Custom Duration Modal Styles */
 
 .options-modal-custom-duration {
