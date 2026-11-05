@@ -51,3 +51,9 @@ export type CustomDuration =
         mode: "specific";
         expiresAt: Date;
     }
+
+export type UserCharactersFilters = {
+    sortBy?: "level" | "attack" | "defense" | "health" | "createdAt" | "updatedAt",
+    order?: "asc" | "desc",
+    filterBy?: "anime" | "rarity"
+};

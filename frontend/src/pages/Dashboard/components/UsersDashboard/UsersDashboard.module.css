@@ -367,10 +367,30 @@
             background-color: var(--bg-modal-dark-tertiary)
         }
     }
+
+    & .character-add {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--bg-modal-dark-secondary);
+        color: #7385ff;
+        font-weight: bold;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #7385ff;
+        border-radius: 6px;
+        padding: 5px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--bg-modal-dark-tertiary)
+        }
+    }
 }
 
 .edit-single-character-manager-container {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-top: 30px;
 
@@ -504,7 +524,8 @@
     display: flex;
 
     & > .artwork {
-        background-image: url(/assets/images/cards/background/artwork/normal.png)
+        background-image: url(/assets/images/cards/background/artwork/normal.png);
+        background-repeat: no-repeat;
     }
 }
 
@@ -551,14 +572,15 @@
 
     & .info-container {
         display: flex;
+        align-items: flex-start;
         gap: 5px;
         margin-top: 20px;
 
-        & .general, .battle-statistics {
+        & .general, .battle-statistics, .stats {
             display: flex;
             flex-direction: column;
             background-color: var(--bg-modal-dark-secondary);
-            width: 40%;
+            width: 20em;
             border-radius: 5px;
 
             & .title {
@@ -582,6 +604,16 @@
                 & .info-item {
                     display: flex;
                     justify-content: space-between;
+
+                    & label {
+                        color: var(--orange-500);
+                        font-weight: bold;
+                    }
+
+                    & .value {
+                        display: flex;
+                        gap: 5px;
+                    }
                 }
             }
         }

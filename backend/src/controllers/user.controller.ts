@@ -23,7 +23,9 @@ class UserController {
 
     getUserCharacters: RequestHandler = async (req, res) => {
         try {
-            const result = await UserService.getUserCharacters({id: Number(req.params.id)});
+            const { page, search } = req.query;
+
+            const result = await UserService.getUserCharacters({id: Number(req.params.id), page: Number(page ?? 1), search: search as string});
 
             return res.json(result);
         } catch(err) {

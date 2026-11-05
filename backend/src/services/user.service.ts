@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { hashPassword, comparePassword } from "../utils/bcrypt.util";
 import { userModel } from "@/models/User";
 import { userCharacterModel } from "@/models/UserCharacter";
-import { GetParams } from "../types/user.types";
+import { GetParams, GetUserCharactersParams } from "@/types/user.types";
 
 const uploadDir = path.resolve(process.cwd(), "uploads", "avatars");
 
@@ -37,10 +37,19 @@ class UserService {
         return result;
     };
 
-    async getUserCharacters({id}: { id: number }) {
-        const result = await userCharacterModel.findUserCharactersById(id);
+    async getUserCharacters({id, page = 1, search = ""}: GetUserCharactersParams) {
+        const MAX_PAGES = 1000;
 
-        return result.map(({user_id, character, ...userCharacter }) =>  ({...userCharacter, character_name: character.name}));
+        const safePage = page > 0 
+            ? Math.min(page, MAX_PAGES)
+            : 1;
+
+        const result = await userCharacterModel.findUserCharactersById({id, page: safePage, search});
+
+        return {
+            data: result.data.map(({user_id, character, ...userCharacter }) =>  ({...userCharacter, character_name: character.name})),
+            meta: result.meta
+        }
     };
 
     async getUsersCount() {

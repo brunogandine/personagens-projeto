@@ -87,6 +87,7 @@ class CharacterModel {
             name: { contains: search }
         }
         : {};
+        
         const characters = await prisma.character.findMany({
             where,
             skip: (page - 1) * PER_PAGE,

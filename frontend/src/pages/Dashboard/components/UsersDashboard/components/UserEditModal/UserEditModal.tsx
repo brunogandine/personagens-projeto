@@ -5,19 +5,21 @@ import UserEditHeader from "./UserEditHeader";
 import { useState } from "react";
 import { Avatar, Modal } from "antd";
 import { UserOutlined, WarningFilled } from "@ant-design/icons";
-import type { EditActions, SelectedUserPreview } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
+import type { EditActions, SelectedUserPreview, UserCharacter, UserCharactersFilters } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 import CharacterManagerStep from "./steps/CharacterManagerStep";
 
 type Props = {
     open: boolean;
     onClose: () => void;
     selectedUsers: SelectedUserPreview[];
-    onOpenCharacterConfig: () => void;
+    onOpenCharacterConfig: (character: UserCharacter) => void;
+    openFilters: () => void;
+    filters: UserCharactersFilters;
 }
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const UserEditModal = ({open, onClose, selectedUsers, onOpenCharacterConfig}: Props) => {
+const UserEditModal = ({open, onClose, selectedUsers, onOpenCharacterConfig, openFilters, filters}: Props) => {
     const [editAction, setEditAction] = useState<EditActions>("edit")
 
     const goBackAction = () => {
@@ -72,7 +74,13 @@ const UserEditModal = ({open, onClose, selectedUsers, onOpenCharacterConfig}: Pr
                             <EditUserStep user={selectedUser} characterManagerAction={() => setEditAction("character_manager")}/>
                         )}
                         {editAction === "character_manager" && (
-                            <CharacterManagerStep userId={selectedUser.id} count={selectedUser.characters_count} onOpenCharacterConfig={onOpenCharacterConfig} />
+                            <CharacterManagerStep 
+                                userId={selectedUser.id} 
+                                count={selectedUser.characters_count} 
+                                onOpenCharacterConfig={onOpenCharacterConfig} 
+                                openFilters={openFilters} 
+                                filters={filters}
+                            />
                         )}
                     </>
                 )}

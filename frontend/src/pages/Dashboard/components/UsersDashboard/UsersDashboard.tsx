@@ -3,12 +3,13 @@ import UsersList from "./UsersList"
 import UsersPagination from "../../shared/DashboardPagination";
 import UserSuspensionModal from "./components/UserSuspensionModal";
 import UserEditModal from "./components/UserEditModal/UserEditModal";
+import UserCharacterConfigModal from "./components/UserCharacterConfigModal/UserCharacterConfigModal";
+import UserCharacterFiltersModal from "./components/UserCharacterFiltersModal/UserCharacterFiltersModal";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Request } from "@/services/apiClient";
 import type { UserAdmin } from "@/types/user";
-import type { UserAction } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
-import UserCharacterConfigModal from "./components/UserCharacterConfigModal/UserCharacterConfigModal";
+import type { UserAction, UserCharacter, UserCharactersFilters } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 
 const UsersDashboard = () => {
     const { user } = useAuth();
@@ -18,6 +19,9 @@ const UsersDashboard = () => {
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [activeAction, setActiveAction] = useState<UserAction | null>(null);
     const [isUserCharacterConfigModalOpen, setIsUserCharacterConfigModalOpen] = useState(false);
+    const [isUserCharacterFilterModalOpen, setIsUserCharacterFilterModalOpen] = useState(false);
+    const [selectedCharacter, setSelectedCharacter] = useState<UserCharacter | null>(null);
+    const [filters, setFilters] = useState<UserCharactersFilters>({});
 
     if(!user)
         return null;
@@ -51,12 +55,24 @@ const UsersDashboard = () => {
         setActiveAction(null);
     };
 
-    const handleCharacterConfigOpen = () => {
+    const handleCharacterConfigOpen = (c: UserCharacter) => {
+        setSelectedCharacter(c);
         setActiveAction(null);
         setIsUserCharacterConfigModalOpen(true);
     };
 
+    const handleCharacterFilterOpen = () => {
+        setIsUserCharacterFilterModalOpen(true);
+        setActiveAction(null);
+    };
+
+    const handleCharacterFilterClose = () => {
+        setIsUserCharacterFilterModalOpen(false);
+        setActiveAction("edit");
+    }
+
     const handleCharacterConfigClose = () => {
+        setSelectedCharacter(null);
         setIsUserCharacterConfigModalOpen(false);
         setActiveAction("edit");
     };
@@ -83,17 +99,28 @@ const UsersDashboard = () => {
                     selectedUsers={selectedUserObjects}
                 />
                 {selectedUserObjects.length !== 0 && (
-                    <UserEditModal 
-                        open={activeAction === "edit"} 
-                        onClose={handleActionClose}
-                        selectedUsers={selectedUserObjects}
-                        onOpenCharacterConfig={handleCharacterConfigOpen}
-                    />
+                    <>
+                        <UserEditModal 
+                            open={activeAction === "edit"} 
+                            onClose={handleActionClose}
+                            selectedUsers={selectedUserObjects}
+                            onOpenCharacterConfig={handleCharacterConfigOpen}
+                            openFilters={handleCharacterFilterOpen}
+                            filters={filters}
+                        />
+                        <UserCharacterFiltersModal
+                            open={isUserCharacterFilterModalOpen}
+                            onClose={handleCharacterFilterClose}
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
+                    </>
                 )}
-                {selectedUserObjects.length === 1 && (
+                {selectedUserObjects.length === 1 && selectedCharacter &&(
                     <UserCharacterConfigModal 
                         open={isUserCharacterConfigModalOpen}
                         onClose={handleCharacterConfigClose}
+                        character={selectedCharacter}
                     />
                 )}
             </div>
