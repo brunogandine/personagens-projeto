@@ -347,6 +347,10 @@
         & > input {
             flex: 1;
             background-color: transparent;
+
+            &.search-bar {
+                border: none;
+            }
         }
     }
 
@@ -625,6 +629,73 @@
     flex-direction: column;
     justify-content: center;    
     gap: 10px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    gap: 5px;
+    width: 15em;
+}
+
+.filter-group-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group-title {
+    font-weight: bold;
+    border-bottom: 1px solid var(--outline-color-default);
+}
+
+.sort-content-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-weight: bold;
+}
+
+.filter-modal-options {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.filter-content-items {
+    gap: 5px;
+
+    &.select {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &.checkbox {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr)
+    }
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-item-add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    background-color: var(--bg-modal-dark-secondary);
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #00ccff07;
+    }
 }
 
 /* Custom Duration Modal Styles */

@@ -9,13 +9,6 @@ export type CharacterItem = {
     }
 };
 
-export type AnimeItem = {
-    id: number;
-    name: string;
-    active: boolean;
-    deleted_at: Date;
-};
-
 export type AnimeContentItem = {
     id: number;
     name: string;

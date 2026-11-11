@@ -8,7 +8,7 @@ export const sortGroups = [
             { label: "Nível", value: "level" },
             { label: "Ataque", value: "attack" },
             { label: "Defesa", value: "defense" },
-            { label: "Saúde", value: "health" }
+            { label: "Vida", value: "health" }
         ]
     },
     {

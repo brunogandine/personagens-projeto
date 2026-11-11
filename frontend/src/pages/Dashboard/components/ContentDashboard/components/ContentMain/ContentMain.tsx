@@ -15,8 +15,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Request } from "@/services/apiClient";
 import { useMessageModal } from "@/contexts/UIFeedbackContext";
-import type { AnimeRestore, AnimeDelete, AnimeEdit, AnimeItem, CharacterDelete, CharacterEdit, CharacterItem, CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
+import type { AnimeRestore, AnimeDelete, AnimeEdit, CharacterDelete, CharacterEdit, CharacterItem, CharacterRestore } from "@/pages/Dashboard/components/ContentDashboard/types/content.types";
 import AnimeRestoreModal from "./components/AnimeCreationModals/AnimeRestoreModal";
+import type { AnimeItem } from "@/types/Animes.types";
 
 export const BASE_ATTRIBUTES_URL = "/assets/images/icons/attributes";
 
