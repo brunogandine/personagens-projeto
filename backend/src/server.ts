@@ -9,6 +9,8 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+app.set("query parser", "extended");
+
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true

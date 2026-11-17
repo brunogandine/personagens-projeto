@@ -1,3 +1,5 @@
+import type { RarityFilters } from "../components/UserCharacterFiltersModal/types/filter.types";
+
 export type UserAction = 
     | "suspend"
     | "edit";
@@ -25,12 +27,14 @@ export type UserCharacter = {
     for_def: number;
     level: number;
     exp: number;
-    wins_pvp : number;
-    wins_npc : number;
-    loses_pvp : number;
-    loses_npc : number;
-    draws_pvp : number;
-    draws_npc : number;
+    wins_pvp: number;
+    wins_npc: number;
+    loses_pvp: number;
+    loses_npc: number;
+    draws_pvp: number;
+    draws_npc: number;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export type DurationUnit =
@@ -52,10 +56,15 @@ export type CustomDuration =
         expiresAt: Date;
     }
 
+export type UserCharactersFilterBy = {
+    anime_id?: number[];
+    rarity?: RarityFilters[];
+}
+
 export type UserCharactersFilters = {
-    sortBy?: "level" | "attack" | "defense" | "health" | "createdAt" | "updatedAt",
-    order?: "asc" | "desc",
-    filterBy?: "anime" | "rarity"
+    sortBy?: "level" | "for_atk" | "for_def" | "for_hp" | "created_at" | "updated_at",
+    orderBy?: "asc" | "desc",
+    filterBy?: UserCharactersFilterBy,
 };
 
 type SortOption = NonNullable<UserCharactersFilters["sortBy"]>;

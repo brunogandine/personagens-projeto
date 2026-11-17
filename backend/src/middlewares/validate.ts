@@ -2,7 +2,14 @@ import { ZodType, ZodError } from "zod";
 import { RequestHandler } from "express";
 
 const validate = (schema: ZodType<any>, source: "body" | "params" | "query"): RequestHandler => (req, res, next) => {
-    const result = schema.safeParse(req[source]);
+    const data = source === "query"
+        ? {
+            ...req.query,
+            ...(res.locals.filterBy !== undefined && { filterBy: res.locals.filterBy })
+        }
+        : req[source];
+
+    const result = schema.safeParse(data);
 
     if(!result.success) {
         const zodError = result.error as ZodError;
@@ -16,7 +23,11 @@ const validate = (schema: ZodType<any>, source: "body" | "params" | "query"): Re
         });
     }
 
-    req[source] = result.data;
+    if(source === "query") {
+        res.locals.validatedQuery = result.data;
+    } else {
+        req[source] = result.data;
+    };
 
     next(); 
 };

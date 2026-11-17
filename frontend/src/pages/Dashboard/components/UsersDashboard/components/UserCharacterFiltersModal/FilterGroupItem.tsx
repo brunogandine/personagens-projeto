@@ -1,9 +1,9 @@
 import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
+import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Select } from "antd";
 import type { Dispatch, SetStateAction } from "react";
 import type { SelectFilterItem } from "./types/filter.types";
-import CheckboxComponent from "@/shared/components/Checkbox/Checkbox";
 
 type FilterProps<TValue = number | string> = {
     title: string;

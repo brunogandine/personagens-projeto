@@ -15,19 +15,22 @@ type Props = {
     onOpenCharacterConfig: (character: UserCharacter) => void;
     openFilters: () => void;
     filters: UserCharactersFilters;
+    onResetFilters: () => void;
 }
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const UserEditModal = ({open, onClose, selectedUsers, onOpenCharacterConfig, openFilters, filters}: Props) => {
+const UserEditModal = ({open, onClose, selectedUsers, onOpenCharacterConfig, openFilters, filters, onResetFilters}: Props) => {
     const [editAction, setEditAction] = useState<EditActions>("edit")
 
     const goBackAction = () => {
         setEditAction("edit");
+        onResetFilters();
     }
 
     const handleClose = () => {
         setEditAction("edit");
+        onResetFilters();
         onClose();
     };
 
@@ -80,6 +83,7 @@ const UserEditModal = ({open, onClose, selectedUsers, onOpenCharacterConfig, ope
                                 onOpenCharacterConfig={onOpenCharacterConfig} 
                                 openFilters={openFilters} 
                                 filters={filters}
+                                onResetFilters={onResetFilters}
                             />
                         )}
                     </>

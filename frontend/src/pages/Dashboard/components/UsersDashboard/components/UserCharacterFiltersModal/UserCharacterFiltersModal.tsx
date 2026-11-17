@@ -1,13 +1,14 @@
 import styles from "@/pages/Dashboard/components/UsersDashboard/UsersDashboard.module.css";
+import FilterGroupItem from "./FilterGroupItem";
 import { Button, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 import { sortGroups } from "@/pages/Dashboard/components/UsersDashboard/config/userSortOptions";
 import { Request } from "@/services/apiClient";
+import { getAnimeOptions, rarityOptions } from "../../config/userFilterOptions";
+import { useMessageModal } from "@/contexts/UIFeedbackContext";
 import type { UserCharactersFilters } from "@/pages/Dashboard/components/UsersDashboard/types/users.types";
 import type { AnimeItem } from "@/types/Animes.types";
-import FilterGroupItem from "./FilterGroupItem";
 import type { AnimeFilters, RarityFilters } from "./types/filter.types";
-import { rarityOptions } from "../../config/userFilterOptions";
 
 type Props = {
     open: boolean;
@@ -24,14 +25,34 @@ const radioOptions = [
 const UserCharacterFiltersModal = ({open, onClose, filters, setFilters}: Props) => {
     const [mode, setMode] = useState<"sort" | "filters">("sort");
     const [sortBy, setSortBy] = useState<UserCharactersFilters["sortBy"]>(filters.sortBy);
-    const [filterBy, setFilterBy] = useState<UserCharactersFilters["filterBy"]>(filters.filterBy);
     const [animeFilters, setAnimeFilters] = useState<AnimeFilters[]>([]);
     const [rarityFilters, setRarityFilters] = useState<RarityFilters[]>([]);
     const [animesList, setAnimesList] = useState<AnimeItem[]>([]);
 
+    const { showToast } = useMessageModal();
+
     useEffect(() => {
         getAllAnimes();
     }, []);
+
+    useEffect(() => {
+        if(!open)
+            return;
+
+        restoreFilters();
+    }, [open, filters]);
+
+    const restoreFilters = () => {
+        setAnimeFilters(
+            (filters.filterBy?.anime_id ?? []).map((value) => ({
+                id: crypto.randomUUID(),
+                value
+            }))
+        );
+
+        setRarityFilters(filters.filterBy?.rarity ?? []);
+        setSortBy(filters.sortBy);
+    };
 
     const getAllAnimes = async () => {
         const res = await Request.get("/animes", {
@@ -49,17 +70,42 @@ const UserCharacterFiltersModal = ({open, onClose, filters, setFilters}: Props) 
 
     const handleClose = () => {
         setMode("sort");
-        setSortBy(filters.sortBy);
-        setFilterBy(filters.filterBy);
-        setAnimeFilters([]);
-        setRarityFilters([]);
         onClose();
     };
 
-    const animeOptions = animesList.map((anime) => ({
-        label: anime.name,
-        value: anime.id
-    }));
+    const animeOptions = getAnimeOptions(animesList);
+
+    const buildFilters = () => {
+        const anime = animeFilters
+            .map((anime) => anime.value)
+            .filter((value) => value !== null);
+
+        if (anime.length === 0 && rarityFilters.length === 0)
+            return undefined;
+
+        return {
+            ...(anime.length > 0 && { anime_id: anime }),
+            ...(rarityFilters.length > 0 && { rarity: rarityFilters })
+        };
+    };
+
+    const handleApply = () => {
+        const newFilterBy = buildFilters();
+
+        if(sortBy === undefined && newFilterBy === undefined) 
+            return showToast({
+                type: "error",
+                text: "Você não definiu nenhum filtro ou ordenação."
+            });
+            
+        setFilters({
+            ...(sortBy !== undefined && { sortBy }), 
+            ...(newFilterBy !== undefined && { filterBy: newFilterBy })
+        });
+
+        setMode("sort");
+        onClose();
+    };
 
     return (
         <Modal 
@@ -111,7 +157,7 @@ const UserCharacterFiltersModal = ({open, onClose, filters, setFilters}: Props) 
                 )}
                 <div className={`${styles["filter-modal-options"]}`}>
                     <Button type="primary" className={`btn-default cancel-btn`} onClick={handleClose}>Cancelar</Button>
-                    <Button type="primary" className={`btn-default primary-btn`}>Confirmar</Button>
+                    <Button type="primary" className={`btn-default primary-btn`} onClick={handleApply}>Confirmar</Button>
                 </div>
             </div>
         </Modal>    

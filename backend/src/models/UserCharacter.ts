@@ -7,31 +7,44 @@ class UserCharacter {
         return prisma.userCharacters.create({ data });
     };
 
-    findUserCharactersById = async ({id, page = 1, search = ""}: GetUserCharactersParams) => {
+    findUserCharactersById = async ({id, page = 1, search = "", sortBy, orderBy, filterBy}: GetUserCharactersParams) => {
         const PER_PAGE = 6;
 
         const where: Prisma.UserCharactersWhereInput = {
             user_id: id,
-            ...(search && {
-                character: {
+            character: {
+                ...(search && {
                     name: {
                         contains: search
                     }
-                }
-            })
+                }),
+                ...(filterBy?.anime_id?.length && {
+                    anime_id: {
+                        in: filterBy.anime_id
+                    }
+                }),
+                ...(filterBy?.rarity?.length && {
+                    rarity: {
+                        in: filterBy.rarity
+                    }
+                })
+            }
         };
+
+        const orderByQuery: Prisma.UserCharactersOrderByWithRelationInput = sortBy
+            ? { [sortBy]: orderBy ?? "asc" }
+            : { id: orderBy ?? "asc" }
 
         const characters = await prisma.userCharacters.findMany({
             where,
             skip: (page - 1) * PER_PAGE,
             take: PER_PAGE,
-            orderBy: {
-                id: "asc"
-            },
+            orderBy: orderByQuery,
             include: {
                 character: {
                     select: {
-                        name: true
+                        name: true,
+                        rarity: true
                     }
                 }
             }

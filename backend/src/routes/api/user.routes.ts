@@ -7,12 +7,13 @@ import AuthorizeUserAccess from "@/middlewares/authorizeUserAccess";
 import UserController from "@/controllers/user.controller";
 import UploadAvatar from "@/middlewares/upload/uploadAvatar";
 import ValidateRequest from "@/middlewares/validate";
+import { userCharactersQuerySchema } from "@/validations/user.validations";
 
 const router = Router();
 
 router.get("/get", Authenticate, AuthorizeUser("Admin"), UserController.getUsers);
 router.get("/counts", Authenticate, UserController.getCounts);
-router.get("/:id/characters", Authenticate, ValidateRequest(idParamsSchema, "params"), AuthorizeUserAccess, UserController.getUserCharacters);
+router.get("/:id/characters", Authenticate, ValidateRequest(idParamsSchema, "params"), ValidateRequest(userCharactersQuerySchema, "query"), AuthorizeUserAccess, UserController.getUserCharacters);
 
 router.patch("/me/avatar", Authenticate, UploadAvatar.single('avatar'), UserController.updateAvatar);
 router.get("/me/avatar/recents", Authenticate, UserController.getRecentAvatars);

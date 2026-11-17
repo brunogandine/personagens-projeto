@@ -24,12 +24,20 @@ class UserController {
     getUserCharacters: RequestHandler = async (req, res) => {
         try {
             const { page, search } = req.query;
+            const { sortBy, orderBy, filterBy } = res.locals.validatedQuery;
 
-            const result = await UserService.getUserCharacters({id: Number(req.params.id), page: Number(page ?? 1), search: search as string});
+            const result = await UserService.getUserCharacters({
+                id: Number(req.params.id), 
+                page: Number(page ?? 1), 
+                search: search as string,     
+                ...(sortBy !== undefined && { sortBy }),
+                ...(orderBy !== undefined && { orderBy }),
+                ...(filterBy !== undefined && { filterBy }),
+            });
 
             return res.json(result);
         } catch(err) {
-            return res.status(500).json({message: "Erro Interno"});
+            return res.status(500).json({message: "Erro Interno."});
         };
     };
 

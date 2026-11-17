@@ -370,6 +370,16 @@
         &:hover {
             background-color: var(--bg-modal-dark-tertiary)
         }
+
+        &.filtered {
+            background-color: #00ff2a13;
+            color: #00ff2a;
+            border-color: #00ff2a;
+
+            &:hover {
+                background-color: #00ff2a3b;
+            }
+        }
     }
 
     & .character-add {

@@ -77,6 +77,10 @@ const UsersDashboard = () => {
         setActiveAction("edit");
     };
 
+    const resetCharacterManagerFilters = () => {
+        setFilters({});
+    };
+
     const selectedUserObjects = users.filter((user) => selectedUsers.includes(user.id)).map((user) => ({    
             id: user.id,
             username: user.username,
@@ -107,6 +111,7 @@ const UsersDashboard = () => {
                             onOpenCharacterConfig={handleCharacterConfigOpen}
                             openFilters={handleCharacterFilterOpen}
                             filters={filters}
+                            onResetFilters={resetCharacterManagerFilters}
                         />
                         <UserCharacterFiltersModal
                             open={isUserCharacterFilterModalOpen}

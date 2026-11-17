@@ -37,17 +37,17 @@ class UserService {
         return result;
     };
 
-    async getUserCharacters({id, page = 1, search = ""}: GetUserCharactersParams) {
+    async getUserCharacters({id, page = 1, search = "", sortBy, orderBy, filterBy}: GetUserCharactersParams) {
         const MAX_PAGES = 1000;
 
         const safePage = page > 0 
             ? Math.min(page, MAX_PAGES)
             : 1;
 
-        const result = await userCharacterModel.findUserCharactersById({id, page: safePage, search});
+        const result = await userCharacterModel.findUserCharactersById({id, page: safePage, search, sortBy, orderBy, filterBy});
 
         return {
-            data: result.data.map(({user_id, character, ...userCharacter }) =>  ({...userCharacter, character_name: character.name})),
+            data: result.data.map(({user_id, character, ...userCharacter }) =>  ({...userCharacter, character_name: character.name, rarity: character.rarity})),
             meta: result.meta
         }
     };

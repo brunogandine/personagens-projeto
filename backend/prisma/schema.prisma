@@ -26,6 +26,7 @@ model Character {
   attr_atk        Int                    @default(0)
   attr_def        Int                    @default(0)
   deleted_at      DateTime?
+  rarity          CharacterRarity        @default(NORMAL)
 
   anime           Anime                  @relation(fields: [anime_id], references: [id], onDelete: Restrict)
   user_character  UserCharacters[]
@@ -89,6 +90,8 @@ model UserCharacters {
   loses_npc    Int          @default(0)
   draws_pvp    Int          @default(0)
   draws_npc    Int          @default(0)
+  created_at    DateTime    @default(now()) @db.DateTime
+  updated_at    DateTime    @default(now()) @updatedAt @db.DateTime
 
   user         User         @relation(fields: [user_id], references: [id])
   character    Character    @relation(fields: [character_id], references: [id])
@@ -97,21 +100,21 @@ model UserCharacters {
 }
 
 model User {
-  id                      Int           @id @default(autoincrement()) @db.UnsignedInt
-  username                String        @unique
-  email                   String        @unique
-  user_key                String        @db.VarChar(255)
-  activation_key          String?       @db.VarChar(255)
-  reset_password_key      String?       @db.VarChar(255)
-  active                  Boolean       @default(false)
-  currency                Int           @default(100)
-  level                   Int           @default(1)
-  created_at              DateTime      @db.DateTime
-  activated_at            DateTime?     @db.DateTime
-  avatar_url              String?       @db.VarChar(255)
+  id                      Int               @id @default(autoincrement()) @db.UnsignedInt
+  username                String            @unique
+  email                   String            @unique
+  user_key                String            @db.VarChar(255)
+  activation_key          String?           @db.VarChar(255)
+  reset_password_key      String?           @db.VarChar(255)
+  active                  Boolean           @default(false)
+  currency                Int               @default(100)
+  level                   Int               @default(1)
+  created_at              DateTime          @db.DateTime
+  activated_at            DateTime?         @db.DateTime
+  avatar_url              String?           @db.VarChar(255)
 
   characters              UserCharacters[]
-  user_power              UserPower     @default(Regular)
+  user_power              UserPower         @default(Regular)
   session                 UserSession[]
   unlocks                 UserUnlocks[]
   restrictions            UserRestriction[] @relation("RestrictedUser")
@@ -158,4 +161,14 @@ enum SystemSettingsTypes {
   STRING
   BOOLEAN
   NUMBER
+}
+
+enum CharacterRarity {
+  NORMAL
+  RARE
+  SUPER_RARE
+  SUPER_SECRET_RARE
+  ULTRA_RARE
+  TRANSCENDENT_ULTRA_RARE
+  LEGENDARY_RARE
 }

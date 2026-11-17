@@ -722,6 +722,10 @@ img {
     &.ant-btn:disabled:not(.ant-btn-disabled) {
         background-color: var(--color-disabled);
         color: var(--ant-color-text-disabled);
+
+        svg {
+            color: #7e7e7e;
+        }
     }
 
     &.ant-btn:not(:disabled):not(.ant-btn-disabled):hover {

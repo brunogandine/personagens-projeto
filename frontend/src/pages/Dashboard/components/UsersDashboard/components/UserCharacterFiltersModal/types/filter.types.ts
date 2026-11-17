@@ -7,8 +7,8 @@ export type AnimeFilters = SelectFilterItem<number>;
 export type RarityFilters = 
     | "NORMAL"
     | "RARE"
-    | "SUPER RARE"
-    | "SECRET SUPER RARE"
-    | "ULTRA RARE"
-    | "TRANSCENDENT ULTRA RARE"
-    | "LEGENDARY RARE"
+    | "SUPER_RARE"
+    | "SUPER_SECRET_RARE"
+    | "ULTRA_RARE"
+    | "TRANSCENDENT_ULTRA_RARE"
+    | "LEGENDARY_RARE"
